@@ -1,0 +1,75 @@
+application {
+  config {
+    baseName coutureApp
+    applicationType monolith
+    packageName com.couture.app
+    authenticationType jwt
+    prodDatabaseType mysql
+    devDatabaseType mysql
+    buildTool maven
+  }
+  entities Client, Admin, Vetement, RendezVous, Notification
+}
+
+enum StatutRendezVous {
+  EN_ATTENTE,
+  CONFIRME,
+  REFUSE
+}
+
+enum TypeNotification {
+  EMAIL,
+  WHATSAPP
+}
+
+entity Client {
+  nom String required
+  prenom String
+  email String required unique
+  telephone String required
+  motDePasse String required
+  dateInscription Instant
+}
+
+entity Admin {
+  nom String required
+  email String required unique
+  motDePasse String required
+}
+
+entity Vetement {
+  nom String required
+  description TextBlob
+  prix BigDecimal required
+  imageUrl String
+  disponible Boolean required
+  dateAjout Instant
+}
+
+entity RendezVous {
+  dateRendezVous Instant required
+  heure String required
+  statut StatutRendezVous required
+  commentaire String
+  dateCreation Instant
+}
+
+entity Notification {
+  type TypeNotification required
+  contenu String required
+  dateEnvoi Instant
+  statut String
+}
+
+/* RELATIONS */
+
+relationship OneToMany {
+  Admin{vetements} to Vetement{admin}
+  Client{rendezVous} to RendezVous{client}
+}
+
+relationship ManyToOne {
+  RendezVous{vetement} to Vetement
+  Notification{rendezVous} to RendezVous
+  Notification{client} to Client
+}
