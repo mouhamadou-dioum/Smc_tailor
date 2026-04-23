@@ -3,11 +3,12 @@
 @section('title', 'Inscription - Couture App')
 
 @section('content')
-<section class="py-5">
+<div class="py-5">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-6">
                 <div class="text-center mb-4">
+                    <a href="{{ route('home') }}" class="navbar-brand">COUTURE</a>
                     <h2 class="section-title">Créer un compte</h2>
                     <p class="section-subtitle">Rejoignez-nous</p>
                 </div>
@@ -61,7 +62,7 @@
             </div>
         </div>
     </div>
-</section>
+</div>
 @endsection
 
 @section('scripts')

@@ -107,12 +107,11 @@ class AuthController extends Controller
         $admin = Admin::where('email', $email)->first();
         
         if ($admin && Hash::check($password, $admin->motDePasse)) {
-            // Note: Les admins utilisent le guard 'client' pour la session
-            // Comme ça client et admin partagent la même session
-            Auth::guard('client')->login($admin);
+            // Connexion de l'admin avec le guard 'admin'
+            Auth::guard('admin')->login($admin);
             $request->session()->regenerate();
-            // Redirection vers la page d'accueil (même pour client et admin)
-            return redirect()->intended(route('home'))->with('success', 'Connexion réussie!');
+            // Redirection vers le dashboard admin
+            return redirect()->intended(route('admin.dashboard'))->with('success', 'Connexion réussie!');
         }
 
         // Erreur si les identifiants sont incorrects
@@ -130,8 +129,12 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        // Déconnexion
-        Auth::guard('client')->logout();
+        // Déconnexion selon le guard actif
+        if (Auth::guard('admin')->check()) {
+            Auth::guard('admin')->logout();
+        } else {
+            Auth::guard('client')->logout();
+        }
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

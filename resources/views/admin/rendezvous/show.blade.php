@@ -57,7 +57,21 @@
                     <p>{{ $rendezVous->commentaire ?: 'Aucun commentaire' }}</p>
                 </div>
 
-                @if($rendezVous->statut === 'EN_ATTENTE')
+                @if($rendezVous->statut === 'CONFIRME')
+                <div class="card-custom p-4 mb-4">
+                    <h4 class="mb-3">Actions</h4>
+                    <div class="d-flex gap-3">
+                        <a href="{{ route('admin.mesures.create', $rendezVous->client_id) }}" 
+                           class="btn btn-primary-custom flex-grow-1">
+                            <i class="fas fa-ruler me-2"></i> Prendre les mesures
+                        </a>
+                        <a href="{{ route('admin.mesures.historique', $rendezVous->client_id) }}" 
+                           class="btn btn-outline-custom flex-grow-1">
+                            <i class="fas fa-history me-2"></i> Historique
+                        </a>
+                    </div>
+                </div>
+                @elseif($rendezVous->statut === 'EN_ATTENTE')
                 <div class="card-custom p-4">
                     <h4 class="mb-3">Actions</h4>
                     <div class="d-flex gap-3">

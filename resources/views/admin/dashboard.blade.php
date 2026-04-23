@@ -13,7 +13,7 @@
                 </a>
                 <form action="{{ route('admin.logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-outline-danger btn-sm">Déconnexion</button>
+                    <button type="submit" class="btn btn-outline-custom btn-sm">Déconnexion</button>
                 </form>
             </div>
         </div>
@@ -96,7 +96,7 @@
                                 <tr>
                                     <th>Client</th>
                                     <th>Date</th>
-                                    <th>Status</th>
+                                    <th>Statut</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

@@ -6,6 +6,7 @@ use App\Http\Controllers\VetementController;
 use App\Http\Controllers\RendezVousController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\MesureController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -50,6 +51,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/rendezvous/{id}', [AdminController::class, 'rendezvousShow'])->name('rendezvous.show');
         Route::get('/rendezvous/{id}/confirmer', [AdminController::class, 'rendezvousConfirmer'])->name('rendezvous.confirmer');
         Route::get('/rendezvous/{id}/refuser', [AdminController::class, 'rendezvousRefuser'])->name('rendezvous.refuser');
+        
+        Route::get('/mesures/{clientId}/create', [MesureController::class, 'create'])->name('mesures.create');
+        Route::post('/mesures/{clientId}', [MesureController::class, 'store'])->name('mesures.store');
+        Route::get('/mesures/{clientId}', [MesureController::class, 'show'])->name('mesures.show');
+        Route::get('/mesures/{clientId}/historique', [MesureController::class, 'historique'])->name('mesures.historique');
         
         Route::get('/clients', [AdminController::class, 'clientsIndex'])->name('clients.index');
     });

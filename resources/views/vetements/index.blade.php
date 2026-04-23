@@ -3,13 +3,15 @@
 @section('title', 'Nos Vêtements - Couture App')
 
 @section('content')
+<section class="py-5" style="background: var(--dark);">
+    <div class="container text-center">
+        <h1 class="hero-title">Nos Créations</h1>
+        <p class="hero-subtitle">Découvrez notre collection exclusive</p>
+    </div>
+</section>
+
 <section class="py-5">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="section-title">Nos Créations</h2>
-            <p class="section-subtitle">Découvrez notre collection exclusive</p>
-        </div>
-
         @if($categories->count() > 0)
         <div class="mb-5">
             <div class="d-flex flex-wrap justify-content-center gap-2">
@@ -31,19 +33,18 @@
             @forelse($vetements as $vetement)
                 <div class="col-md-6 col-lg-4">
                     <div class="card-custom h-100">
-                        <div class="featured-card">
+                        <div class="position-relative">
                             <img
-                                src="{{ $vetement->imageUrl ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200' }}"
+                                src="{{ $vetement->imageUrl ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800' }}"
                                 alt="{{ $vetement->nom }}"
-                                class="img-fluid"
-                                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200';"
+                                class="img-fluid w-100"
+                                style="height: 300px; object-fit: cover;"
+                                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';"
                             >
                             @if(!$vetement->disponible)
                                 <span class="badge bg-secondary position-absolute top-0 end-0 m-2">Indisponible</span>
                             @endif
-                            <div class="featured-overlay">
-                                <span class="price-tag">{{ number_format($vetement->prix, 0, ',', ' ') }} CFA</span>
-                            </div>
+                            <span class="price-tag position-absolute bottom-0 start-0 m-2">{{ number_format($vetement->prix, 0, ',', ' ') }} CFA</span>
                         </div>
                         <div class="p-4">
                             <h5 class="mb-2">{{ $vetement->nom }}</h5>

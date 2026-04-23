@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Couture sur mesure - Réservez vos rendez-vous pour des vêtements personnalisés">
     <title>@yield('title', 'Couture App')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -464,18 +465,92 @@
         }
 
         @media (max-width: 768px) {
-            .hero-title { font-size: 2.5rem; }
-            .section-title { font-size: 2rem; }
+            .hero-title { font-size: 2rem; }
+            .section-title { font-size: 1.5rem; }
+            .navbar-custom { padding: 0.75rem 0; }
+            .navbar-brand { font-size: 1.25rem; }
+            .nav-link-custom { padding: 0.5rem 0.75rem !important; font-size: 0.875rem; }
+            .nav-actions { gap: 0.5rem !important; }
+            .btn { padding: 0.5rem 1rem; font-size: 0.875rem; }
+            .card-custom { padding: 1.25rem; }
+            .form-custom { padding: 1.5rem; }
+            .footer-custom { padding: 2rem 0 1rem; }
+            .footer-title { font-size: 1.25rem; }
+            .footer-custom .col-md-4 { margin-bottom: 1.5rem; }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title { font-size: 1.75rem; }
+            .section-title { font-size: 1.25rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.25rem; }
+            .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.8rem; }
+            .form-control-custom { padding: 0.625rem 0.875rem; font-size: 0.9rem; }
+            .table-custom th, .table-custom td { padding: 0.625rem; font-size: 0.875rem; }
+            .stat-card { padding: 1rem; }
+            .featured-card img { height: 250px !important; }
+        }
+
+        /* Mobile Menu */
+        .navbar-toggler {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 991px) {
+            .navbar-toggler {
+                display: block;
+            }
+            .nav-actions {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                padding-top: 1rem;
+                border-top: 1px solid var(--gray-200);
+                margin-top: 1rem;
+            }
+            .nav-actions.active {
+                display: flex;
+            }
+            .nav-link-custom {
+                padding: 0.75rem 0 !important;
+                width: 100%;
+            }
+            .nav-actions form {
+                width: 100%;
+            }
+            .nav-actions .btn {
+                width: 100%;
+                text-align: center;
+                margin-top: 0.5rem;
+            }
         }
     </style>
+    @yield('styles')
 </head>
 <body>
     <nav class="navbar-custom">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <a class="navbar-brand" href="{{ route('home') }}">COUTURE</a>
+                <button class="navbar-toggler" onclick="document.querySelector('.nav-actions').classList.toggle('active')">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <div class="d-flex align-items-center nav-actions">
-                    @if(\Illuminate\Support\Facades\Auth::guard('admin')->check())
+                    @php
+                        $authUser = \Illuminate\Support\Facades\Auth::guard('admin')->user() ?? \Illuminate\Support\Facades\Auth::guard('client')->user();
+                        $isAdmin  = $authUser instanceof \App\Models\Admin;
+                        $isClient = $authUser instanceof \App\Models\Client;
+                        $logoutRoute = $isAdmin ? route('admin.logout') : route('logout');
+                    @endphp
+
+                    @if($isAdmin)
                         <a href="{{ route('admin.dashboard') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-chart-line"></i><span>Tableau de bord</span>
                         </a>
@@ -491,13 +566,13 @@
                         <a href="{{ route('admin.clients.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-users"></i><span>Clients</span>
                         </a>
-                        <form action="{{ route('admin.logout') }}" method="POST" class="d-inline">
+                        <form action="{{ $logoutRoute }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-outline-custom btn-sm">
                                 <i class="fas fa-right-from-bracket me-1"></i> Déconnexion
                             </button>
                         </form>
-                    @elseif(\Illuminate\Support\Facades\Auth::guard('client')->check())
+                    @elseif($isClient)
                         <a href="{{ route('home') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-house"></i><span>Accueil</span>
                         </a>
@@ -510,7 +585,7 @@
                         <a href="{{ route('rendezvous.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-calendar-check"></i><span>Mes rendez-vous</span>
                         </a>
-                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                        <form action="{{ $logoutRoute }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-outline-custom btn-sm">
                                 <i class="fas fa-right-from-bracket me-1"></i> Déconnexion
@@ -522,9 +597,6 @@
                         </a>
                         <a href="{{ route('register') }}" class="btn btn-primary-custom btn-sm">
                             <i class="fas fa-user-plus me-1"></i> S'inscrire
-                        </a>
-                        <a href="{{ route('admin.login') }}" class="btn btn-admin btn-sm ms-2">
-                            <i class="fas fa-user-shield me-1"></i> Admin
                         </a>
                     @endif
                 </div>
@@ -551,7 +623,7 @@
                         <li><a href="{{ route('login') }}" class="footer-link d-block mb-2">Connexion</a></li>
                         <li><a href="{{ route('register') }}" class="footer-link d-block mb-2">S'inscrire</a></li>
                         @endguest
-                        <li><a href="{{ route('admin.login') }}" class="footer-link d-block mb-2">Espace Admin</a></li>
+                        <li><a href="{{ route('login') }}" class="footer-link d-block mb-2">Connexion</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-4">
@@ -573,6 +645,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+    
     @yield('scripts')
+    @yield('extraScripts')
 </body>
 </html>

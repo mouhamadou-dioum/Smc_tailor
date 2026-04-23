@@ -379,16 +379,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
+@media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
         }
     </style>
+    @yield('styles')
 </head>
 <body>
     <nav class="navbar-custom">
@@ -398,9 +394,10 @@
                 <div class="d-flex align-items-center nav-actions">
                     @php
                         // Vérification plus stricte: utilisateur connecté ET instance de Admin
-                        $user = Auth::guard('client')->user();
+                        $user = Auth::guard('admin')->user() ?? Auth::guard('client')->user();
                         $isAdmin = $user instanceof \App\Models\Admin;
                         $isClient = $user instanceof \App\Models\Client;
+                        $logoutRoute = $isAdmin ? route('admin.logout') : route('logout');
                     @endphp
                     
                     @if($isAdmin)
@@ -419,7 +416,7 @@
                         <a href="{{ route('admin.clients.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-users"></i><span>Clients</span>
                         </a>
-                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                        <form action="{{ $logoutRoute }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-outline-custom btn-sm">
                                 <i class="fas fa-right-from-bracket me-1"></i> Déconnexion
@@ -438,7 +435,7 @@
                         <a href="{{ route('rendezvous.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-calendar-check"></i><span>Mes rendez-vous</span>
                         </a>
-                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                        <form action="{{ $logoutRoute }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-outline-custom btn-sm">
                                 <i class="fas fa-right-from-bracket me-1"></i> Déconnexion
@@ -500,4 +497,4 @@
     <script src="{{ asset('js/app.js') }}"></script>
     @yield('scripts')
 </body>
-</html>
+</html>avant 

@@ -6,7 +6,7 @@
 <section class="hero-section">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-6 slide-up">
+            <div class="col-lg-6">
                 <h1 class="hero-title">L'Art de la Couture Sur Mesure</h1>
                 <p class="hero-subtitle">Découvrez nos créations exclusives et réservez votre rendez-vous pour une expérience personnalisée.</p>
                 <div class="d-flex gap-3">

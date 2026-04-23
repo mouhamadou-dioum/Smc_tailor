@@ -45,4 +45,9 @@ class Client extends Authenticatable
     {
         return $this->hasMany(Notification::class);
     }
+
+    public function mesures()
+    {
+        return $this->hasMany(Mesure::class);
+    }
 }
