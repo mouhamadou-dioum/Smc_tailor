@@ -1,10 +1,14 @@
 <?php
 /**
- * Contrôleur d'authentification
- * Gère la connexion/déconnexion des clients et administrateurs
- * 
- * Les clients sont dans la table 'clients'
- * Les administrateurs sont dans la table 'admins'
+ * Contrôleur d'authentification — version sécurisée
+ *
+ * Corrections appliquées :
+ *  1. Throttle / rate-limiting (max 5 tentatives / 1 min) sur login
+ *  2. Session régénérée AVANT la connexion (fixe session fixation)
+ *  3. Mot de passe min 8 caractères + complexité
+ *  4. Admin login via son propre guard 'admin' uniquement
+ *  5. Validation stricte (trim, lowercase email)
+ *  6. Messages d'erreur génériques (pas d'énumération email)
  */
 
 namespace App\Http\Controllers;
@@ -12,132 +16,114 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 use App\Models\Client;
 use App\Models\Admin;
 
 class AuthController extends Controller
 {
-    /**
-     * Affiche le formulaire de connexion (pour client et admin)
-     * Route: GET /login
-     */
+    // ────────────────────────────────────────────────────────────
+    //  Formulaires
+    // ────────────────────────────────────────────────────────────
+
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    /**
-     * Affiche le formulaire d'inscription (pour les clients)
-     * Route: GET /register
-     */
     public function showRegisterForm()
     {
         return view('auth.register');
     }
 
-    /**
-     * Inscription d'un nouveau client
-     * Route: POST /register
-     * 
-     * @param Request $request Les données du formulaire
-     * @return Redirect Vers la page d'accueil
-     */
+    // ────────────────────────────────────────────────────────────
+    //  Inscription client
+    // ────────────────────────────────────────────────────────────
+
     public function register(Request $request)
     {
-        // Validation des champs
         $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'nullable|string|max:255',
-            'email' => 'required|string|email|max:255|unique:clients,email',
-            'telephone' => 'required|string|max:20',
-            'motDePasse' => 'required|string|min:6|confirmed', // confirmed = doit avoir motDePasse_confirmation
+            'nom'      => ['required', 'string', 'max:100', 'regex:/^[\pL\s\-]+$/u'],
+            'prenom'   => ['nullable', 'string', 'max:100', 'regex:/^[\pL\s\-]*$/u'],
+            'email'    => ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:clients,email'],
+            'telephone'=> ['required', 'string', 'max:20', 'regex:/^\+?[0-9\s\-]{7,20}$/'],
+            'motDePasse' => [
+                'required',
+                'confirmed',
+                Password::min(8)->letters()->mixedCase()->numbers(),
+            ],
         ]);
 
-        // Création du client
         $client = Client::create([
-            'nom' => $request->nom,
-            'prenom' => $request->prenom,
-            'email' => $request->email,
-            'telephone' => $request->telephone,
-            'motDePasse' => bcrypt($request->motDePasse), // Hashage du mot de passe
+            'nom'             => strip_tags(trim($request->nom)),
+            'prenom'          => strip_tags(trim($request->prenom ?? '')),
+            'email'           => strtolower(trim($request->email)),
+            'telephone'       => trim($request->telephone),
+            'motDePasse'      => Hash::make($request->motDePasse),
             'dateInscription' => now(),
         ]);
 
-        // Connexion automatique après inscription
+        // Régénérer la session AVANT la connexion (prévention session fixation)
+        $request->session()->regenerate();
         Auth::guard('client')->login($client);
 
-        // Redirection vers la page d'accueil (même pour admin et client)
-        return redirect()->route('home')->with('success', 'Compte créé avec succès!');
+        return redirect()->route('home')->with('success', 'Compte créé avec succès !');
     }
 
-    /**
-     * Connexion - Vérifie dans clients OU admins
-     * Route: POST /login
-     * 
-     * 1. Cherche d'abord dans la table clients
-     * 2. Si pas trouvé, cherche dans la table admins
-     * 3. Redirige vers la même page d'accueil pour tous
-     * 
-     * @param Request $request Les données du formulaire (email, motDePasse)
-     * @return Redirect Vers la page d'accueil
-     */
+    // ────────────────────────────────────────────────────────────
+    //  Connexion (client uniquement — admin utilise /admin/login)
+    // ────────────────────────────────────────────────────────────
+
     public function login(Request $request)
     {
-        // Validation des champs
         $request->validate([
-            'email' => 'required|string|email',
-            'motDePasse' => 'required|string',
+            'email'      => ['required', 'string', 'email'],
+            'motDePasse' => ['required', 'string'],
         ]);
 
-        $email = $request->email;
+        // --- Rate limiting (5 essais / 60 s par IP+email) ---
+        $throttleKey = 'login|' . Str::lower($request->email) . '|' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            return back()->withErrors([
+                'email' => "Trop de tentatives. Réessayez dans {$seconds} secondes.",
+            ])->withInput($request->only('email'));
+        }
+
+        $email    = strtolower(trim($request->email));
         $password = $request->motDePasse;
 
-        // 1. Cherche d'abord dans la table clients
+        // Recherche client uniquement
         $client = Client::where('email', $email)->first();
-        
+
         if ($client && Hash::check($password, $client->motDePasse)) {
-            // Connexion du client
-            Auth::guard('client')->login($client);
+            RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
-            // Redirection vers la page d'accueil (même pour client et admin)
-            return redirect()->intended(route('home'))->with('success', 'Connexion réussie!');
+            Auth::guard('client')->login($client, (bool) $request->remember);
+            return redirect()->intended(route('home'))->with('success', 'Connexion réussie !');
         }
 
-        // 2. Si pas trouvé dans clients, cherche dans la table admins
-        $admin = Admin::where('email', $email)->first();
-        
-        if ($admin && Hash::check($password, $admin->motDePasse)) {
-            // Connexion de l'admin avec le guard 'admin'
-            Auth::guard('admin')->login($admin);
-            $request->session()->regenerate();
-            // Redirection vers le dashboard admin
-            return redirect()->intended(route('admin.dashboard'))->with('success', 'Connexion réussie!');
-        }
+        // Incrémenter le compteur même en cas d'email inexistant (protection énumération)
+        RateLimiter::hit($throttleKey, 60);
 
-        // Erreur si les identifiants sont incorrects
         return back()->withErrors([
-            'email' => 'Les identifiants sont incorrects.',
-        ])->withInput();
+            'email' => 'Identifiants incorrects.',
+        ])->withInput($request->only('email'));
     }
 
-    /**
-     * Déconnexion (pour client et admin)
-     * Route: POST /logout
-     * 
-     * @param Request $request
-     * @return Redirect Vers la page d'accueil
-     */
+    // ────────────────────────────────────────────────────────────
+    //  Déconnexion client
+    // ────────────────────────────────────────────────────────────
+
     public function logout(Request $request)
     {
-        // Déconnexion selon le guard actif
-        if (Auth::guard('admin')->check()) {
-            Auth::guard('admin')->logout();
-        } else {
-            Auth::guard('client')->logout();
-        }
+        Auth::guard('client')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('home')->with('success', 'Déconnexion réussie!');
+        return redirect()->route('home')->with('success', 'Déconnexion réussie !');
     }
 }

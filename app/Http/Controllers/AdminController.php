@@ -26,19 +26,31 @@ class AdminController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'motDePasse' => 'required',
+            'email'      => ['required', 'email'],
+            'motDePasse' => ['required', 'string'],
         ]);
 
-        $admin = Admin::where('email', $request->email)->first();
+        // Rate limiting : 5 tentatives / 60 s par IP
+        $throttleKey = 'admin-login|' . $request->ip();
+        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($throttleKey);
+            return back()->withErrors([
+                'email' => "Trop de tentatives. Réessayez dans {$seconds} secondes.",
+            ]);
+        }
+
+        $admin = Admin::where('email', strtolower(trim($request->email)))->first();
 
         if ($admin && Hash::check($request->motDePasse, $admin->motDePasse)) {
+            \Illuminate\Support\Facades\RateLimiter::clear($throttleKey);
+            $request->session()->regenerate(); // prévention session fixation
             Auth::guard('admin')->login($admin);
-            $request->session()->regenerate();
             return redirect()->route('admin.dashboard');
         }
 
-        return back()->withErrors(['email' => 'Identifiants incorrects'])->withInput();
+        \Illuminate\Support\Facades\RateLimiter::hit($throttleKey, 60);
+
+        return back()->withErrors(['email' => 'Identifiants incorrects.']);
     }
 
     public function logout()

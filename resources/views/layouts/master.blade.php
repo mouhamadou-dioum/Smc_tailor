@@ -45,6 +45,7 @@
             color: var(--dark);
         }
 
+        /* ── Navbar ── */
         .navbar-custom {
             background-color: var(--white);
             box-shadow: var(--shadow-sm);
@@ -62,6 +63,17 @@
             letter-spacing: 1px;
         }
 
+        .navbar-toggler-custom {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 0.4rem 0.6rem;
+            line-height: 1;
+        }
+
         .nav-link-custom {
             color: var(--gray-700) !important;
             font-weight: 500;
@@ -71,6 +83,7 @@
         }
 
         .nav-link-custom:hover { color: var(--primary) !important; }
+
         .nav-link-custom::after {
             content: '';
             position: absolute;
@@ -99,10 +112,13 @@
         }
 
         .nav-actions {
+            display: flex;
+            align-items: center;
             flex-wrap: wrap;
             row-gap: 0.5rem;
         }
 
+        /* ── Buttons ── */
         .btn-primary-custom {
             background-color: var(--primary);
             border-color: var(--primary);
@@ -152,6 +168,7 @@
             box-shadow: var(--shadow);
         }
 
+        /* ── Cards ── */
         .card-custom {
             background-color: var(--white);
             border: none;
@@ -166,6 +183,7 @@
             box-shadow: var(--shadow-lg);
         }
 
+        /* ── Hero ── */
         .hero-section {
             background: linear-gradient(135deg, var(--dark) 0%, #2d2d4a 100%);
             padding: 6rem 0;
@@ -203,6 +221,7 @@
             margin-bottom: 2rem;
         }
 
+        /* ── Sections ── */
         .section-title {
             font-size: 2.5rem;
             font-weight: 600;
@@ -227,6 +246,7 @@
             margin-bottom: 3rem;
         }
 
+        /* ── Featured card ── */
         .featured-card {
             position: relative;
             overflow: hidden;
@@ -262,6 +282,7 @@
             font-size: 0.875rem;
         }
 
+        /* ── Forms ── */
         .form-custom {
             background-color: var(--white);
             padding: 2.5rem;
@@ -287,6 +308,7 @@
             margin-bottom: 0.5rem;
         }
 
+        /* ── Footer ── */
         .footer-custom {
             background-color: var(--dark);
             color: var(--gray-400);
@@ -329,6 +351,7 @@
             transform: translateY(-3px);
         }
 
+        /* ── Alerts & Badges ── */
         .alert-custom {
             border: none;
             border-radius: 8px;
@@ -336,15 +359,8 @@
             font-weight: 500;
         }
 
-        .alert-success-custom {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .alert-error-custom {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
+        .alert-success-custom { background-color: #d4edda; color: #155724; }
+        .alert-error-custom   { background-color: #f8d7da; color: #721c24; }
 
         .badge-custom {
             padding: 0.35rem 0.75rem;
@@ -353,49 +369,28 @@
             font-size: 0.75rem;
         }
 
-        .badge-waiting {
-            background-color: #fff3cd;
-            color: #856404;
-        }
+        .badge-waiting   { background-color: #fff3cd; color: #856404; }
+        .badge-confirmed { background-color: #d4edda; color: #155724; }
+        .badge-rejected  { background-color: #f8d7da; color: #721c24; }
+        .badge-admin     { background-color: var(--secondary); color: var(--white); }
+        .badge-client    { background-color: var(--primary); color: var(--white); }
 
-        .badge-confirmed {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .badge-rejected {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .badge-admin {
-            background-color: var(--secondary);
-            color: var(--white);
-        }
-
-        .badge-client {
-            background-color: var(--primary);
-            color: var(--white);
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
+        /* ── Animations ── */
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        .slide-up {
-            animation: slideUp 0.6s ease-out;
-        }
+        .slide-up { animation: slideUp 0.6s ease-out; }
 
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
+        /* ── Tables ── */
         .table-custom {
             background-color: var(--white);
             border-radius: 12px;
@@ -403,24 +398,17 @@
             box-shadow: var(--shadow);
         }
 
-        .table-custom thead {
-            background-color: var(--primary);
-            color: var(--white);
-        }
+        .table-custom thead { background-color: var(--primary); color: var(--white); }
 
         .table-custom th, .table-custom td {
             padding: 1rem;
             vertical-align: middle;
         }
 
-        .table-custom tbody tr {
-            transition: all 0.3s ease;
-        }
+        .table-custom tbody tr { transition: all 0.3s ease; }
+        .table-custom tbody tr:hover { background-color: var(--gray-100); }
 
-        .table-custom tbody tr:hover {
-            background-color: var(--gray-100);
-        }
-
+        /* ── Stat cards ── */
         .stat-card {
             background-color: var(--white);
             border-radius: 12px;
@@ -444,68 +432,18 @@
             font-size: 1.5rem;
         }
 
-        .stat-icon-primary {
-            background-color: rgba(201,169,89,0.15);
-            color: var(--primary);
-        }
+        .stat-icon-primary   { background-color: rgba(201,169,89,0.15); color: var(--primary); }
+        .stat-icon-secondary { background-color: rgba(44,62,80,0.15);   color: var(--secondary); }
+        .stat-icon-success   { background-color: rgba(40,167,69,0.15);  color: #28a745; }
+        .stat-icon-warning   { background-color: rgba(255,193,7,0.15);  color: #ffc107; }
 
-        .stat-icon-secondary {
-            background-color: rgba(44,62,80,0.15);
-            color: var(--secondary);
-        }
-
-        .stat-icon-success {
-            background-color: rgba(40,167,69,0.15);
-            color: #28a745;
-        }
-
-        .stat-icon-warning {
-            background-color: rgba(255,193,7,0.15);
-            color: #ffc107;
-        }
-
-        @media (max-width: 768px) {
-            .hero-title { font-size: 2rem; }
-            .section-title { font-size: 1.5rem; }
-            .navbar-custom { padding: 0.75rem 0; }
-            .navbar-brand { font-size: 1.25rem; }
-            .nav-link-custom { padding: 0.5rem 0.75rem !important; font-size: 0.875rem; }
-            .nav-actions { gap: 0.5rem !important; }
-            .btn { padding: 0.5rem 1rem; font-size: 0.875rem; }
-            .card-custom { padding: 1.25rem; }
-            .form-custom { padding: 1.5rem; }
-            .footer-custom { padding: 2rem 0 1rem; }
-            .footer-title { font-size: 1.25rem; }
-            .footer-custom .col-md-4 { margin-bottom: 1.5rem; }
-        }
-
-        @media (max-width: 576px) {
-            .hero-title { font-size: 1.75rem; }
-            .section-title { font-size: 1.25rem; }
-            h2 { font-size: 1.5rem; }
-            h3 { font-size: 1.25rem; }
-            .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.8rem; }
-            .form-control-custom { padding: 0.625rem 0.875rem; font-size: 0.9rem; }
-            .table-custom th, .table-custom td { padding: 0.625rem; font-size: 0.875rem; }
-            .stat-card { padding: 1rem; }
-            .featured-card img { height: 250px !important; }
-        }
-
-        /* Mobile Menu */
-        .navbar-toggler {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--primary);
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
+        /* ════════════════════════════════
+           RESPONSIVE — Tablet (≤991px)
+           Menu hamburger activé
+        ════════════════════════════════ */
         @media (max-width: 991px) {
-            .navbar-toggler {
-                display: block;
-            }
+            .navbar-toggler-custom { display: block; }
+
             .nav-actions {
                 display: none;
                 width: 100%;
@@ -515,21 +453,77 @@
                 border-top: 1px solid var(--gray-200);
                 margin-top: 1rem;
             }
-            .nav-actions.active {
-                display: flex;
-            }
+
+            .nav-actions.active { display: flex; }
+
             .nav-link-custom {
                 padding: 0.75rem 0 !important;
                 width: 100%;
+                border-bottom: 1px solid var(--gray-100);
             }
-            .nav-actions form {
-                width: 100%;
-            }
+
+            .nav-actions form { width: 100%; }
+
             .nav-actions .btn {
                 width: 100%;
                 text-align: center;
                 margin-top: 0.5rem;
             }
+
+            .hero-section { padding: 4rem 0; }
+        }
+
+        /* ════════════════════════════════
+           RESPONSIVE — Mobile (≤768px)
+        ════════════════════════════════ */
+        @media (max-width: 768px) {
+            .hero-title    { font-size: 2rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .section-title { font-size: 1.75rem; }
+            .section-subtitle { font-size: 1rem; margin-bottom: 2rem; }
+
+            .navbar-custom { padding: 0.75rem 0; }
+            .navbar-brand  { font-size: 1.4rem; }
+
+            .form-custom   { padding: 1.5rem; }
+            .footer-custom { padding: 2.5rem 0 1.5rem; }
+            .footer-title  { font-size: 1.25rem; }
+
+            .featured-card img { height: 300px; }
+
+            .card-custom { padding: 1rem; }
+
+            .table-custom th, .table-custom td { padding: 0.75rem; }
+            .stat-card { padding: 1.25rem; }
+        }
+
+        /* ════════════════════════════════
+           RESPONSIVE — Small mobile (≤576px)
+        ════════════════════════════════ */
+        @media (max-width: 576px) {
+            .hero-title    { font-size: 1.6rem; }
+            .hero-subtitle { font-size: 0.95rem; }
+            .section-title { font-size: 1.4rem; }
+
+            h2 { font-size: 1.4rem; }
+            h3 { font-size: 1.2rem; }
+
+            .btn    { padding: 0.5rem 1rem; font-size: 0.875rem; }
+            .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.8rem; }
+
+            .form-custom         { padding: 1.25rem; }
+            .form-control-custom { padding: 0.625rem 0.875rem; font-size: 0.9rem; }
+
+            .featured-card img { height: 220px; }
+
+            .footer-custom .col-md-4 { margin-bottom: 1.5rem; }
+
+            .table-custom th, .table-custom td { padding: 0.625rem; font-size: 0.875rem; }
+
+            .stat-card  { padding: 1rem; }
+            .stat-icon  { width: 48px; height: 48px; font-size: 1.25rem; }
+
+            .hero-section { padding: 3rem 0; }
         }
     </style>
     @yield('styles')
@@ -539,14 +533,20 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <a class="navbar-brand" href="{{ route('home') }}">COUTURE</a>
-                <button class="navbar-toggler" onclick="document.querySelector('.nav-actions').classList.toggle('active')">
+
+                {{-- Bouton hamburger (visible ≤991px) --}}
+                <button class="navbar-toggler-custom"
+                        onclick="document.querySelector('.nav-actions').classList.toggle('active')"
+                        aria-label="Menu">
                     <i class="fas fa-bars"></i>
                 </button>
+
                 <div class="d-flex align-items-center nav-actions">
                     @php
-                        $authUser = \Illuminate\Support\Facades\Auth::guard('admin')->user() ?? \Illuminate\Support\Facades\Auth::guard('client')->user();
-                        $isAdmin  = $authUser instanceof \App\Models\Admin;
-                        $isClient = $authUser instanceof \App\Models\Client;
+                        $authUser    = \Illuminate\Support\Facades\Auth::guard('admin')->user()
+                                    ?? \Illuminate\Support\Facades\Auth::guard('client')->user();
+                        $isAdmin     = $authUser instanceof \App\Models\Admin;
+                        $isClient    = $authUser instanceof \App\Models\Client;
                         $logoutRoute = $isAdmin ? route('admin.logout') : route('logout');
                     @endphp
 
@@ -572,6 +572,7 @@
                                 <i class="fas fa-right-from-bracket me-1"></i> Déconnexion
                             </button>
                         </form>
+
                     @elseif($isClient)
                         <a href="{{ route('home') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-house"></i><span>Accueil</span>
@@ -591,6 +592,7 @@
                                 <i class="fas fa-right-from-bracket me-1"></i> Déconnexion
                             </button>
                         </form>
+
                     @else
                         <a href="{{ route('login') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-right-to-bracket"></i><span>Connexion</span>
@@ -619,11 +621,11 @@
                     <h5 class="text-white mb-3">Liens rapides</h5>
                     <ul class="list-unstyled">
                         <li><a href="{{ route('home') }}" class="footer-link d-block mb-2">Accueil</a></li>
+                        {{-- Lien connexion/inscription uniquement pour les visiteurs non connectés --}}
                         @guest('client')
                         <li><a href="{{ route('login') }}" class="footer-link d-block mb-2">Connexion</a></li>
                         <li><a href="{{ route('register') }}" class="footer-link d-block mb-2">S'inscrire</a></li>
                         @endguest
-                        <li><a href="{{ route('login') }}" class="footer-link d-block mb-2">Connexion</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-4">
@@ -645,7 +647,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
-    
+
     @yield('scripts')
     @yield('extraScripts')
 </body>

@@ -48,6 +48,7 @@
             color: var(--dark);
         }
 
+        /* ── Navbar ── */
         .navbar-custom {
             background-color: var(--white);
             box-shadow: var(--shadow-sm);
@@ -65,6 +66,17 @@
             letter-spacing: 1px;
         }
 
+        .navbar-toggler-custom {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 0.4rem 0.6rem;
+            line-height: 1;
+        }
+
         .nav-link-custom {
             color: var(--gray-700) !important;
             font-weight: 500;
@@ -73,9 +85,7 @@
             position: relative;
         }
 
-        .nav-link-custom:hover {
-            color: var(--primary) !important;
-        }
+        .nav-link-custom:hover { color: var(--primary) !important; }
 
         .nav-link-custom::after {
             content: '';
@@ -89,9 +99,7 @@
             transform: translateX(-50%);
         }
 
-        .nav-link-custom:hover::after {
-            width: 80%;
-        }
+        .nav-link-custom:hover::after { width: 80%; }
 
         .nav-link-with-icon {
             display: inline-flex;
@@ -107,10 +115,13 @@
         }
 
         .nav-actions {
+            display: flex;
+            align-items: center;
             flex-wrap: wrap;
             row-gap: 0.5rem;
         }
 
+        /* ── Buttons ── */
         .btn-primary-custom {
             background-color: var(--primary);
             border-color: var(--primary);
@@ -143,6 +154,7 @@
             color: var(--white);
         }
 
+        /* ── Cards ── */
         .card-custom {
             background-color: var(--white);
             border: none;
@@ -157,6 +169,7 @@
             box-shadow: var(--shadow-lg);
         }
 
+        /* ── Hero ── */
         .hero-section {
             background: linear-gradient(135deg, var(--dark) 0%, #2d2d4a 100%);
             padding: 6rem 0;
@@ -194,6 +207,7 @@
             margin-bottom: 2rem;
         }
 
+        /* ── Sections ── */
         .section-title {
             font-size: 2.5rem;
             font-weight: 600;
@@ -218,6 +232,7 @@
             margin-bottom: 3rem;
         }
 
+        /* ── Featured card ── */
         .featured-card {
             position: relative;
             overflow: hidden;
@@ -232,9 +247,7 @@
             transition: transform 0.5s ease;
         }
 
-        .featured-card:hover img {
-            transform: scale(1.1);
-        }
+        .featured-card:hover img { transform: scale(1.1); }
 
         .featured-overlay {
             position: absolute;
@@ -255,6 +268,7 @@
             font-size: 0.875rem;
         }
 
+        /* ── Forms ── */
         .form-custom {
             background-color: var(--white);
             padding: 2.5rem;
@@ -280,6 +294,7 @@
             margin-bottom: 0.5rem;
         }
 
+        /* ── Footer ── */
         .footer-custom {
             background-color: var(--dark);
             color: var(--gray-400);
@@ -322,6 +337,7 @@
             transform: translateY(-3px);
         }
 
+        /* ── Alerts & Badges ── */
         .alert-custom {
             border: none;
             border-radius: 8px;
@@ -329,15 +345,8 @@
             font-weight: 500;
         }
 
-        .alert-success-custom {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .alert-error-custom {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
+        .alert-success-custom { background-color: #d4edda; color: #155724; }
+        .alert-error-custom   { background-color: #f8d7da; color: #721c24; }
 
         .badge-custom {
             padding: 0.35rem 0.75rem;
@@ -346,42 +355,104 @@
             font-size: 0.75rem;
         }
 
-        .badge-waiting {
-            background-color: #fff3cd;
-            color: #856404;
-        }
+        .badge-waiting   { background-color: #fff3cd; color: #856404; }
+        .badge-confirmed { background-color: #d4edda; color: #155724; }
+        .badge-rejected  { background-color: #f8d7da; color: #721c24; }
 
-        .badge-confirmed {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .badge-rejected {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
+        /* ── Animations ── */
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        .slide-up {
-            animation: slideUp 0.6s ease-out;
-        }
+        .slide-up { animation: slideUp 0.6s ease-out; }
 
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-@media (max-width: 768px) {
-            .hero-title { font-size: 2.5rem; }
-            .section-title { font-size: 2rem; }
+        /* ════════════════════════════════
+           RESPONSIVE — Tablet (≤991px)
+           Menu hamburger activé
+        ════════════════════════════════ */
+        @media (max-width: 991px) {
+            .navbar-toggler-custom { display: block; }
+
+            .nav-actions {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                padding-top: 1rem;
+                border-top: 1px solid var(--gray-200);
+                margin-top: 1rem;
+            }
+
+            .nav-actions.active { display: flex; }
+
+            .nav-link-custom {
+                padding: 0.75rem 0 !important;
+                width: 100%;
+                border-bottom: 1px solid var(--gray-100);
+            }
+
+            .nav-actions form { width: 100%; }
+
+            .nav-actions .btn {
+                width: 100%;
+                text-align: center;
+                margin-top: 0.5rem;
+            }
+
+            .hero-section { padding: 4rem 0; }
+        }
+
+        /* ════════════════════════════════
+           RESPONSIVE — Mobile (≤768px)
+        ════════════════════════════════ */
+        @media (max-width: 768px) {
+            .hero-title    { font-size: 2rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .section-title { font-size: 1.75rem; }
+            .section-subtitle { font-size: 1rem; margin-bottom: 2rem; }
+
+            .navbar-custom  { padding: 0.75rem 0; }
+            .navbar-brand   { font-size: 1.4rem; }
+
+            .form-custom    { padding: 1.5rem; }
+            .footer-custom  { padding: 2.5rem 0 1.5rem; }
+            .footer-title   { font-size: 1.25rem; }
+
+            .featured-card img { height: 300px; }
+
+            .card-custom { padding: 1rem; }
+        }
+
+        /* ════════════════════════════════
+           RESPONSIVE — Small mobile (≤576px)
+        ════════════════════════════════ */
+        @media (max-width: 576px) {
+            .hero-title    { font-size: 1.6rem; }
+            .hero-subtitle { font-size: 0.95rem; }
+            .section-title { font-size: 1.4rem; }
+
+            h2 { font-size: 1.4rem; }
+            h3 { font-size: 1.2rem; }
+
+            .btn      { padding: 0.5rem 1rem; font-size: 0.875rem; }
+            .btn-sm   { padding: 0.375rem 0.75rem; font-size: 0.8rem; }
+
+            .form-custom         { padding: 1.25rem; }
+            .form-control-custom { padding: 0.625rem 0.875rem; font-size: 0.9rem; }
+
+            .featured-card img { height: 220px; }
+
+            .footer-custom .col-md-4 { margin-bottom: 1.5rem; }
+
+            .hero-section { padding: 3rem 0; }
         }
     </style>
     @yield('styles')
@@ -391,15 +462,22 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <a class="navbar-brand" href="{{ route('home') }}">COUTURE</a>
+
+                {{-- Bouton hamburger (visible ≤991px) --}}
+                <button class="navbar-toggler-custom"
+                        onclick="document.querySelector('.nav-actions').classList.toggle('active')"
+                        aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+
                 <div class="d-flex align-items-center nav-actions">
                     @php
-                        // Vérification plus stricte: utilisateur connecté ET instance de Admin
-                        $user = Auth::guard('admin')->user() ?? Auth::guard('client')->user();
-                        $isAdmin = $user instanceof \App\Models\Admin;
-                        $isClient = $user instanceof \App\Models\Client;
+                        $user        = Auth::guard('admin')->user() ?? Auth::guard('client')->user();
+                        $isAdmin     = $user instanceof \App\Models\Admin;
+                        $isClient    = $user instanceof \App\Models\Client;
                         $logoutRoute = $isAdmin ? route('admin.logout') : route('logout');
                     @endphp
-                    
+
                     @if($isAdmin)
                         <a href="{{ route('admin.dashboard') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-chart-line"></i><span>Tableau de bord</span>
@@ -422,6 +500,7 @@
                                 <i class="fas fa-right-from-bracket me-1"></i> Déconnexion
                             </button>
                         </form>
+
                     @elseif($isClient)
                         <a href="{{ route('home') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-house"></i><span>Accueil</span>
@@ -441,8 +520,8 @@
                                 <i class="fas fa-right-from-bracket me-1"></i> Déconnexion
                             </button>
                         </form>
+
                     @else
-                        {{-- Visiteur: pas de menu Admin, seulement login/inscription --}}
                         <a href="{{ route('login') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-right-to-bracket"></i><span>Connexion</span>
                         </a>
@@ -497,4 +576,4 @@
     <script src="{{ asset('js/app.js') }}"></script>
     @yield('scripts')
 </body>
-</html>avant 
+</html>
