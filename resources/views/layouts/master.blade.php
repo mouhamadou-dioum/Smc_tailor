@@ -63,7 +63,7 @@
             text-decoration: none;
         }
 
-        .navbar-toggler-custom {
+.navbar-toggler-custom {
             display: none;
             background: none;
             border: none;
@@ -73,6 +73,83 @@
             padding: 0.4rem 0.6rem;
             line-height: 1;
             z-index: 1001;
+        }
+
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* ════════════════════════════════
+            RESPONSIVE — Tablet (≤991px)
+            Menu hamburger activé
+        ════════════════════════════════ */
+        @media (max-width: 991px) {
+            .navbar-toggler-custom { display: block; }
+
+            .navbar-wrapper {
+                position: relative;
+            }
+
+            .nav-actions {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                width: 100%;
+                max-height: calc(100vh - 70px);
+                overflow-y: auto;
+                flex-direction: column;
+                align-items: stretch;
+                background: var(--white);
+                border-top: 2px solid var(--primary);
+                border-radius: 0 0 8px 8px;
+                box-shadow: var(--shadow-lg);
+                padding: 0;
+                z-index: 1000;
+            }
+
+            .nav-actions.active { 
+                display: flex; 
+            }
+
+            .nav-link-custom {
+                padding: 1rem 1.25rem !important;
+                width: 100%;
+                border-bottom: 1px solid var(--gray-100);
+                font-size: 1.1rem;
+                text-align: left;
+            }
+
+            .nav-link-custom::after { display: none; }
+
+            .nav-link-custom:last-child { border-bottom: none; }
+
+            .nav-actions form {
+                width: 100%;
+                padding: 1rem 1.25rem;
+            }
+
+            .nav-actions .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .hero-section { padding: 4rem 0; }
         }
 
         .nav-close-btn {
@@ -505,6 +582,7 @@
     @yield('styles')
 </head>
 <body>
+    <div class="menu-overlay" id="menuOverlay"></div>
     <nav class="navbar-custom">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center navbar-wrapper">
@@ -516,9 +594,6 @@
                 </button>
 
                 <div class="d-flex align-items-center nav-actions" id="navMenu">
-                    <button class="nav-close-btn" id="navCloseBtn" aria-label="Fermer le menu">
-                        <i class="fas fa-times"></i>
-                    </button>
                     @php
                         $user        = Auth::guard('admin')->user() ?? Auth::guard('client')->user();
                         $isAdmin     = $user instanceof \App\Models\Admin;
@@ -527,19 +602,19 @@
                     @endphp
 
                     @if($isAdmin)
-                        <a href="{{ route('admin.dashboard') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="{{ route('admin.dashboard') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-chart-line"></i><span>Tableau de bord</span>
                         </a>
-                        <a href="{{ route('admin.vetements.index') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="{{ route('admin.vetements.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-shirt"></i><span>Vêtements</span>
                         </a>
-                        <a href="{{ route('admin.categories.index') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="{{ route('admin.categories.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-tags"></i><span>Catégories</span>
                         </a>
-                        <a href="{{ route('admin.rendezvous.index') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="{{ route('admin.rendezvous.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-calendar-alt"></i><span>Rendez-vous</span>
                         </a>
-                        <a href="{{ route('admin.clients.index') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="{{ route('admin.clients.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-users"></i><span>Clients</span>
                         </a>
                         <form action="{{ $logoutRoute }}" method="POST" class="d-inline">
@@ -550,16 +625,16 @@
                         </form>
 
                     @elseif($isClient)
-                        <a href="{{ route('home') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="{{ route('home') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-house"></i><span>Accueil</span>
                         </a>
-                        <a href="{{ route('vetements.index') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="{{ route('vetements.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-shirt"></i><span>Collection</span>
                         </a>
-                        <a href="{{ route('rendezvous.create') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="{{ route('rendezvous.create') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-calendar-plus"></i><span>Réserver</span>
                         </a>
-                        <a href="{{ route('rendezvous.index') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="{{ route('rendezvous.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-calendar-check"></i><span>Mes rendez-vous</span>
                         </a>
                         <form action="{{ $logoutRoute }}" method="POST" class="d-inline">
@@ -570,7 +645,7 @@
                         </form>
 
                     @else
-                        <a href="{{ route('login') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="{{ route('login') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-right-to-bracket"></i><span>Connexion</span>
                         </a>
                         <a href="{{ route('register') }}" class="btn btn-primary-custom btn-sm">
@@ -629,18 +704,18 @@
         var toggler = document.getElementById('navToggler');
         var menu    = document.getElementById('navMenu');
         var icon    = document.getElementById('navIcon');
-        var closeBtn = document.getElementById('navCloseBtn');
+        var overlay = document.getElementById('menuOverlay');
 
         function closeMenu() {
             menu.classList.remove('active');
+            if (overlay) overlay.classList.remove('active');
             if (icon) icon.className = 'fas fa-bars';
-            document.body.style.overflow = '';
         }
 
         function openMenu() {
             menu.classList.add('active');
+            if (overlay) overlay.classList.add('active');
             if (icon) icon.className = 'fas fa-times';
-            document.body.style.overflow = 'hidden';
         }
 
         if (!toggler || !menu) return;
@@ -654,22 +729,16 @@
             }
         });
 
-        if (closeBtn) {
-            closeBtn.addEventListener('click', function () {
+        if (overlay) {
+            overlay.addEventListener('click', function () {
                 closeMenu();
             });
         }
 
-        menu.querySelectorAll('a, button[type="submit"]').forEach(function (link) {
+        menu.querySelectorAll('a').forEach(function (link) {
             link.addEventListener('click', function () {
                 closeMenu();
             });
-        });
-
-        document.addEventListener('click', function (e) {
-            if (!menu.contains(e.target) && !toggler.contains(e.target)) {
-                closeMenu();
-            }
         });
 
         document.addEventListener('keydown', function (e) {
