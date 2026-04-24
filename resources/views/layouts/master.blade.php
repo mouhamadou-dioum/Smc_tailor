@@ -541,13 +541,21 @@
                     <i class="fas fa-bars"></i>
                 </button>
 
-                <div class="d-flex align-items-center nav-actions">
+<div class="d-flex align-items-center nav-actions">
                     @php
-                        $authUser    = \Illuminate\Support\Facades\Auth::guard('admin')->user()
-                                    ?? \Illuminate\Support\Facades\Auth::guard('client')->user();
-                        $isAdmin     = $authUser instanceof \App\Models\Admin;
-                        $isClient    = $authUser instanceof \App\Models\Client;
-$logoutRoute = $isAdmin ? route('admin.logout') : ($isClient ? route('logout') : '#');                    @endphp
+                        $authUser = null;
+                        try {
+                            $authUser = \Illuminate\Support\Facades\Auth::guard('admin')->user();
+                            if (!$authUser) {
+                                $authUser = \Illuminate\Support\Facades\Auth::guard('client')->user();
+                            }
+                        } catch (\Exception $e) {
+                            $authUser = null;
+                        }
+                        $isAdmin = $authUser instanceof \App\Models\Admin;
+                        $isClient = $authUser instanceof \App\Models\Client;
+                        $logoutRoute = $isAdmin ? route('admin.logout') : ($isClient ? route('logout') : '#');
+                    @endphp
 
                     @if($isAdmin)
                         <a href="{{ route('admin.dashboard') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
