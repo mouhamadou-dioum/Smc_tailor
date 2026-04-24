@@ -30,6 +30,8 @@ class AdminController extends Controller
             'motDePasse' => ['required', 'string'],
         ]);
 
+        $email = strtolower(trim($request->email));
+
         // Rate limiting : 5 tentatives / 60 s par IP
         $throttleKey = 'admin-login|' . $request->ip();
         if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($throttleKey, 5)) {
@@ -39,20 +41,11 @@ class AdminController extends Controller
             ]);
         }
 
-        // Empêcher les clients de se connecter via /admin/login
-        $email = strtolower(trim($request->email));
-        $clientExists = Client::where('email', $email)->exists();
-        
-        if ($clientExists) {
-            \Illuminate\Support\Facades\RateLimiter::hit($throttleKey, 60);
-            return back()->withErrors(['email' => 'Accès réservé aux administrateurs.']);
-        }
-
         $admin = Admin::where('email', $email)->first();
 
         if ($admin && Hash::check($request->motDePasse, $admin->motDePasse)) {
             \Illuminate\Support\Facades\RateLimiter::clear($throttleKey);
-            $request->session()->regenerate(); // prévention session fixation
+            $request->session()->regenerate();
             Auth::guard('admin')->login($admin);
             return redirect()->route('admin.dashboard');
         }
