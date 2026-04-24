@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Couture sur mesure - Réservez vos rendez-vous pour des vêtements personnalisés">
     <title>@yield('title', 'Couture App')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,6 +60,7 @@
             font-weight: 700;
             color: var(--primary) !important;
             letter-spacing: 1px;
+            text-decoration: none;
         }
 
         .navbar-toggler-custom {
@@ -72,6 +72,7 @@
             cursor: pointer;
             padding: 0.4rem 0.6rem;
             line-height: 1;
+            z-index: 1001;
         }
 
         .nav-link-custom {
@@ -80,6 +81,7 @@
             padding: 0.5rem 1rem !important;
             transition: all 0.3s ease;
             position: relative;
+            text-decoration: none;
         }
 
         .nav-link-custom:hover { color: var(--primary) !important; }
@@ -149,23 +151,6 @@
         .btn-outline-custom:hover {
             background-color: var(--primary);
             color: var(--white);
-        }
-
-        .btn-admin {
-            background-color: var(--secondary);
-            border-color: var(--secondary);
-            color: var(--white);
-            padding: 0.625rem 1.5rem;
-            font-weight: 600;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-admin:hover {
-            background-color: var(--dark);
-            border-color: var(--dark);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
         }
 
         /* ── Cards ── */
@@ -343,6 +328,7 @@
             color: var(--gray-300);
             margin-right: 0.5rem;
             transition: all 0.3s ease;
+            text-decoration: none;
         }
 
         .social-icon:hover {
@@ -372,8 +358,6 @@
         .badge-waiting   { background-color: #fff3cd; color: #856404; }
         .badge-confirmed { background-color: #d4edda; color: #155724; }
         .badge-rejected  { background-color: #f8d7da; color: #721c24; }
-        .badge-admin     { background-color: var(--secondary); color: var(--white); }
-        .badge-client    { background-color: var(--primary); color: var(--white); }
 
         /* ── Animations ── */
         .fade-in { animation: fadeIn 0.5s ease-in-out; }
@@ -390,53 +374,6 @@
             to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* ── Tables ── */
-        .table-custom {
-            background-color: var(--white);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-
-        .table-custom thead { background-color: var(--primary); color: var(--white); }
-
-        .table-custom th, .table-custom td {
-            padding: 1rem;
-            vertical-align: middle;
-        }
-
-        .table-custom tbody tr { transition: all 0.3s ease; }
-        .table-custom tbody tr:hover { background-color: var(--gray-100); }
-
-        /* ── Stat cards ── */
-        .stat-card {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-
-        .stat-icon-primary   { background-color: rgba(201,169,89,0.15); color: var(--primary); }
-        .stat-icon-secondary { background-color: rgba(44,62,80,0.15);   color: var(--secondary); }
-        .stat-icon-success   { background-color: rgba(40,167,69,0.15);  color: #28a745; }
-        .stat-icon-warning   { background-color: rgba(255,193,7,0.15);  color: #ffc107; }
-
         /* ════════════════════════════════
            RESPONSIVE — Tablet (≤991px)
            Menu hamburger activé
@@ -444,10 +381,15 @@
         @media (max-width: 991px) {
             .navbar-toggler-custom { display: block; }
 
+            /* Le wrapper de la navbar doit être relative */
+            .navbar-wrapper {
+                position: relative;
+            }
+
             .nav-actions {
                 display: none;
-                position: absolute;
-                top: calc(100% + 1rem);
+                position: absolute;   /* overlay → ne pousse PAS le contenu */
+                top: 100%;
                 left: 0;
                 right: 0;
                 width: 100%;
@@ -470,9 +412,15 @@
                 font-size: 1rem;
             }
 
+            /* Désactive l'underline animé sur mobile */
+            .nav-link-custom::after { display: none; }
+
             .nav-link-custom:last-child { border-bottom: none; }
 
-            .nav-actions form { width: 100%; padding: 0.75rem 1.25rem; }
+            .nav-actions form {
+                width: 100%;
+                padding: 0.75rem 1.25rem;
+            }
 
             .nav-actions .btn {
                 width: 100%;
@@ -491,19 +439,16 @@
             .section-title { font-size: 1.75rem; }
             .section-subtitle { font-size: 1rem; margin-bottom: 2rem; }
 
-            .navbar-custom { padding: 0.75rem 0; }
-            .navbar-brand  { font-size: 1.4rem; }
+            .navbar-custom  { padding: 0.75rem 0; }
+            .navbar-brand   { font-size: 1.4rem; }
 
-            .form-custom   { padding: 1.5rem; }
-            .footer-custom { padding: 2.5rem 0 1.5rem; }
-            .footer-title  { font-size: 1.25rem; }
+            .form-custom    { padding: 1.5rem; }
+            .footer-custom  { padding: 2.5rem 0 1.5rem; }
+            .footer-title   { font-size: 1.25rem; }
 
             .featured-card img { height: 300px; }
 
             .card-custom { padding: 1rem; }
-
-            .table-custom th, .table-custom td { padding: 0.75rem; }
-            .stat-card { padding: 1.25rem; }
         }
 
         /* ════════════════════════════════
@@ -517,8 +462,8 @@
             h2 { font-size: 1.4rem; }
             h3 { font-size: 1.2rem; }
 
-            .btn    { padding: 0.5rem 1rem; font-size: 0.875rem; }
-            .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.8rem; }
+            .btn      { padding: 0.5rem 1rem; font-size: 0.875rem; }
+            .btn-sm   { padding: 0.375rem 0.75rem; font-size: 0.8rem; }
 
             .form-custom         { padding: 1.25rem; }
             .form-control-custom { padding: 0.625rem 0.875rem; font-size: 0.9rem; }
@@ -526,11 +471,6 @@
             .featured-card img { height: 220px; }
 
             .footer-custom .col-md-4 { margin-bottom: 1.5rem; }
-
-            .table-custom th, .table-custom td { padding: 0.625rem; font-size: 0.875rem; }
-
-            .stat-card  { padding: 1rem; }
-            .stat-icon  { width: 48px; height: 48px; font-size: 1.25rem; }
 
             .hero-section { padding: 3rem 0; }
         }
@@ -540,30 +480,20 @@
 <body>
     <nav class="navbar-custom">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2" style="position:relative;">
+            <div class="d-flex justify-content-between align-items-center navbar-wrapper">
                 <a class="navbar-brand" href="{{ route('home') }}">COUTURE</a>
 
                 {{-- Bouton hamburger (visible ≤991px) --}}
-                <button class="navbar-toggler-custom"
-                        onclick="document.querySelector('.nav-actions').classList.toggle('active')"
-                        aria-label="Menu">
-                    <i class="fas fa-bars"></i>
+                <button class="navbar-toggler-custom" id="navToggler" aria-label="Menu">
+                    <i class="fas fa-bars" id="navIcon"></i>
                 </button>
 
-<div class="d-flex align-items-center nav-actions">
+                <div class="d-flex align-items-center nav-actions" id="navMenu">
                     @php
-                        $authUser = null;
-                        try {
-                            $authUser = \Illuminate\Support\Facades\Auth::guard('admin')->user();
-                            if (!$authUser) {
-                                $authUser = \Illuminate\Support\Facades\Auth::guard('client')->user();
-                            }
-                        } catch (\Exception $e) {
-                            $authUser = null;
-                        }
-                        $isAdmin = $authUser instanceof \App\Models\Admin;
-                        $isClient = $authUser instanceof \App\Models\Client;
-                        $logoutRoute = $isAdmin ? route('admin.logout') : ($isClient ? route('client.logout') : '#');
+                        $user        = Auth::guard('admin')->user() ?? Auth::guard('client')->user();
+                        $isAdmin     = $user instanceof \App\Models\Admin;
+                        $isClient    = $user instanceof \App\Models\Client;
+                        $logoutRoute = $isAdmin ? route('admin.logout') : ($isClient ? route('logout') : '#');
                     @endphp
 
                     @if($isAdmin)
@@ -637,8 +567,7 @@
                     <h5 class="text-white mb-3">Liens rapides</h5>
                     <ul class="list-unstyled">
                         <li><a href="{{ route('home') }}" class="footer-link d-block mb-2">Accueil</a></li>
-                        {{-- Lien connexion/inscription uniquement pour les visiteurs non connectés --}}
-                        @guest('client')
+                        @guest
                         <li><a href="{{ route('login') }}" class="footer-link d-block mb-2">Connexion</a></li>
                         <li><a href="{{ route('register') }}" class="footer-link d-block mb-2">S'inscrire</a></li>
                         @endguest
@@ -664,7 +593,40 @@
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 
+    {{-- ── Menu hamburger : toggle + fermeture automatique ── --}}
+    <script>
+    (function () {
+        var toggler = document.getElementById('navToggler');
+        var menu    = document.getElementById('navMenu');
+        var icon    = document.getElementById('navIcon');
+
+        if (!toggler || !menu) return;
+
+        /* Ouvre / ferme au clic du bouton */
+        toggler.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var isOpen = menu.classList.toggle('active');
+            icon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
+        });
+
+        /* Ferme quand on clique sur un lien du menu */
+        menu.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                menu.classList.remove('active');
+                icon.className = 'fas fa-bars';
+            });
+        });
+
+        /* Ferme quand on clique en dehors du menu */
+        document.addEventListener('click', function (e) {
+            if (!menu.contains(e.target) && !toggler.contains(e.target)) {
+                menu.classList.remove('active');
+                icon.className = 'fas fa-bars';
+            }
+        });
+    })();
+    </script>
+
     @yield('scripts')
-    @yield('extraScripts')
 </body>
 </html>
