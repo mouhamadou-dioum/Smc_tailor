@@ -446,28 +446,37 @@
 
             .nav-actions {
                 display: none;
+                position: absolute;
+                top: calc(100% + 1rem);
+                left: 0;
+                right: 0;
                 width: 100%;
                 flex-direction: column;
                 align-items: flex-start;
-                padding-top: 1rem;
-                border-top: 1px solid var(--gray-200);
-                margin-top: 1rem;
+                background: var(--white);
+                border-top: 2px solid var(--primary);
+                border-radius: 0 0 8px 8px;
+                box-shadow: var(--shadow-lg);
+                padding: 0.5rem 0;
+                z-index: 999;
             }
 
             .nav-actions.active { display: flex; }
 
             .nav-link-custom {
-                padding: 0.75rem 0 !important;
+                padding: 0.85rem 1.25rem !important;
                 width: 100%;
                 border-bottom: 1px solid var(--gray-100);
+                font-size: 1rem;
             }
 
-            .nav-actions form { width: 100%; }
+            .nav-link-custom:last-child { border-bottom: none; }
+
+            .nav-actions form { width: 100%; padding: 0.75rem 1.25rem; }
 
             .nav-actions .btn {
                 width: 100%;
                 text-align: center;
-                margin-top: 0.5rem;
             }
 
             .hero-section { padding: 4rem 0; }
@@ -531,7 +540,7 @@
 <body>
     <nav class="navbar-custom">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2" style="position:relative;">
                 <a class="navbar-brand" href="{{ route('home') }}">COUTURE</a>
 
                 {{-- Bouton hamburger (visible ≤991px) --}}

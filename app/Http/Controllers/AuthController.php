@@ -60,10 +60,8 @@ class AuthController extends Controller
             'dateInscription' => now(),
         ]);
 
-        $request->session()->regenerate();
-        Auth::guard('client')->login($client);
-
-        return redirect()->route('home')->with('success', 'Compte créé avec succès !');
+        // Ne pas connecter automatiquement — rediriger vers la page de connexion
+        return redirect()->route('login')->with('success', 'Compte créé avec succès ! Connectez-vous.');
     }
 
     // ────────────────────────────────────────────────────────────

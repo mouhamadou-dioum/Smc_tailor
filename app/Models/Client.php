@@ -24,9 +24,17 @@ class Client extends Authenticatable
         'remember_token',
     ];
 
-    public function getAuthPassword()
+    public function getAuthPassword(): string
     {
         return $this->motDePasse;
+    }
+
+    /**
+     * Laravel 11+ utilise getAuthPasswordName() pour identifier le champ mot de passe.
+     */
+    public function getAuthPasswordName(): string
+    {
+        return 'motDePasse';
     }
 
     protected function casts(): array

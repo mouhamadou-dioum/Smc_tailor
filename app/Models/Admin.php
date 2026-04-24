@@ -26,9 +26,18 @@ class Admin extends Authenticatable
         return [];
     }
 
-    public function getAuthPassword()
+    public function getAuthPassword(): string
     {
         return $this->motDePasse;
+    }
+
+    /**
+     * Laravel 11+ utilise getAuthPasswordName() pour savoir quel champ vérifier.
+     * Sans ceci, Auth::attempt() cherche le champ "password" qui n'existe pas.
+     */
+    public function getAuthPasswordName(): string
+    {
+        return 'motDePasse';
     }
 
     public function vetements()
