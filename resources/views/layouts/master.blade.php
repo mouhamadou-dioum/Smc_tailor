@@ -44,7 +44,7 @@
             color: var(--dark);
         }
 
-        /* ── Navbar ── */
+        /* Navbar */
         .navbar-custom {
             background-color: var(--white);
             box-shadow: var(--shadow-sm);
@@ -63,7 +63,7 @@
             text-decoration: none;
         }
 
-.navbar-toggler-custom {
+        .navbar-toggler-custom {
             display: none;
             background: none;
             border: none;
@@ -72,103 +72,6 @@
             cursor: pointer;
             padding: 0.4rem 0.6rem;
             line-height: 1;
-            z-index: 1001;
-        }
-
-        .menu-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .menu-overlay.active {
-            display: block;
-            opacity: 1;
-        }
-
-        /* ════════════════════════════════
-            RESPONSIVE — Tablet (≤991px)
-            Menu hamburger activé
-        ════════════════════════════════ */
-        @media (max-width: 991px) {
-            .navbar-toggler-custom { display: block; }
-
-            .navbar-wrapper {
-                position: relative;
-            }
-
-            .nav-actions {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                width: 100%;
-                max-height: calc(100vh - 70px);
-                overflow-y: auto;
-                flex-direction: column;
-                align-items: stretch;
-                background: var(--white);
-                border-top: 2px solid var(--primary);
-                border-radius: 0 0 8px 8px;
-                box-shadow: var(--shadow-lg);
-                padding: 0;
-                z-index: 1000;
-            }
-
-            .nav-actions.active { 
-                display: flex; 
-            }
-
-            .nav-link-custom {
-                padding: 1rem 1.25rem !important;
-                width: 100%;
-                border-bottom: 1px solid var(--gray-100);
-                font-size: 1.1rem;
-                text-align: left;
-            }
-
-            .nav-link-custom::after { display: none; }
-
-            .nav-link-custom:last-child { border-bottom: none; }
-
-            .nav-actions form {
-                width: 100%;
-                padding: 1rem 1.25rem;
-            }
-
-            .nav-actions .btn {
-                width: 100%;
-                text-align: center;
-            }
-
-            .hero-section { padding: 4rem 0; }
-        }
-
-        .nav-close-btn {
-            display: none;
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.75rem;
-            color: var(--gray-700);
-            cursor: pointer;
-            padding: 0.5rem;
-            line-height: 1;
-            z-index: 1002;
-        }
-
-        @media (max-width: 991px) {
-            .nav-close-btn { display: block; }
         }
 
         .nav-link-custom {
@@ -216,7 +119,7 @@
             row-gap: 0.5rem;
         }
 
-        /* ── Buttons ── */
+        /* Buttons */
         .btn-primary-custom {
             background-color: var(--primary);
             border-color: var(--primary);
@@ -249,7 +152,7 @@
             color: var(--white);
         }
 
-        /* ── Cards ── */
+        /* Cards */
         .card-custom {
             background-color: var(--white);
             border: none;
@@ -264,7 +167,7 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* ── Hero ── */
+        /* Hero */
         .hero-section {
             background: linear-gradient(135deg, var(--dark) 0%, #2d2d4a 100%);
             padding: 6rem 0;
@@ -302,7 +205,7 @@
             margin-bottom: 2rem;
         }
 
-        /* ── Sections ── */
+        /* Sections */
         .section-title {
             font-size: 2.5rem;
             font-weight: 600;
@@ -327,7 +230,7 @@
             margin-bottom: 3rem;
         }
 
-        /* ── Featured card ── */
+        /* Featured card */
         .featured-card {
             position: relative;
             overflow: hidden;
@@ -363,7 +266,7 @@
             font-size: 0.875rem;
         }
 
-        /* ── Forms ── */
+        /* Forms */
         .form-custom {
             background-color: var(--white);
             padding: 2.5rem;
@@ -389,7 +292,7 @@
             margin-bottom: 0.5rem;
         }
 
-        /* ── Footer ── */
+        /* Footer */
         .footer-custom {
             background-color: var(--dark);
             color: var(--gray-400);
@@ -433,7 +336,7 @@
             transform: translateY(-3px);
         }
 
-        /* ── Alerts & Badges ── */
+        /* Alerts & Badges */
         .alert-custom {
             border: none;
             border-radius: 8px;
@@ -455,7 +358,7 @@
         .badge-confirmed { background-color: #d4edda; color: #155724; }
         .badge-rejected  { background-color: #f8d7da; color: #721c24; }
 
-        /* ── Animations ── */
+        /* Animations */
         .fade-in { animation: fadeIn 0.5s ease-in-out; }
 
         @keyframes fadeIn {
@@ -470,73 +373,62 @@
             to   { opacity: 1; transform: translateY(0); }
         }
 
-/* ════════════════════════════════
-            RESPONSIVE — Tablet (≤991px)
-            Menu hamburger activé
-        ════════════════════════════════ */
+        /* Responsive - Tablet (≤991px) */
         @media (max-width: 991px) {
-            .navbar-toggler-custom { 
-                display: block; 
-                position: relative;
-                z-index: 1001;
-            }
+            .navbar-toggler-custom { display: block; }
 
-            /* Le wrapper de la navbar doit être relative */
             .navbar-wrapper {
                 position: relative;
             }
 
             .nav-actions {
                 display: none;
-                position: fixed;
-                top: 0;
+                position: absolute;
+                top: 100%;
                 left: 0;
                 right: 0;
                 width: 100%;
-                height: 100vh;
-                flex-direction: column;
-                align-items: flex-start;
-                background: rgba(255,255,255,0.98);
-                border: none;
-                border-radius: 0;
-                box-shadow: none;
-                padding: 70px 1.5rem 1.5rem;
-                z-index: 1000;
+                max-height: 70vh;
                 overflow-y: auto;
+                flex-direction: column;
+                align-items: stretch;
+                background: var(--white);
+                border-top: 2px solid var(--primary);
+                border-radius: 0 0 8px 8px;
+                box-shadow: var(--shadow-lg);
+                padding: 0;
             }
 
-            .nav-actions.active { display: flex; }
+            .nav-actions.active { 
+                display: flex; 
+            }
 
             .nav-link-custom {
-                padding: 1rem 0.5rem !important;
+                padding: 1rem 1.25rem !important;
                 width: 100%;
-                border-bottom: 1px solid var(--gray-200);
-                font-size: 1.25rem;
+                border-bottom: 1px solid var(--gray-100);
+                font-size: 1.1rem;
+                text-align: left;
             }
 
-            /* Désactive l'underline animé sur mobile */
             .nav-link-custom::after { display: none; }
 
             .nav-link-custom:last-child { border-bottom: none; }
 
             .nav-actions form {
                 width: 100%;
-                padding: 1rem 0.5rem;
+                padding: 1rem 1.25rem;
             }
 
             .nav-actions .btn {
                 width: 100%;
                 text-align: center;
-                padding: 1rem;
-                font-size: 1.1rem;
             }
 
             .hero-section { padding: 4rem 0; }
         }
 
-        /* ════════════════════════════════
-           RESPONSIVE — Mobile (≤768px)
-        ════════════════════════════════ */
+        /* Responsive - Mobile (≤768px) */
         @media (max-width: 768px) {
             .hero-title    { font-size: 2rem; }
             .hero-subtitle { font-size: 1rem; }
@@ -555,9 +447,7 @@
             .card-custom { padding: 1rem; }
         }
 
-        /* ════════════════════════════════
-           RESPONSIVE — Small mobile (≤576px)
-        ════════════════════════════════ */
+        /* Responsive - Small mobile (≤576px) */
         @media (max-width: 576px) {
             .hero-title    { font-size: 1.6rem; }
             .hero-subtitle { font-size: 0.95rem; }
@@ -582,13 +472,11 @@
     @yield('styles')
 </head>
 <body>
-    <div class="menu-overlay" id="menuOverlay"></div>
     <nav class="navbar-custom">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center navbar-wrapper">
                 <a class="navbar-brand" href="{{ route('home') }}">COUTURE</a>
 
-                {{-- Bouton hamburger (visible ≤991px) --}}
                 <button class="navbar-toggler-custom" id="navToggler" aria-label="Menu">
                     <i class="fas fa-bars" id="navIcon"></i>
                 </button>
@@ -698,23 +586,19 @@
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 
-    {{-- ── Menu hamburger : toggle + fermeture automatique ── --}}
     <script>
     (function () {
         var toggler = document.getElementById('navToggler');
         var menu    = document.getElementById('navMenu');
-        var icon    = document.getElementById('navIcon');
-        var overlay = document.getElementById('menuOverlay');
+        var icon   = document.getElementById('navIcon');
 
         function closeMenu() {
             menu.classList.remove('active');
-            if (overlay) overlay.classList.remove('active');
             if (icon) icon.className = 'fas fa-bars';
         }
 
         function openMenu() {
             menu.classList.add('active');
-            if (overlay) overlay.classList.add('active');
             if (icon) icon.className = 'fas fa-times';
         }
 
@@ -729,16 +613,16 @@
             }
         });
 
-        if (overlay) {
-            overlay.addEventListener('click', function () {
-                closeMenu();
-            });
-        }
-
         menu.querySelectorAll('a').forEach(function (link) {
             link.addEventListener('click', function () {
                 closeMenu();
             });
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!menu.contains(e.target) && !toggler.contains(e.target)) {
+                closeMenu();
+            }
         });
 
         document.addEventListener('keydown', function (e) {
