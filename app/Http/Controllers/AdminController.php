@@ -89,24 +89,65 @@ class AdminController extends Controller
         return view('admin.vetements.create', compact('categories'));
     }
 
+    /**
+     * Upload une image sur Cloudinary et retourne l'URL publique.
+     * Utilise l'API REST directement (pas de package externe).
+     */
+    private function uploadToCloudinary($file): string
+    {
+        $cloudName = config('cloudinary.cloud_name');
+        $apiKey    = config('cloudinary.api_key');
+        $apiSecret = config('cloudinary.api_secret');
+
+        $timestamp = time();
+        $params    = ['timestamp' => $timestamp];
+        ksort($params);
+        $signString = http_build_query($params) . $apiSecret;
+        $signature  = sha1($signString);
+
+        $response = Http::attach(
+            'file', file_get_contents($file->getRealPath()), $file->getClientOriginalName()
+        )->post("https://api.cloudinary.com/v1_1/{$cloudName}/image/upload", [
+            'api_key'   => $apiKey,
+            'timestamp' => $timestamp,
+            'signature' => $signature,
+        ]);
+
+        if ($response->failed()) {
+            throw new \Exception('Erreur upload Cloudinary : ' . $response->body());
+        }
+
+        return $response->json('secure_url');
+    }
+
     public function vetementsStore(Request $request)
     {
         $request->validate([
-            'nom' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'prix' => 'required|numeric|min:0',
-            'imageUrl' => 'nullable|url',
+            'nom'          => 'required|string|max:255',
+            'description'  => 'nullable|string',
+            'prix'         => 'required|numeric|min:0',
+            'image'        => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'imageUrl'     => 'nullable|url',
             'categorie_id' => 'nullable|exists:categories,id',
         ]);
 
+        // Priorité : fichier uploadé > URL saisie > image par défaut
+        $imageUrl = 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=600';
+
+        if ($request->hasFile('image')) {
+            $imageUrl = $this->uploadToCloudinary($request->file('image'));
+        } elseif ($request->filled('imageUrl')) {
+            $imageUrl = $request->imageUrl;
+        }
+
         Vetement::create([
-            'nom' => $request->nom,
-            'description' => $request->description,
-            'prix' => $request->prix,
-            'imageUrl' => $request->imageUrl ?? 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=600',
-            'disponible' => $request->has('disponible'),
-            'dateAjout' => now(),
-            'admin_id' => Auth::guard('admin')->id(),
+            'nom'          => $request->nom,
+            'description'  => $request->description,
+            'prix'         => $request->prix,
+            'imageUrl'     => $imageUrl,
+            'disponible'   => $request->has('disponible'),
+            'dateAjout'    => now(),
+            'admin_id'     => Auth::guard('admin')->id(),
             'categorie_id' => $request->categorie_id,
         ]);
 
@@ -125,19 +166,29 @@ class AdminController extends Controller
         $vetement = Vetement::findOrFail($id);
 
         $request->validate([
-            'nom' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'prix' => 'required|numeric|min:0',
-            'imageUrl' => 'nullable|url',
+            'nom'          => 'required|string|max:255',
+            'description'  => 'nullable|string',
+            'prix'         => 'required|numeric|min:0',
+            'image'        => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'imageUrl'     => 'nullable|url',
             'categorie_id' => 'nullable|exists:categories,id',
         ]);
 
+        // Priorité : nouveau fichier > nouvelle URL > conserver l'ancienne image
+        $imageUrl = $vetement->imageUrl;
+
+        if ($request->hasFile('image')) {
+            $imageUrl = $this->uploadToCloudinary($request->file('image'));
+        } elseif ($request->filled('imageUrl')) {
+            $imageUrl = $request->imageUrl;
+        }
+
         $vetement->update([
-            'nom' => $request->nom,
-            'description' => $request->description,
-            'prix' => $request->prix,
-            'imageUrl' => $request->imageUrl ?? 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=600',
-            'disponible' => $request->has('disponible'),
+            'nom'          => $request->nom,
+            'description'  => $request->description,
+            'prix'         => $request->prix,
+            'imageUrl'     => $imageUrl,
+            'disponible'   => $request->has('disponible'),
             'categorie_id' => $request->categorie_id,
         ]);
 
