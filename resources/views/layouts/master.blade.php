@@ -547,8 +547,7 @@
                                     ?? \Illuminate\Support\Facades\Auth::guard('client')->user();
                         $isAdmin     = $authUser instanceof \App\Models\Admin;
                         $isClient    = $authUser instanceof \App\Models\Client;
-                        $logoutRoute = $isAdmin ? route('admin.logout') : route('logout');
-                    @endphp
+$logoutRoute = $isAdmin ? route('admin.logout') : ($isClient ? route('logout') : '#');                    @endphp
 
                     @if($isAdmin)
                         <a href="{{ route('admin.dashboard') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
