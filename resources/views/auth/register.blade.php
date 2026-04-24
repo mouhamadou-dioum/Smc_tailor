@@ -43,15 +43,25 @@
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label class="form-label-custom">Mot de passe *</label>
-                            <input type="password" name="motDePasse" class="form-control form-control-custom" required minlength="6">
+                            <label class="form-label-custom">Mot de passe * (min 8 caractères)</label>
+                            <div class="input-group">
+                                <input type="password" id="motDePasse" name="motDePasse" class="form-control form-control-custom" required minlength="8">
+                                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('motDePasse', 'togglePwd1')" id="togglePwd1">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                             @error('motDePasse')
                                 <span class="text-danger small">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="mb-4">
                             <label class="form-label-custom">Confirmer le mot de passe *</label>
-                            <input type="password" name="motDePasse_confirmation" class="form-control form-control-custom" required>
+                            <div class="input-group">
+                                <input type="password" name="motDePasse_confirmation" class="form-control form-control-custom" required>
+                                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('motDePasse_confirmation', 'togglePwd2')" id="togglePwd2">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary-custom w-100 mb-3">S'inscrire</button>
                         <p class="text-center mb-0">
@@ -66,7 +76,33 @@
 @endsection
 
 @section('scripts')
+<style>
+.input-group { position: relative; }
+.input-group .btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border: 2px solid var(--gray-200);
+    border-left: none;
+    border-radius: 0 6px 6px 0;
+    z-index: 10;
+}
+.input-group input { padding-right: 40px; }
+</style>
 <script>
+function togglePassword(inputId, btnId) {
+    const input = document.getElementById(inputId);
+    const btn = document.getElementById(btnId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+    } else {
+        input.type = 'password';
+        btn.innerHTML = '<i class="fas fa-eye"></i>';
+    }
+}
+
 document.getElementById('registerForm').addEventListener('submit', function(e) {
     const password = this.querySelector('input[name="motDePasse"]').value;
     const confirmPassword = this.querySelector('input[name="motDePasse_confirmation"]').value;

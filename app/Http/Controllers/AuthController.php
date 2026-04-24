@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rules\Password;
 use App\Models\Client;
 use App\Models\Admin;
 
@@ -45,15 +44,11 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'nom'      => ['required', 'string', 'max:100', 'regex:/^[\pL\s\-]+$/u'],
-            'prenom'   => ['nullable', 'string', 'max:100', 'regex:/^[\pL\s\-]*$/u'],
-            'email'    => ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:clients,email'],
-            'telephone'=> ['required', 'string', 'max:20', 'regex:/^\+?[0-9\s\-]{7,20}$/'],
-            'motDePasse' => [
-                'required',
-                'confirmed',
-                Password::min(8)->letters()->mixedCase()->numbers(),
-            ],
+            'nom'      => ['required', 'string', 'max:100'],
+            'prenom'   => ['nullable', 'string', 'max:100'],
+            'email'    => ['required', 'string', 'email', 'max:255', 'unique:clients,email'],
+            'telephone'=> ['required', 'string', 'max:20'],
+            'motDePasse' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
 
         $client = Client::create([
@@ -65,7 +60,6 @@ class AuthController extends Controller
             'dateInscription' => now(),
         ]);
 
-        // Régénérer la session AVANT la connexion (prévention session fixation)
         $request->session()->regenerate();
         Auth::guard('client')->login($client);
 
