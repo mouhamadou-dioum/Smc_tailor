@@ -9,7 +9,7 @@
             <div class="col-lg-6">
                 <h1 class="hero-title">L'Art de la Couture Sur Mesure</h1>
                 <p class="hero-subtitle">Découvrez nos créations exclusives et réservez votre rendez-vous pour une expérience personnalisée.</p>
-                <div class="d-flex gap-3">
+                <div class="d-flex gap-3 flex-column flex-sm-row">
                     @guest
                         <a href="{{ route('register') }}" class="btn btn-primary-custom">Commencer</a>
                         <a href="{{ route('login') }}" class="btn btn-outline-custom" style="border-color: white; color: white;">Connexion</a>
@@ -29,7 +29,7 @@
             <p class="section-subtitle">Ce que nous offrons</p>
         </div>
         <div class="row g-4">
-            <div class="col-md-4">
+            <div class="col-12 col-md-4">
                 <div class="card-custom p-4 text-center">
                     <div class="mb-3">
                         <i class="fas fa-tshirt" style="font-size: 3rem; color: var(--primary);"></i>
@@ -38,7 +38,7 @@
                     <p class="text-muted">Des pièces uniques adaptées à votre style et vos mesures.</p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-12 col-md-4">
                 <div class="card-custom p-4 text-center">
                     <div class="mb-3">
                         <i class="fas fa-calendar-check" style="font-size: 3rem; color: var(--primary);"></i>
@@ -47,7 +47,7 @@
                     <p class="text-muted">Planifiez facilement vos rendez-vous depuis chez vous.</p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-12 col-md-4">
                 <div class="card-custom p-4 text-center">
                     <div class="mb-3">
                         <i class="fas fa-envelope" style="font-size: 3rem; color: var(--primary);"></i>
@@ -66,37 +66,37 @@
             <h2 class="section-title">Comment Ça Marche</h2>
             <p class="section-subtitle">Réservez en quelques étapes simples</p>
         </div>
-        <div class="row g-4">
-            <div class="col-md-3">
+        <div class="row g-4 text-center">
+            <div class="col-6 col-md-3">
                 <div class="text-center">
-                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; background-color: var(--primary); color: white; font-size: 1.5rem; font-weight: bold;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; min-width: 80px; background-color: var(--primary); color: white; font-size: 1.5rem; font-weight: bold;">
                         1
                     </div>
                     <h5>Inscrivez-vous</h5>
                     <p class="text-muted small">Créez votre compte client</p>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-6 col-md-3">
                 <div class="text-center">
-                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; background-color: var(--primary); color: white; font-size: 1.5rem; font-weight: bold;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; min-width: 80px; background-color: var(--primary); color: white; font-size: 1.5rem; font-weight: bold;">
                         2
                     </div>
                     <h5>Parcourez</h5>
                     <p class="text-muted small">Découvrez nos créations</p>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-6 col-md-3">
                 <div class="text-center">
-                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; background-color: var(--primary); color: white; font-size: 1.5rem; font-weight: bold;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; min-width: 80px; background-color: var(--primary); color: white; font-size: 1.5rem; font-weight: bold;">
                         3
                     </div>
                     <h5>Réservez</h5>
                     <p class="text-muted small">Choisissez un vêtement et date</p>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-6 col-md-3">
                 <div class="text-center">
-                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; background-color: var(--primary); color: white; font-size: 1.5rem; font-weight: bold;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; min-width: 80px; background-color: var(--primary); color: white; font-size: 1.5rem; font-weight: bold;">
                         4
                     </div>
                     <h5>Confirmez</h5>

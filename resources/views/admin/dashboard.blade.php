@@ -5,9 +5,9 @@
 @section('content')
 <div class="py-4">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Tableau de bord Admin</h2>
-            <div class="d-flex gap-2">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <h2 class="mb-0">Tableau de bord Admin</h2>
+            <div class="d-flex gap-2 flex-wrap">
                 <a href="{{ route('admin.categories.index') }}" class="btn btn-outline-custom btn-sm">
                     <i class="fas fa-tags me-1"></i> Catégories
                 </a>
@@ -18,30 +18,30 @@
             </div>
         </div>
 
-        <div class="row g-4 mb-4">
-            <div class="col-md-3">
-                <div class="card-custom p-4 text-center">
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="card-custom p-3 p-md-4 text-center">
                     <i class="fas fa-tshirt" style="font-size: 2rem; color: var(--primary);"></i>
                     <h3 class="mt-2">{{ $stats['vetements'] }}</h3>
                     <p class="text-muted mb-0">Vêtements</p>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card-custom p-4 text-center">
+            <div class="col-6 col-md-3">
+                <div class="card-custom p-3 p-md-4 text-center">
                     <i class="fas fa-users" style="font-size: 2rem; color: var(--primary);"></i>
                     <h3 class="mt-2">{{ $stats['clients'] }}</h3>
                     <p class="text-muted mb-0">Clients</p>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card-custom p-4 text-center">
+            <div class="col-6 col-md-3">
+                <div class="card-custom p-3 p-md-4 text-center">
                     <i class="fas fa-calendar-alt" style="font-size: 2rem; color: var(--primary);"></i>
                     <h3 class="mt-2">{{ $stats['rendezVous'] }}</h3>
                     <p class="text-muted mb-0">Rendez-vous</p>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card-custom p-4 text-center">
+            <div class="col-6 col-md-3">
+                <div class="card-custom p-3 p-md-4 text-center">
                     <i class="fas fa-clock" style="font-size: 2rem; color: #ffc107;"></i>
                     <h3 class="mt-2">{{ $stats['enAttente'] }}</h3>
                     <p class="text-muted mb-0">En attente</p>

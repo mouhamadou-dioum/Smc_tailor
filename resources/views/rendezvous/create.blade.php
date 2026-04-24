@@ -23,9 +23,9 @@
                         @if($vetementPreselect)
                             <input type="hidden" name="vetement_id" value="{{ $vetementPreselect->id }}">
                             <div class="mb-4 p-3 rounded border" style="border-color: var(--gray-300) !important; background: var(--gray-100);">
-                                <div class="d-flex gap-3 align-items-center flex-wrap">
+                                <div class="d-flex gap-3 align-items-center flex-wrap flex-sm-nowrap">
                                     @if($vetementPreselect->imageUrl)
-                                        <img src="{{ $vetementPreselect->imageUrl }}" alt="" class="rounded" style="width: 72px; height: 72px; object-fit: cover;">
+                                        <img src="{{ $vetementPreselect->imageUrl }}" alt="" class="rounded" style="width: 72px; height: 72px; min-width: 72px; object-fit: cover;">
                                     @endif
                                     <div class="flex-grow-1">
                                         <div class="form-label-custom mb-1">Modèle concerné</div>

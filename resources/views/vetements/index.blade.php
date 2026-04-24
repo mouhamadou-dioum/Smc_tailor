@@ -13,15 +13,15 @@
 <section class="py-5">
     <div class="container">
         @if($categories->count() > 0)
-        <div class="mb-5">
-            <div class="d-flex flex-wrap justify-content-center gap-2">
+        <div class="mb-5 overflow-auto">
+            <div class="d-flex flex-nowrap flex-md-wrap justify-content-center gap-2">
                 <a href="{{ route('vetements.index') }}" 
-                   class="btn {{ !$categorieId ? 'btn-primary-custom' : 'btn-outline-custom' }}">
+                   class="btn {{ !$categorieId ? 'btn-primary-custom' : 'btn-outline-custom' }} btn-sm">
                     Tous
                 </a>
                 @foreach($categories as $categorie)
                     <a href="{{ route('vetements.index', ['categorie' => $categorie->id]) }}" 
-                       class="btn {{ $categorieId == $categorie->id ? 'btn-primary-custom' : 'btn-outline-custom' }}">
+                       class="btn {{ $categorieId == $categorie->id ? 'btn-primary-custom' : 'btn-outline-custom' }} btn-sm">
                         {{ $categorie->nom }}
                     </a>
                 @endforeach
@@ -49,7 +49,7 @@
                         <div class="p-4">
                             <h5 class="mb-2">{{ $vetement->nom }}</h5>
                             <p class="text-muted small mb-3">{{ \Illuminate\Support\Str::limit($vetement->description ?? '', 80) }}</p>
-                            <div class="d-flex gap-2">
+                            <div class="d-flex gap-2 flex-column flex-sm-row">
                                 <button class="btn btn-outline-custom flex-grow-1" data-bs-toggle="modal" data-bs-target="#vetementModal{{ $vetement->id }}">
                                     <i class="fas fa-eye me-1"></i> Détails
                                 </button>
