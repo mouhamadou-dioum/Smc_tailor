@@ -13,15 +13,12 @@
         :root {
             --primary: #c9a959;
             --primary-dark: #a88942;
-            --secondary: #2c3e50;
             --dark: #1a1a2e;
-            --light: #f8f9fa;
             --white: #ffffff;
             --gray-100: #f5f5f5;
             --gray-200: #e9ecef;
             --gray-300: #dee2e6;
             --gray-400: #ced4da;
-            --gray-500: #adb5bd;
             --gray-600: #6c757d;
             --gray-700: #495057;
             --gray-800: #343a40;
@@ -74,30 +71,23 @@
             line-height: 1;
         }
 
+        /* Menu - desktop */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            row-gap: 0.5rem;
+        }
+
         .nav-link-custom {
             color: var(--gray-700) !important;
             font-weight: 500;
             padding: 0.5rem 1rem !important;
             transition: all 0.3s ease;
-            position: relative;
             text-decoration: none;
         }
 
         .nav-link-custom:hover { color: var(--primary) !important; }
-
-        .nav-link-custom::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .nav-link-custom:hover::after { width: 80%; }
 
         .nav-link-with-icon {
             display: inline-flex;
@@ -106,18 +96,7 @@
             text-decoration: none;
         }
 
-        .nav-link-with-icon i {
-            width: 1.15rem;
-            text-align: center;
-            opacity: 0.92;
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            row-gap: 0.5rem;
-        }
+        .nav-link-with-icon i { opacity: 0.92; }
 
         /* Buttons */
         .btn-primary-custom {
@@ -173,22 +152,6 @@
             padding: 6rem 0;
             position: relative;
             overflow: hidden;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 60%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(201,169,89,0.15) 0%, transparent 70%);
-            animation: float 8s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
         }
 
         .hero-title {
@@ -247,16 +210,6 @@
 
         .featured-card:hover img { transform: scale(1.1); }
 
-        .featured-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-            padding: 2rem 1.5rem 1.5rem;
-            color: var(--white);
-        }
-
         .price-tag {
             background-color: var(--primary);
             color: var(--white);
@@ -311,10 +264,7 @@
             transition: all 0.3s ease;
         }
 
-        .footer-link:hover {
-            color: var(--primary);
-            padding-left: 5px;
-        }
+        .footer-link:hover { color: var(--primary); }
 
         .social-icon {
             display: inline-flex;
@@ -347,85 +297,45 @@
         .alert-success-custom { background-color: #d4edda; color: #155724; }
         .alert-error-custom   { background-color: #f8d7da; color: #721c24; }
 
-        .badge-custom {
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.75rem;
-        }
+        .badge-waiting   { background-color: #fff3cd; color: #856404; padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.75rem; }
+        .badge-confirmed { background-color: #d4edda; color: #155724; padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.75rem; }
+        .badge-rejected  { background-color: #f8d7da; color: #721c24; padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.75rem; }
 
-        .badge-waiting   { background-color: #fff3cd; color: #856404; }
-        .badge-confirmed { background-color: #d4edda; color: #155724; }
-        .badge-rejected  { background-color: #f8d7da; color: #721c24; }
-
-        /* Animations */
-        .fade-in { animation: fadeIn 0.5s ease-in-out; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .slide-up { animation: slideUp 0.6s ease-out; }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive - Tablet (≤991px) */
+        /* RESPONSIVE - Tablet (≤991px) */
         @media (max-width: 991px) {
             .navbar-toggler-custom { display: block; }
 
-            .navbar-wrapper {
-                position: relative;
-            }
-
             .nav-actions {
                 display: none;
-                position: absolute;
-                top: 100%;
+                position: fixed;
+                top: 60px;
                 left: 0;
                 right: 0;
-                width: 100%;
-                max-height: 70vh;
-                overflow-y: auto;
+                background: var(--white);
+                border-bottom: 3px solid var(--primary);
                 flex-direction: column;
                 align-items: stretch;
-                background: var(--white);
-                border-top: 2px solid var(--primary);
-                border-radius: 0 0 8px 8px;
-                box-shadow: var(--shadow-lg);
                 padding: 0;
+                z-index: 999;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             }
 
-            .nav-actions.active { 
-                display: flex; 
-            }
+            .nav-actions.active { display: flex; }
 
             .nav-link-custom {
-                padding: 1rem 1.25rem !important;
+                padding: 15px 20px !important;
                 width: 100%;
                 border-bottom: 1px solid var(--gray-100);
-                font-size: 1.1rem;
                 text-align: left;
             }
 
-            .nav-link-custom::after { display: none; }
-
-            .nav-link-custom:last-child { border-bottom: none; }
-
-            .nav-actions form {
-                width: 100%;
-                padding: 1rem 1.25rem;
-            }
-
-            .nav-actions .btn {
+            .nav-actions form, .nav-actions .btn {
                 width: 100%;
                 text-align: center;
+                padding: 15px 20px;
             }
 
-            .hero-section { padding: 4rem 0; }
+            .hero-section { padding: 3rem 0; }
         }
 
         /* Responsive - Mobile (≤768px) */
@@ -443,7 +353,6 @@
             .footer-title   { font-size: 1.25rem; }
 
             .featured-card img { height: 300px; }
-
             .card-custom { padding: 1rem; }
         }
 
@@ -463,10 +372,7 @@
             .form-control-custom { padding: 0.625rem 0.875rem; font-size: 0.9rem; }
 
             .featured-card img { height: 220px; }
-
             .footer-custom .col-md-4 { margin-bottom: 1.5rem; }
-
-            .hero-section { padding: 3rem 0; }
         }
     </style>
     @yield('styles')
@@ -474,7 +380,7 @@
 <body>
     <nav class="navbar-custom">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center navbar-wrapper">
+            <div class="d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" href="{{ route('home') }}">COUTURE</a>
 
                 <button class="navbar-toggler-custom" id="navToggler" aria-label="Menu">
@@ -490,51 +396,47 @@
                     @endphp
 
                     @if($isAdmin)
-                        <a href="{{ route('admin.dashboard') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
+                        <a href="{{ route('admin.dashboard') }}" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-chart-line"></i><span>Tableau de bord</span>
                         </a>
-                        <a href="{{ route('admin.vetements.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
+                        <a href="{{ route('admin.vetements.index') }}" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-shirt"></i><span>Vêtements</span>
                         </a>
-                        <a href="{{ route('admin.categories.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
+                        <a href="{{ route('admin.categories.index') }}" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-tags"></i><span>Catégories</span>
                         </a>
-                        <a href="{{ route('admin.rendezvous.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
+                        <a href="{{ route('admin.rendezvous.index') }}" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-calendar-alt"></i><span>Rendez-vous</span>
                         </a>
-                        <a href="{{ route('admin.clients.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
+                        <a href="{{ route('admin.clients.index') }}" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-users"></i><span>Clients</span>
                         </a>
                         <form action="{{ $logoutRoute }}" method="POST" class="d-inline">
                             @csrf
-                            <button type="submit" class="btn btn-outline-custom btn-sm">
-                                <i class="fas fa-right-from-bracket me-1"></i> Déconnexion
-                            </button>
+                            <button type="submit" class="btn btn-outline-custom btn-sm">Déconnexion</button>
                         </form>
 
                     @elseif($isClient)
-                        <a href="{{ route('home') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
+                        <a href="{{ route('home') }}" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-house"></i><span>Accueil</span>
                         </a>
-                        <a href="{{ route('vetements.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
+                        <a href="{{ route('vetements.index') }}" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-shirt"></i><span>Collection</span>
                         </a>
-                        <a href="{{ route('rendezvous.create') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
+                        <a href="{{ route('rendezvous.create') }}" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-calendar-plus"></i><span>Réserver</span>
                         </a>
-                        <a href="{{ route('rendezvous.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
-                            <i class="fas fa-calendar-check"></i><span>Mes rendez-vous</span>
+                        <a href="{{ route('rendezvous.index') }}" class="nav-link-custom nav-link-with-icon">
+                            <i class="fas fa-calendar-check"></i><span>Mes rdvs</span>
                         </a>
                         <form action="{{ $logoutRoute }}" method="POST" class="d-inline">
                             @csrf
-                            <button type="submit" class="btn btn-outline-custom btn-sm">
-                                <i class="fas fa-right-from-bracket me-1"></i> Déconnexion
-                            </button>
+                            <button type="submit" class="btn btn-outline-custom btn-sm">Déconnexion</button>
                         </form>
 
                     @else
-                        <a href="{{ route('login') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
-                            <i class="fas fa-right-to-bracket"></i><span>Connexion</span>
+                        <a href="{{ route('login') }}" class="nav-link-custom nav-link-with-icon">
+                            <i class="fas fa-sign-in-alt"></i><span>Connexion</span>
                         </a>
                         <a href="{{ route('register') }}" class="btn btn-primary-custom btn-sm">
                             <i class="fas fa-user-plus me-1"></i> S'inscrire
@@ -554,7 +456,7 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h4 class="footer-title">COUTURE</h4>
-                    <p>Découvrez l'art de la couture sur mesure. Nous créons des pièces uniques qui mettraient en valeur votre style et votre personnalité.</p>
+                    <p>Découvrez l'art de la couture sur mesure.</p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <h5 class="text-white mb-3">Liens rapides</h5>
@@ -587,10 +489,12 @@
     <script src="{{ asset('js/app.js') }}"></script>
 
     <script>
-    (function () {
+    document.addEventListener('DOMContentLoaded', function() {
         var toggler = document.getElementById('navToggler');
-        var menu    = document.getElementById('navMenu');
-        var icon   = document.getElementById('navIcon');
+        var menu = document.getElementById('navMenu');
+        var icon = document.getElementById('navIcon');
+
+        if (!toggler || !menu) return;
 
         function closeMenu() {
             menu.classList.remove('active');
@@ -602,9 +506,7 @@
             if (icon) icon.className = 'fas fa-times';
         }
 
-        if (!toggler || !menu) return;
-
-        toggler.addEventListener('click', function (e) {
+        toggler.addEventListener('click', function(e) {
             e.stopPropagation();
             if (menu.classList.contains('active')) {
                 closeMenu();
@@ -613,24 +515,24 @@
             }
         });
 
-        menu.querySelectorAll('a').forEach(function (link) {
-            link.addEventListener('click', function () {
+        menu.querySelectorAll('a, button').forEach(function(el) {
+            el.addEventListener('click', function() {
                 closeMenu();
             });
         });
 
-        document.addEventListener('click', function (e) {
+        document.addEventListener('click', function(e) {
             if (!menu.contains(e.target) && !toggler.contains(e.target)) {
                 closeMenu();
             }
         });
 
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && menu.classList.contains('active')) {
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
                 closeMenu();
             }
         });
-    })();
+    });
     </script>
 
     @yield('scripts')
