@@ -39,7 +39,16 @@ class AdminController extends Controller
             ]);
         }
 
-        $admin = Admin::where('email', strtolower(trim($request->email)))->first();
+        // Empêcher les clients de se connecter via /admin/login
+        $email = strtolower(trim($request->email));
+        $clientExists = Client::where('email', $email)->exists();
+        
+        if ($clientExists) {
+            \Illuminate\Support\Facades\RateLimiter::hit($throttleKey, 60);
+            return back()->withErrors(['email' => 'Accès réservé aux administrateurs.']);
+        }
+
+        $admin = Admin::where('email', $email)->first();
 
         if ($admin && Hash::check($request->motDePasse, $admin->motDePasse)) {
             \Illuminate\Support\Facades\RateLimiter::clear($throttleKey);
