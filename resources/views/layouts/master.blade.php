@@ -554,7 +554,7 @@
                         }
                         $isAdmin = $authUser instanceof \App\Models\Admin;
                         $isClient = $authUser instanceof \App\Models\Client;
-                        $logoutRoute = $isAdmin ? route('admin.logout') : ($isClient ? route('logout') : '#');
+                        $logoutRoute = $isAdmin ? route('admin.logout') : ($isClient ? route('client.logout') : '#');
                     @endphp
 
                     @if($isAdmin)
