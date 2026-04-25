@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Couture App')</title>
+    <title><?php echo $__env->yieldContent('title', 'Couture App'); ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -391,80 +391,80 @@
             .footer-custom .col-md-4 { margin-bottom: 1.5rem; }
         }
     </style>
-    @yield('styles')
+    <?php echo $__env->yieldContent('styles'); ?>
 </head>
 <body>
     <nav class="navbar-custom">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center navbar-wrapper">
-                <a class="navbar-brand" href="{{ route('home') }}">COUTURE</a>
+                <a class="navbar-brand" href="<?php echo e(route('home')); ?>">COUTURE</a>
 
                 <button class="navbar-toggler-custom" id="navToggler" aria-label="Menu">
                     <i class="fas fa-bars" id="navIcon"></i>
                 </button>
 
                 <div class="nav-actions" id="navMenu">
-                    @php
+                    <?php
                         $user        = Auth::guard('admin')->user() ?? Auth::guard('client')->user();
                         $isAdmin     = $user instanceof \App\Models\Admin;
                         $isClient    = $user instanceof \App\Models\Client;
                         $logoutRoute = $isAdmin ? route('admin.logout') : ($isClient ? route('logout') : '#');
-                    @endphp
+                    ?>
 
-                    @if($isAdmin)
-                        <a href="{{ route('admin.dashboard') }}" class="nav-link-custom nav-link-with-icon">
+                    <?php if($isAdmin): ?>
+                        <a href="<?php echo e(route('admin.dashboard')); ?>" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-chart-line"></i><span>Tableau de bord</span>
                         </a>
-                        <a href="{{ route('admin.vetements.index') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="<?php echo e(route('admin.vetements.index')); ?>" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-shirt"></i><span>Vêtements</span>
                         </a>
-                        <a href="{{ route('admin.categories.index') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="<?php echo e(route('admin.categories.index')); ?>" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-tags"></i><span>Catégories</span>
                         </a>
-                        <a href="{{ route('admin.rendezvous.index') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="<?php echo e(route('admin.rendezvous.index')); ?>" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-calendar-alt"></i><span>Rendez-vous</span>
                         </a>
-                        <a href="{{ route('admin.clients.index') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="<?php echo e(route('admin.clients.index')); ?>" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-users"></i><span>Clients</span>
                         </a>
-                        <form action="{{ $logoutRoute }}" method="POST" class="d-inline">
-                            @csrf
+                        <form action="<?php echo e($logoutRoute); ?>" method="POST" class="d-inline">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="btn btn-outline-custom btn-sm">Déconnexion</button>
                         </form>
 
-                    @elseif($isClient)
-                        <a href="{{ route('home') }}" class="nav-link-custom nav-link-with-icon">
+                    <?php elseif($isClient): ?>
+                        <a href="<?php echo e(route('home')); ?>" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-house"></i><span>Accueil</span>
                         </a>
-                        <a href="{{ route('vetements.index') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="<?php echo e(route('vetements.index')); ?>" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-shirt"></i><span>Collection</span>
                         </a>
-                        <a href="{{ route('rendezvous.create') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="<?php echo e(route('rendezvous.create')); ?>" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-calendar-plus"></i><span>Réserver</span>
                         </a>
-                        <a href="{{ route('rendezvous.index') }}" class="nav-link-custom nav-link-with-icon">
+                        <a href="<?php echo e(route('rendezvous.index')); ?>" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-calendar-check"></i><span>Mes rdvs</span>
                         </a>
-                        <form action="{{ $logoutRoute }}" method="POST" class="d-inline">
-                            @csrf
+                        <form action="<?php echo e($logoutRoute); ?>" method="POST" class="d-inline">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="btn btn-outline-custom btn-sm">Déconnexion</button>
                         </form>
 
-                    @else
-                        <a href="{{ route('login') }}" class="nav-link-custom nav-link-with-icon">
+                    <?php else: ?>
+                        <a href="<?php echo e(route('login')); ?>" class="nav-link-custom nav-link-with-icon">
                             <i class="fas fa-sign-in-alt"></i><span>Connexion</span>
                         </a>
-                        <a href="{{ route('register') }}" class="btn btn-primary-custom btn-sm">
+                        <a href="<?php echo e(route('register')); ?>" class="btn btn-primary-custom btn-sm">
                             <i class="fas fa-user-plus me-1"></i> S'inscrire
                         </a>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </nav>
 
     <main>
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </main>
 
     <footer class="footer-custom">
@@ -477,11 +477,11 @@
                 <div class="col-md-4 mb-4">
                     <h5 class="text-white mb-3">Liens rapides</h5>
                     <ul class="list-unstyled">
-                        <li><a href="{{ route('home') }}" class="footer-link d-block mb-2">Accueil</a></li>
-                        @guest
-                        <li><a href="{{ route('login') }}" class="footer-link d-block mb-2">Connexion</a></li>
-                        <li><a href="{{ route('register') }}" class="footer-link d-block mb-2">S'inscrire</a></li>
-                        @endguest
+                        <li><a href="<?php echo e(route('home')); ?>" class="footer-link d-block mb-2">Accueil</a></li>
+                        <?php if(auth()->guard()->guest()): ?>
+                        <li><a href="<?php echo e(route('login')); ?>" class="footer-link d-block mb-2">Connexion</a></li>
+                        <li><a href="<?php echo e(route('register')); ?>" class="footer-link d-block mb-2">S'inscrire</a></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-4">
@@ -502,7 +502,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="<?php echo e(asset('js/app.js')); ?>"></script>
 
     <script>
     (function () {
@@ -561,6 +561,6 @@
     })();
     </script>
 
-    @yield('scripts')
+    <?php echo $__env->yieldContent('scripts'); ?>
 </body>
-</html>
+</html><?php /**PATH C:\Users\fallou\Desktop\projet laravel\couture-app\resources\views/layouts/master.blade.php ENDPATH**/ ?>

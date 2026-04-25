@@ -448,50 +448,49 @@
         @media (max-width: 991px) {
             .navbar-toggler-custom { display: block; }
 
-            /* ── Navbar wrapper doit être relative pour que le menu s'y accroche ── */
-            .navbar-wrapper {
-                position: relative;
-            }
+            /* Navbar plus compacte */
+            .navbar-custom { padding: 0.5rem 0; }
+            .navbar-brand  { font-size: 1.3rem; }
 
             .nav-actions {
                 display: none;
-                position: absolute;   /* overlay → ne pousse pas le contenu */
-                top: 100%;
+                position: fixed;
+                top: var(--navbar-h, 52px);
                 left: 0;
                 right: 0;
                 width: 100%;
-                flex-direction: column;
-                align-items: flex-start;
+                flex-direction: row;
+                align-items: center;
+                flex-wrap: wrap;
                 background: var(--white);
                 border-top: 2px solid var(--primary);
                 border-radius: 0 0 8px 8px;
+                padding: 0.3rem 1rem;
+                gap: 0.5rem;
+                z-index: 998;
                 box-shadow: var(--shadow-lg);
-                padding: 0.5rem 0;
-                z-index: 999;
             }
 
             .nav-actions.active { display: flex; }
 
             .nav-link-custom {
-                padding: 0.85rem 1.25rem !important;
-                width: 100%;
-                border-bottom: 1px solid var(--gray-100);
-                font-size: 1rem;
+                padding: 0.25rem 0.5rem !important;
+                width: auto;
+                border-bottom: none;
+                font-size: 0.85rem;
+                line-height: 1.3;
             }
 
-            /* Désactive l'underline animé sur mobile */
             .nav-link-custom::after { display: none; }
 
-            .nav-link-custom:last-child { border-bottom: none; }
-
             .nav-actions form {
-                width: 100%;
-                padding: 0.75rem 1.25rem;
+                padding: 0;
             }
 
-            .nav-actions .btn {
-                width: 100%;
-                text-align: center;
+            .nav-actions form .btn,
+            .nav-actions > a.btn {
+                font-size: 0.8rem;
+                padding: 0.2rem 0.75rem;
             }
 
             .hero-section { padding: 4rem 0; }
@@ -506,8 +505,8 @@
             .section-title { font-size: 1.75rem; }
             .section-subtitle { font-size: 1rem; margin-bottom: 2rem; }
 
-            .navbar-custom { padding: 0.75rem 0; }
-            .navbar-brand  { font-size: 1.4rem; }
+            .navbar-custom { padding: 0.4rem 0; }
+            .navbar-brand  { font-size: 1.3rem; }
 
             .form-custom   { padding: 1.5rem; }
             .footer-custom { padding: 2.5rem 0 1.5rem; }
@@ -563,7 +562,7 @@
                     <i class="fas fa-bars" id="navIcon"></i>
                 </button>
 
-                <div class="d-flex align-items-center nav-actions" id="navMenu">
+                <div class="nav-actions" id="navMenu">
                     @php
                         $authUser = null;
                         try {
@@ -676,36 +675,59 @@
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 
-    {{-- ── Menu hamburger : toggle + fermeture automatique ── --}}
     <script>
     (function () {
+        var navbar  = document.querySelector('.navbar-custom');
         var toggler = document.getElementById('navToggler');
         var menu    = document.getElementById('navMenu');
         var icon    = document.getElementById('navIcon');
 
         if (!toggler || !menu) return;
 
+        /* Met à jour --navbar-h en temps réel */
+        function updateNavbarHeight() {
+            if (navbar) {
+                document.documentElement.style.setProperty(
+                    '--navbar-h', navbar.getBoundingClientRect().height + 'px'
+                );
+            }
+        }
+        updateNavbarHeight();
+        window.addEventListener('resize', updateNavbarHeight);
+
+        function closeMenu() {
+            menu.classList.remove('active');
+            if (icon) icon.className = 'fas fa-bars';
+        }
+
         /* Ouvre / ferme au clic du bouton */
         toggler.addEventListener('click', function (e) {
             e.stopPropagation();
             var isOpen = menu.classList.toggle('active');
-            icon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
+            if (icon) icon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
+            if (isOpen) updateNavbarHeight();
         });
 
-        /* Ferme quand on clique sur un lien du menu */
+        /* Ferme quand on clique sur un lien */
         menu.querySelectorAll('a').forEach(function (link) {
-            link.addEventListener('click', function () {
-                menu.classList.remove('active');
-                icon.className = 'fas fa-bars';
-            });
+            link.addEventListener('click', closeMenu);
         });
+
+        /* Ferme au scroll */
+        window.addEventListener('scroll', function () {
+            if (menu.classList.contains('active')) closeMenu();
+        }, { passive: true });
 
         /* Ferme quand on clique en dehors du menu */
         document.addEventListener('click', function (e) {
             if (!menu.contains(e.target) && !toggler.contains(e.target)) {
-                menu.classList.remove('active');
-                icon.className = 'fas fa-bars';
+                closeMenu();
             }
+        });
+
+        /* Ferme avec Escape */
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeMenu();
         });
     })();
     </script>
