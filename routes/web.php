@@ -25,6 +25,7 @@ Route::middleware(['auth:client'])->group(function () {
     Route::get('/rendezvous/create', [RendezVousController::class, 'create'])->name('rendezvous.create');
     Route::post('/rendezvous', [RendezVousController::class, 'store'])->name('rendezvous.store');
     Route::get('/rendezvous', [RendezVousController::class, 'myRendezVous'])->name('rendezvous.index');
+    Route::put('/rendezvous/{id}/confirmer', [RendezVousController::class, 'confirmByClient'])->name('rendezvous.confirm');
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {

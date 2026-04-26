@@ -74,15 +74,26 @@
                 @elseif($rendezVous->statut === 'EN_ATTENTE')
                 <div class="card-custom p-4">
                     <h4 class="mb-3">Actions</h4>
-                    <div class="d-flex gap-3">
-                        <a href="{{ route('admin.rendezvous.confirmer', $rendezVous->id) }}" 
-                           class="btn btn-success flex-grow-1">
-                            <i class="fas fa-check me-2"></i> Confirmer
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="https://wa.me/{{ $rendezVous->client->telephone }}?text=Bonjour+{{ $rendezVous->client->prenom }},+je+vous+contacte+concernant+votre+rdv"
+                           target="_blank"
+                           class="btn btn-outline-custom flex-grow-1">
+                            <i class="fab fa-whatsapp me-2"></i> Contacter via WhatsApp
                         </a>
-                        <a href="{{ route('admin.rendezvous.refuser', $rendezVous->id) }}" 
-                           class="btn btn-danger flex-grow-1">
-                            <i class="fas fa-times me-2"></i> Refuser
-                        </a>
+                        <form action="{{ route('admin.rendezvous.confirmer', $rendezVous->id) }}" method="POST" class="flex-grow-1">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="fas fa-check me-2"></i> Confirmer
+                            </button>
+                        </form>
+                        <form action="{{ route('admin.rendezvous.refuser', $rendezVous->id) }}" method="POST" class="flex-grow-1">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-danger w-100">
+                                <i class="fas fa-times me-2"></i> Refuser
+                            </button>
+                        </form>
                     </div>
                 </div>
                 @endif
