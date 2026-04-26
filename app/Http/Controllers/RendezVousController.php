@@ -110,6 +110,7 @@ class RendezVousController extends Controller
         }
 
         $vetementNom = $vetement?->nom ?? 'Non spécifié';
+        $vetementPrix = $vetement?->prix ? number_format($vetement->prix, 0, ',', ' ') . ' CFA' : 'Prix non spécifié';
         $clientNom = "{$client->prenom} {$client->nom}";
         $clientTel = $client->telephone;
         $dateRdv = $rendezVous->dateRendezVous->format('d/m/Y');
@@ -119,6 +120,7 @@ class RendezVousController extends Controller
         $message .= "Client: {$clientNom}\n";
         $message .= "Tél: {$clientTel}\n";
         $message .= "Vêtement: {$vetementNom}\n";
+        $message .= "Prix: {$vetementPrix}\n";
         $message .= "Date: {$dateRdv} à {$heureRdv}";
 
         $waPhone = $this->normalizeWhatsAppPhone($admin->telephone);

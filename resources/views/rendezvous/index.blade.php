@@ -22,7 +22,6 @@
                             <th>Heure</th>
                             <th>Statut</th>
                             <th>Commentaire</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,19 +40,10 @@
                                     @endif
                                 </td>
                                 <td class="text-muted small">{{ \Illuminate\Support\Str::limit($rdv->commentaire ?? '—', 60) }}</td>
-                                <td>
-                                    @if($rdv->statut === \App\Models\RendezVous::STATUT_CONFIRME)
-                                        <form action="{{ route('rendezvous.confirm', $rdv->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn btn-sm btn-success">Confirmer</button>
-                                        </form>
-                                    @endif
-                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-5 text-muted">
+                                <td colspan="5" class="text-center py-5 text-muted">
                                     <i class="fas fa-calendar-xmark fa-2x mb-3 d-block opacity-50"></i>
                                     Aucun rendez-vous pour le moment.
                                 </td>
