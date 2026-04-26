@@ -34,13 +34,13 @@
                 <div class="col-md-6 col-lg-4">
                     <div class="card-custom h-100">
                         <div class="position-relative">
-                            <img
-                                src="{{ $vetement->imageUrl ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800' }}"
-                                alt="{{ $vetement->nom }}"
-                                class="img-fluid w-100"
-                                style="height: 300px; object-fit: cover;"
-                                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';"
-                            >
+                           <img
+    src="{{ $vetement->imageUrl ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800' }}"
+    alt="{{ $vetement->nom }}"
+    class="img-fluid w-100"
+    style="height: 350px; object-fit: cover; object-position: top center;"
+    onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';"
+>
                             @if(!$vetement->disponible)
                                 <span class="badge bg-secondary position-absolute top-0 end-0 m-2">Indisponible</span>
                             @endif

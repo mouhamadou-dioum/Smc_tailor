@@ -41,7 +41,7 @@
             color: var(--dark);
         }
 
-        /* Navbar */
+        /* ── Navbar ── */
         .navbar-custom {
             background-color: var(--white);
             box-shadow: var(--shadow-sm);
@@ -49,6 +49,13 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            /* ✅ Permet au menu de pousser le contenu vers le bas */
+            overflow: visible;
+        }
+
+        .navbar-custom .container {
+            /* ✅ Permet le retour à la ligne du menu */
+            flex-wrap: wrap;
         }
 
         .navbar-brand {
@@ -98,15 +105,16 @@
 
         .nav-link-with-icon i { opacity: 0.92; }
 
-        /* Buttons */
+        /* ── Buttons ── */
         .btn-primary-custom {
             background-color: var(--primary);
             border-color: var(--primary);
             color: var(--white);
-            padding: 0.625rem 1.5rem;
+            padding: 0.5rem 1rem;
             font-weight: 600;
             border-radius: 4px;
             transition: all 0.3s ease;
+            font-size: 0.875rem;
         }
 
         .btn-primary-custom:hover {
@@ -120,10 +128,11 @@
             border: 2px solid var(--primary);
             color: var(--primary);
             background: transparent;
-            padding: 0.5rem 1.25rem;
+            padding: 0.4rem 1rem;
             font-weight: 600;
             border-radius: 4px;
             transition: all 0.3s ease;
+            font-size: 0.875rem;
         }
 
         .btn-outline-custom:hover {
@@ -131,7 +140,7 @@
             color: var(--white);
         }
 
-        /* Cards */
+        /* ── Cards ── */
         .card-custom {
             background-color: var(--white);
             border: none;
@@ -146,7 +155,7 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* Hero */
+        /* ── Hero ── */
         .hero-section {
             background: linear-gradient(135deg, var(--dark) 0%, #2d2d4a 100%);
             padding: 6rem 0;
@@ -168,7 +177,7 @@
             margin-bottom: 2rem;
         }
 
-        /* Sections */
+        /* ── Sections ── */
         .section-title {
             font-size: 2.5rem;
             font-weight: 600;
@@ -193,7 +202,7 @@
             margin-bottom: 3rem;
         }
 
-        /* Featured card */
+        /* ── Featured card ── */
         .featured-card {
             position: relative;
             overflow: hidden;
@@ -201,11 +210,12 @@
         }
 
         .featured-card img {
-            width: 100%;
-            height: 420px;
-            object-fit: contain;
-            background-color: var(--gray-100);
-            transition: transform 0.5s ease;
+              width: 100%;
+                height: 420px;
+                object-fit: cover;        /* ✅ était "contain", qui laisse des espaces vides */
+                object-position: top;     /* ✅ cadre sur le haut pour ne pas couper la tête */
+                background-color: var(--gray-100);
+                transition: transform 0.5s ease;
         }
 
         .featured-card:hover img { transform: scale(1.1); }
@@ -219,7 +229,7 @@
             font-size: 0.875rem;
         }
 
-        /* Forms */
+        /* ── Forms ── */
         .form-custom {
             background-color: var(--white);
             padding: 2.5rem;
@@ -245,7 +255,7 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Footer */
+        /* ── Footer ── */
         .footer-custom {
             background-color: var(--dark);
             color: var(--gray-400);
@@ -286,7 +296,7 @@
             transform: translateY(-3px);
         }
 
-        /* Alerts & Badges */
+        /* ── Alerts & Badges ── */
         .alert-custom {
             border: none;
             border-radius: 8px;
@@ -301,60 +311,86 @@
         .badge-confirmed { background-color: #d4edda; color: #155724; padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.75rem; }
         .badge-rejected  { background-color: #f8d7da; color: #721c24; padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.75rem; }
 
-        /* RESPONSIVE - Tablet (≤991px) */
+        /* ════════════════════════════════════════
+           RESPONSIVE — Tablet (≤991px)
+           ✅ Menu en position relative → pousse
+              le contenu vers le bas sans rien cacher
+        ════════════════════════════════════════ */
         @media (max-width: 991px) {
             .navbar-toggler-custom { display: block; }
 
-            /* Navbar plus compacte */
-            .navbar-custom { padding: 0.5rem 0; }
-            .navbar-brand  { font-size: 1.3rem; }
+            .navbar-custom {
+                padding: 0.5rem 0;
+            }
+
+            /* ✅ Le conteneur doit autoriser le retour à la ligne */
+            .navbar-custom .container,
+            .navbar-custom .navbar-wrapper {
+                flex-wrap: wrap;
+                align-items: center;
+            }
+
+            .navbar-brand { font-size: 1.3rem; }
 
             .nav-actions {
+                /* ✅ Masqué par défaut */
                 display: none;
-                position: fixed;
-                top: var(--navbar-h, 52px);
-                left: 0;
-                right: 0;
+
+                /* ✅ Position relative : le menu s'insère dans le flux
+                      et pousse le contenu en dessous au lieu de le couvrir */
+                position: relative;
+                top: auto;
+                right: auto;
+                left: auto;
+                transform: none;
+
                 width: 100%;
-                flex-direction: row;
-                align-items: center;
-                flex-wrap: wrap;
+                flex-direction: column;
+                align-items: flex-start;
+
                 background: var(--white);
                 border-top: 2px solid var(--primary);
                 border-radius: 0 0 8px 8px;
-                padding: 0.3rem 1rem;
-                gap: 0.5rem;
-                z-index: 998;
+                padding: 0.5rem;
+                gap: 0.25rem;
                 box-shadow: var(--shadow-lg);
+
+                /* ✅ Animation d'ouverture douce */
+                animation: none;
             }
 
-            .nav-actions.active { display: flex; }
+            /* ✅ Quand le menu est ouvert */
+            .nav-actions.active {
+                display: flex;
+            }
 
             .nav-link-custom {
-                padding: 0.25rem 0.5rem !important;
-                width: auto;
-                border-bottom: none;
+                padding: 0.5rem 0.75rem !important;
+                width: 100%;
+                border-bottom: 1px solid var(--gray-200);
                 text-align: left;
-                font-size: 0.85rem;
-                line-height: 1.3;
+                font-size: 0.9rem;
             }
 
             .nav-link-custom:last-child { border-bottom: none; }
 
             .nav-actions form {
+                width: 100%;
                 padding: 0;
             }
 
             .nav-actions form .btn,
             .nav-actions > a.btn {
+                width: 100%;
                 font-size: 0.8rem;
-                padding: 0.2rem 0.75rem;
+                padding: 0.4rem 0.75rem;
+                margin-top: 0.25rem;
             }
 
             .hero-section { padding: 3rem 0; }
         }
 
-        /* Responsive - Mobile (≤768px) */
+        /* ── Mobile (≤768px) ── */
         @media (max-width: 768px) {
             .hero-title    { font-size: 2rem; }
             .hero-subtitle { font-size: 1rem; }
@@ -372,7 +408,7 @@
             .card-custom { padding: 1rem; }
         }
 
-        /* Responsive - Small mobile (≤576px) */
+        /* ── Small mobile (≤576px) ── */
         @media (max-width: 576px) {
             .hero-title    { font-size: 1.6rem; }
             .hero-subtitle { font-size: 0.95rem; }
@@ -396,7 +432,7 @@
 <body>
     <nav class="navbar-custom">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center navbar-wrapper">
+            <div class="d-flex justify-content-between align-items-center flex-wrap w-100 navbar-wrapper">
                 <a class="navbar-brand" href="<?php echo e(route('home')); ?>">COUTURE</a>
 
                 <button class="navbar-toggler-custom" id="navToggler" aria-label="Menu">
@@ -408,7 +444,7 @@
                         $user        = Auth::guard('admin')->user() ?? Auth::guard('client')->user();
                         $isAdmin     = $user instanceof \App\Models\Admin;
                         $isClient    = $user instanceof \App\Models\Client;
-                        $logoutRoute = $isAdmin ? route('admin.logout') : ($isClient ? route('logout') : '#');
+                        $logoutRoute = $isAdmin ? route('admin.logout') : ($isClient ? route('client.logout') : '#');
                     ?>
 
                     <?php if($isAdmin): ?>
@@ -506,23 +542,11 @@
 
     <script>
     (function () {
-        var navbar  = document.querySelector('.navbar-custom');
         var toggler = document.getElementById('navToggler');
         var menu    = document.getElementById('navMenu');
         var icon    = document.getElementById('navIcon');
 
         if (!toggler || !menu) return;
-
-        /* Met à jour la variable CSS --navbar-h en temps réel */
-        function updateNavbarHeight() {
-            if (navbar) {
-                document.documentElement.style.setProperty(
-                    '--navbar-h', navbar.getBoundingClientRect().height + 'px'
-                );
-            }
-        }
-        updateNavbarHeight();
-        window.addEventListener('resize', updateNavbarHeight);
 
         function closeMenu() {
             menu.classList.remove('active');
@@ -534,10 +558,9 @@
             e.stopPropagation();
             var isOpen = menu.classList.toggle('active');
             if (icon) icon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
-            if (isOpen) updateNavbarHeight(); /* recalcule avant affichage */
         });
 
-        /* Ferme au clic sur un lien (pas les boutons submit) */
+        /* Ferme au clic sur un lien */
         menu.querySelectorAll('a').forEach(function (link) {
             link.addEventListener('click', closeMenu);
         });

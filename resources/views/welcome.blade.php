@@ -11,8 +11,8 @@
                 <p class="hero-subtitle">Découvrez nos créations exclusives et réservez votre rendez-vous pour une expérience personnalisée.</p>
                 <div class="d-flex gap-3 flex-column flex-sm-row">
                     @guest
-                        <a href="{{ route('register') }}" class="btn btn-primary-custom">Commencer</a>
-                        <a href="{{ route('login') }}" class="btn btn-outline-custom" style="border-color: white; color: white;">Connexion</a>
+                        <a href="{{ route('register') }}" class="btn btn-primary-custom" style="padding: 0.4rem 1rem; font-size: 0.85rem;">Commencer</a>
+                        <a href="{{ route('login') }}" class="btn btn-outline-custom" style="border-color: white; color: white; padding: 0.4rem 1rem; font-size: 0.85rem;">Connexion</a>
                     @else
                         <a href="{{ route('vetements.index') }}" class="btn btn-primary-custom">Voir les vêtements</a>
                     @endguest
@@ -69,38 +69,38 @@
         <div class="row g-4 text-center">
             <div class="col-6 col-md-3">
                 <div class="text-center">
-                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; min-width: 80px; background-color: var(--primary); color: white; font-size: 1.5rem; font-weight: bold;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; min-width: 60px; background-color: var(--primary); color: white; font-size: 1.2rem; font-weight: bold;">
                         1
                     </div>
-                    <h5>Inscrivez-vous</h5>
-                    <p class="text-muted small">Créez votre compte client</p>
+                    <h5 style="font-size: 0.9rem;">Inscrivez-vous</h5>
+                    <p class="text-muted" style="font-size: 0.78rem;">Créez votre compte client</p>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="text-center">
-                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; min-width: 80px; background-color: var(--primary); color: white; font-size: 1.5rem; font-weight: bold;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; min-width: 60px; background-color: var(--primary); color: white; font-size: 1.2rem; font-weight: bold;">
                         2
                     </div>
-                    <h5>Parcourez</h5>
-                    <p class="text-muted small">Découvrez nos créations</p>
+                    <h5 style="font-size: 0.9rem;">Parcourez</h5>
+                    <p class="text-muted" style="font-size: 0.78rem;">Découvrez nos créations</p>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="text-center">
-                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; min-width: 80px; background-color: var(--primary); color: white; font-size: 1.5rem; font-weight: bold;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; min-width: 60px; background-color: var(--primary); color: white; font-size: 1.2rem; font-weight: bold;">
                         3
                     </div>
-                    <h5>Réservez</h5>
-                    <p class="text-muted small">Choisissez un vêtement et date</p>
+                    <h5 style="font-size: 0.9rem;">Réservez</h5>
+                    <p class="text-muted" style="font-size: 0.78rem;">Choisissez un vêtement et date</p>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="text-center">
-                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; min-width: 80px; background-color: var(--primary); color: white; font-size: 1.5rem; font-weight: bold;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; min-width: 60px; background-color: var(--primary); color: white; font-size: 1.2rem; font-weight: bold;">
                         4
                     </div>
-                    <h5>Confirmez</h5>
-                    <p class="text-muted small">Recevez la confirmation</p>
+                    <h5 style="font-size: 0.9rem;">Confirmez</h5>
+                    <p class="text-muted" style="font-size: 0.78rem;">Recevez la confirmation</p>
                 </div>
             </div>
         </div>
