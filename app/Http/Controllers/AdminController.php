@@ -64,7 +64,7 @@ class AdminController extends Controller
     public function dashboard()
     {
         $vetements = Vetement::orderBy('dateAjout', 'desc')->get();
-        $rendezVous = RendezVous::with(['client', 'vetement'])->orderBy('dateRendezVous', 'desc')->get();
+        $rendezVous = RendezVous::with(['client', 'vetement', 'notifications'])->orderBy('dateRendezVous', 'desc')->get();
         $clients = Client::orderBy('dateInscription', 'desc')->get();
         
         $stats = [
@@ -205,22 +205,36 @@ class AdminController extends Controller
 
     public function rendezvousIndex()
     {
-        $rendezVous = RendezVous::with(['client', 'vetement'])->orderBy('dateRendezVous', 'desc')->get();
+        $rendezVous = RendezVous::with(['client', 'vetement', 'notifications'])->orderBy('dateRendezVous', 'desc')->get();
         return view('admin.rendezvous.index', compact('rendezVous'));
     }
 
     public function rendezvousShow($id)
     {
-        $rendezVous = RendezVous::with(['client', 'vetement'])->findOrFail($id);
+        $rendezVous = RendezVous::with(['client', 'vetement', 'notifications'])->findOrFail($id);
         return view('admin.rendezvous.show', compact('rendezVous'));
     }
 
     public function rendezvousConfirmer($id)
     {
-        $rendezVous = RendezVous::with(['client', 'vetement'])->findOrFail($id);
+        $rendezVous = RendezVous::with(['client', 'vetement', 'notifications'])->findOrFail($id);
         $rendezVous->update(['statut' => RendezVous::STATUT_CONFIRME]);
 
-        $message = "Votre rendez-vous du {$rendezVous->dateRendezVous->format('d/m/Y')} à {$rendezVous->heure} a été CONFIRME.";
+        $vetementNom = $rendezVous->vetement?->nom ?? null;
+        $clientPrenom = $rendezVous->client?->prenom ?? 'Client';
+        $dateRdv = $rendezVous->dateRendezVous->format('d/m/Y');
+        $heureRdv = $rendezVous->heure;
+
+        $message  = "✅ *Rendez-vous confirmé !*\n\n";
+        $message .= "Bonjour {$clientPrenom},\n\n";
+        $message .= "Votre rendez-vous a bien été *confirmé*.\n\n";
+        $message .= "📅 Date : {$dateRdv}\n";
+        $message .= "🕐 Heure : {$heureRdv}\n";
+        if ($vetementNom) {
+            $message .= "👗 Vêtement : {$vetementNom}\n";
+        }
+        $message .= "\nMerci de votre confiance. À très bientôt ! 🙏";
+
         $this->sendAppointmentNotifications($rendezVous, $message, 'confirm');
 
         return back()->with('success', 'Rendez-vous confirmé!');
@@ -228,10 +242,18 @@ class AdminController extends Controller
 
     public function rendezvousRefuser($id)
     {
-        $rendezVous = RendezVous::with(['client', 'vetement'])->findOrFail($id);
+        $rendezVous = RendezVous::with(['client', 'vetement', 'notifications'])->findOrFail($id);
         $rendezVous->update(['statut' => RendezVous::STATUT_REFUSE]);
 
-        $message = "Votre rendez-vous du {$rendezVous->dateRendezVous->format('d/m/Y')} a été REFUSE. Veuillez prendre un nouveau rendez-vous.";
+        $clientPrenom2 = $rendezVous->client?->prenom ?? 'Client';
+        $dateRdv2 = $rendezVous->dateRendezVous->format('d/m/Y');
+
+        $message  = "❌ *Rendez-vous non disponible*\n\n";
+        $message .= "Bonjour {$clientPrenom2},\n\n";
+        $message .= "Nous sommes désolés, votre rendez-vous du *{$dateRdv2}* n'a pas pu être confirmé.\n\n";
+        $message .= "Vous pouvez prendre un nouveau rendez-vous directement sur l'application.\n";
+        $message .= "N'hésitez pas à nous contacter pour toute question. 🙏";
+
         $this->sendAppointmentNotifications($rendezVous, $message, 'refuse');
 
         return back()->with('success', 'Rendez-vous refusé!');

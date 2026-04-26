@@ -102,6 +102,9 @@ class RendezVousController extends Controller
         return back()->with('success', 'Rendez-vous confirmé!');
     }
 
+    /**
+     * Envoie un message WhatsApp détaillé à l'admin lors d'une nouvelle réservation.
+     */
     private function notifyAdminNewAppointment($client, RendezVous $rendezVous, ?Vetement $vetement): void
     {
         $admin = Admin::first();
@@ -109,30 +112,47 @@ class RendezVousController extends Controller
             return;
         }
 
-        $vetementNom = $vetement?->nom ?? 'Non spécifié';
-        $vetementPrix = $vetement?->prix ? number_format($vetement->prix, 0, ',', ' ') . ' CFA' : 'Prix non spécifié';
-        $clientNom = "{$client->prenom} {$client->nom}";
-        $clientTel = $client->telephone;
-        $dateRdv = $rendezVous->dateRendezVous->format('d/m/Y');
-        $heureRdv = $rendezVous->heure;
+        $clientNom    = "{$client->prenom} {$client->nom}";
+        $clientTel    = $client->telephone;
+        $clientEmail  = $client->email ?? 'Non renseigné';
+        $dateRdv      = $rendezVous->dateRendezVous->format('d/m/Y');
+        $heureRdv     = $rendezVous->heure;
+        $commentaire  = trim((string) $rendezVous->commentaire);
 
-        $message = "🆕 Nouveau RDV!\n\n";
-        $message .= "Client: {$clientNom}\n";
-        $message .= "Tél: {$clientTel}\n";
-        $message .= "Vêtement: {$vetementNom}\n";
-        $message .= "Prix: {$vetementPrix}\n";
-        $message .= "Date: {$dateRdv} à {$heureRdv}";
+        // Bloc vêtement (optionnel)
+        if ($vetement) {
+            $vetementNom  = $vetement->nom;
+            $vetementPrix = $vetement->prix
+                ? number_format($vetement->prix, 0, ',', ' ') . ' CFA'
+                : 'Prix non spécifié';
+            $vetementLine = "👗 Vêtement : {$vetementNom} ({$vetementPrix})";
+        } else {
+            $vetementLine = "👗 Vêtement : *(à définir avec le client)*";
+        }
 
-        $waPhone = $this->normalizeWhatsAppPhone($admin->telephone);
-        $token = config('services.whatsapp.token');
+        $message  = "🆕 *Nouvelle réservation*\n\n";
+        $message .= "👤 Client : {$clientNom}\n";
+        $message .= "📞 Tél : {$clientTel}\n";
+        $message .= "📧 Email : {$clientEmail}\n";
+        $message .= "📅 Date : {$dateRdv} à {$heureRdv}\n";
+        $message .= "{$vetementLine}\n";
+
+        if ($commentaire !== '') {
+            $message .= "💬 Note : {$commentaire}\n";
+        }
+
+        $message .= "\n✅ Validez ou refusez ce RDV depuis votre tableau de bord.";
+
+        $waPhone      = $this->normalizeWhatsAppPhone($admin->telephone);
+        $token        = config('services.whatsapp.token');
         $phoneNumberId = config('services.whatsapp.phone_number_id');
 
         if (!empty($token) && !empty($phoneNumberId) && $waPhone) {
-            $this->sendWhatsAppMessage($token, $phoneNumberId, $waPhone, $message);
+            $this->sendWhatsAppTextMessage($token, $phoneNumberId, $waPhone, $message);
         }
     }
 
-    private function sendWhatsAppMessage(string $token, string $phoneNumberId, string $waPhone, string $message): void
+    private function sendWhatsAppTextMessage(string $token, string $phoneNumberId, string $waPhone, string $message): void
     {
         $url = "https://graph.facebook.com/v21.0/{$phoneNumberId}/messages";
 
@@ -141,9 +161,9 @@ class RendezVousController extends Controller
                 ->timeout(25)
                 ->post($url, [
                     'messaging_product' => 'whatsapp',
-                    'to' => $waPhone,
-                    'type' => 'text',
-                    'text' => ['body' => $message],
+                    'to'                => $waPhone,
+                    'type'              => 'text',
+                    'text'              => ['body' => $message],
                 ]);
 
             if (!$response->successful()) {
