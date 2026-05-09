@@ -1,72 +1,197 @@
 <?php $__env->startSection('title', 'Inscription - Couture App'); ?>
 
+<?php $__env->startSection('styles'); ?>
+<style>
+    .auth-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        padding: 2rem 0;
+    }
+
+    .auth-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        width: 100%;
+        max-width: 550px;
+    }
+
+    .auth-logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary) !important;
+        text-decoration: none;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.75rem;
+        color: #1a1a2e;
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-subtitle {
+        color: #6c757d;
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+    }
+
+    .auth-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .auth-input {
+        border: 2px solid #e9ecef;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .auth-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(201,169,89,0.2);
+        outline: none;
+    }
+
+    .auth-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .auth-btn:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+    }
+
+    .auth-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .auth-link:hover {
+        text-decoration: underline;
+    }
+
+    .auth-back {
+        color: rgba(255,255,255,0.7);
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    .auth-back:hover {
+        color: #fff;
+    }
+
+    .password-toggle {
+        background: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-left: none;
+        border-radius: 0 8px 8px 0;
+        padding: 0.5rem 0.75rem;
+        cursor: pointer;
+    }
+
+    .password-toggle:hover {
+        background: #e9ecef;
+    }
+
+    .error-text {
+        color: #dc3545;
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+    }
+</style>
+<?php $__env->stopSection(); ?>
+
 <?php $__env->startSection('content'); ?>
-<div class="py-5">
+<div class="auth-page">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-6">
                 <div class="text-center mb-4">
-                    <a href="<?php echo e(route('home')); ?>" class="navbar-brand">COUTURE</a>
-                    <h2 class="section-title">Créer un compte</h2>
-                    <p class="section-subtitle">Rejoignez-nous</p>
+                    <a href="<?php echo e(route('home')); ?>" class="auth-logo">COUTURE</a>
+                    <h1 class="auth-title">Créer un compte</h1>
+                    <p class="auth-subtitle">Rejoignez-nous pour bénéficier de nos services</p>
                 </div>
-                <div class="form-custom">
+                
+                <div class="auth-card">
                     <form id="registerForm" method="POST" action="<?php echo e(route('register')); ?>">
                         <?php echo csrf_field(); ?>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label-custom">Nom *</label>
-                                <input type="text" name="nom" class="form-control form-control-custom" required>
+                                <label class="auth-label">Nom *</label>
+                                <input type="text" name="nom" class="auth-input" required placeholder="Votre nom">
                                 <?php $__errorArgs = ['nom'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                                    <span class="text-danger small"><?php echo e($message); ?></span>
+                                    <span class="error-text"><?php echo e($message); ?></span>
                                 <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label-custom">Prénom</label>
-                                <input type="text" name="prenom" class="form-control form-control-custom">
+                                <label class="auth-label">Prénom</label>
+                                <input type="text" name="prenom" class="auth-input" placeholder="Votre prénom">
                             </div>
                         </div>
+                        
                         <div class="mb-3">
-                            <label class="form-label-custom">Email *</label>
-                            <input type="email" name="email" class="form-control form-control-custom" required>
+                            <label class="auth-label">Email *</label>
+                            <input type="email" name="email" class="auth-input" required placeholder="votre@email.com">
                             <?php $__errorArgs = ['email'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                                <span class="text-danger small"><?php echo e($message); ?></span>
+                                <span class="error-text"><?php echo e($message); ?></span>
                             <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                         </div>
+                        
                         <div class="mb-3">
-                            <label class="form-label-custom">Téléphone *</label>
-                            <input type="tel" name="telephone" class="form-control form-control-custom" placeholder="+221 77 123 45 67" required>
+                            <label class="auth-label">Téléphone *</label>
+                            <input type="tel" name="telephone" class="auth-input" placeholder="+221 77 123 45 67" required>
                             <?php $__errorArgs = ['telephone'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                                <span class="text-danger small"><?php echo e($message); ?></span>
+                                <span class="error-text"><?php echo e($message); ?></span>
                             <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                         </div>
+                        
                         <div class="mb-3">
-                            <label class="form-label-custom">Mot de passe * (min 8 caractères)</label>
-                            <div class="input-group">
-                                <input type="password" id="motDePasse" name="motDePasse" class="form-control form-control-custom" required minlength="8">
-                                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('motDePasse', 'togglePwd1')" id="togglePwd1">
-                                    <i class="fas fa-eye"></i>
+                            <label class="auth-label">Mot de passe * (min 8 caractères)</label>
+                            <div class="position-relative">
+                                <input type="password" id="motDePasse" name="motDePasse" class="auth-input" required minlength="8" style="padding-right:45px;" placeholder="••••••••">
+                                <button type="button" class="password-toggle position-absolute" onclick="togglePassword('motDePasse', 'togglePwd1')" style="right:2px;top:50%;transform:translateY(-50%);border:none;background:transparent;">
+                                    <i class="fas fa-eye" id="togglePwd1Icon"></i>
                                 </button>
                             </div>
                             <?php $__errorArgs = ['motDePasse'];
@@ -74,58 +199,52 @@ $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                                <span class="text-danger small"><?php echo e($message); ?></span>
+                                <span class="error-text"><?php echo e($message); ?></span>
                             <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                         </div>
+                        
                         <div class="mb-4">
-                            <label class="form-label-custom">Confirmer le mot de passe *</label>
-                            <div class="input-group">
-                                <input type="password" name="motDePasse_confirmation" class="form-control form-control-custom" required>
-                                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('motDePasse_confirmation', 'togglePwd2')" id="togglePwd2">
-                                    <i class="fas fa-eye"></i>
+                            <label class="auth-label">Confirmer le mot de passe *</label>
+                            <div class="position-relative">
+                                <input type="password" name="motDePasse_confirmation" class="auth-input" required style="padding-right:45px;" placeholder="••••••••">
+                                <button type="button" class="password-toggle position-absolute" onclick="togglePassword('motDePasse_confirmation', 'togglePwd2')" style="right:2px;top:50%;transform:translateY(-50%);border:none;background:transparent;">
+                                    <i class="fas fa-eye" id="togglePwd2Icon"></i>
                                 </button>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary-custom w-100 mb-3">S'inscrire</button>
-                        <p class="text-center mb-0">
-                            Déjà inscrit? <a href="<?php echo e(route('login')); ?>" style="color: var(--primary);">Se connecter</a>
+                        
+                        <button type="submit" class="auth-btn mb-3">S'inscrire</button>
+                        
+                        <p class="text-center" style="color:#6c757d;">
+                            Déjà inscrit? <a href="<?php echo e(route('login')); ?>" class="auth-link">Se connecter</a>
                         </p>
                     </form>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="<?php echo e(route('home')); ?>" class="auth-back">
+                        <i class="fas fa-arrow-left me-1"></i> Retour à l'accueil
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('scripts'); ?>
-<style>
-.input-group { position: relative; }
-.input-group .btn {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    border: 2px solid var(--gray-200);
-    border-left: none;
-    border-radius: 0 6px 6px 0;
-    z-index: 10;
-}
-.input-group input { padding-right: 40px; }
-</style>
 <script>
-function togglePassword(inputId, btnId) {
+function togglePassword(inputId, iconId) {
     const input = document.getElementById(inputId);
-    const btn = document.getElementById(btnId);
+    const icon = document.getElementById(iconId);
     if (input.type === 'password') {
         input.type = 'text';
-        btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+        icon.className = 'fas fa-eye-slash';
     } else {
         input.type = 'password';
-        btn.innerHTML = '<i class="fas fa-eye"></i>';
+        icon.className = 'fas fa-eye';
     }
 }
 

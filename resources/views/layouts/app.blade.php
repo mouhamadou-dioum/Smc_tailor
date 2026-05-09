@@ -45,15 +45,15 @@
             color: var(--dark);
         }
 
-        /* ── Navbar ── */
-        .navbar-custom {
-            background-color: var(--white);
-            box-shadow: var(--shadow-sm);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+/* ── Navbar ── */
+.navbar-custom {
+    background-color: #111;
+    box-shadow: var(--shadow-sm);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
         .navbar-brand {
             font-family: 'Playfair Display', serif;
@@ -76,14 +76,16 @@
             z-index: 1001;
         }
 
-        .nav-link-custom {
-            color: var(--gray-700) !important;
-            font-weight: 500;
-            padding: 0.5rem 1rem !important;
-            transition: all 0.3s ease;
-            position: relative;
-            text-decoration: none;
-        }
+.nav-link-custom {
+    color: #ffffff !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: all 0.3s ease;
+    position: relative;
+    text-decoration: none;
+}
+
+.nav-link-custom:hover { color: var(--primary) !important; }
 
         .nav-link-custom:hover { color: var(--primary) !important; }
 
@@ -313,7 +315,7 @@
 
         /* ── Footer ── */
         .footer-custom {
-            background-color: var(--dark);
+            background-color: #000000;
             color: var(--gray-400);
             padding: 4rem 0 2rem;
         }
@@ -555,7 +557,9 @@
     <nav class="navbar-custom">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center navbar-wrapper">
-                <a class="navbar-brand" href="{{ route('home') }}">COUTURE</a>
+                <a class="navbar-brand" href="{{ route('home') }}">
+    {{-- <img src="{{ asset('lg-smc.png') }}" alt="COUTURE" style="height: 40px;"> --}}
+</a>
 
                 {{-- Bouton hamburger (visible ≤991px) --}}
                 <button class="navbar-toggler-custom" id="navToggler" aria-label="Menu">
@@ -622,11 +626,11 @@
                         </form>
 
                     @else
-                        <a href="{{ route('login') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
-                            <i class="fas fa-right-to-bracket"></i><span>Connexion</span>
+                        <a href="{{ route('login') }}" class="btn btn-outline-custom btn-sm nav-link-with-icon me-2 me-md-3">
+                            <i class="fas fa-right-to-bracket"></i> Connexion
                         </a>
-                        <a href="{{ route('register') }}" class="btn btn-primary-custom btn-sm">
-                            <i class="fas fa-user-plus me-1"></i> S'inscrire
+                        <a href="{{ route('register') }}" class="btn btn-primary-custom btn-sm nav-link-with-icon">
+                            <i class="fas fa-user-plus"></i> S'inscrire
                         </a>
                     @endif
                 </div>
@@ -638,11 +642,13 @@
         @yield('content')
     </main>
 
-    <footer class="footer-custom">
+    {{-- <footer class="footer-custom">
         <div class="container">
             <div class="row">
                 <div class="col-md-4 mb-4">
-                    <h4 class="footer-title">COUTURE</h4>
+                    <a href="{{ route('home') }}">
+         <img src="{{ asset('lg-smc.png') }}" alt="COUTURE" style="height: 40px;" class="footer-title">
+        </a>
                     <p>Découvrez l'art de la couture sur mesure. Nous créons des pièces uniques qui mettraient en valeur votre style et votre personnalité.</p>
                 </div>
                 <div class="col-md-4 mb-4">
@@ -669,7 +675,105 @@
             <hr style="border-color: rgba(255,255,255,0.1);">
             <p class="text-center mb-0">&copy; 2024 Couture App. Tous droits réservés.</p>
         </div>
-    </footer>
+    </footer> --}}
+    <footer class="site-footer">
+
+    {{-- Bande CTA --}}
+    <div class="footer-cta">
+        <div class="footer-cta-inner">
+            <div>
+                <p class="footer-cta-tag">Commencez dès aujourd'hui</p>
+                <h2 class="footer-cta-title">Votre création <em>vous attend</em></h2>
+            </div>
+            <a href="{{ route('register') }}" class="btn-gold">
+                <i class="fas fa-calendar-check" style="font-size:0.65rem;"></i>
+                Prendre rendez-vous
+            </a>
+        </div>
+    </div>
+
+    {{-- Corps du footer --}}
+    <div class="footer-body">
+        <div class="footer-grid">
+
+            {{-- Colonne marque --}}
+            <div class="footer-col footer-col-brand">
+                <div class="footer-logo">SMC<span>—</span>COUTURE</div>
+                <p class="footer-about">
+                    Maison de couture sur mesure fondée en 2020 à Dakar. Chaque création est unique, pensée pour sublimer votre style avec des matières d'exception.
+                </p>
+                <div class="footer-socials">
+                    <a href="#" class="footer-social" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="footer-social" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="footer-social" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" class="footer-social" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+
+            {{-- Colonne navigation --}}
+            <div class="footer-col">
+                <h4 class="footer-col-title">Navigation</h4>
+                <ul class="footer-links">
+                    <li><a href="{{ route('home') }}" class="footer-link"><i class="fas fa-chevron-right"></i>Accueil</a></li>
+                    <li><a href="{{ route('vetements.index') }}" class="footer-link"><i class="fas fa-chevron-right"></i>Collection</a></li>
+                    <li><a href="{{ route('rendezvous.create') }}" class="footer-link"><i class="fas fa-chevron-right"></i>Réserver</a></li>
+                    @auth('client')
+                    <li><a href="{{ route('rendezvous.index') }}" class="footer-link"><i class="fas fa-chevron-right"></i>Mes rendez-vous</a></li>
+                    @endauth
+                    @guest('client')
+                    <li><a href="{{ route('login') }}" class="footer-link"><i class="fas fa-chevron-right"></i>Connexion</a></li>
+                    <li><a href="{{ route('register') }}" class="footer-link"><i class="fas fa-chevron-right"></i>S'inscrire</a></li>
+                    @endguest
+                </ul>
+            </div>
+
+            {{-- Colonne services --}}
+            <div class="footer-col">
+                <h4 class="footer-col-title">Nos services</h4>
+                <ul class="footer-links">
+                    <li><a href="#" class="footer-link"><i class="fas fa-chevron-right"></i>Vêtements sur mesure</a></li>
+                    <li><a href="#" class="footer-link"><i class="fas fa-chevron-right"></i>Tenues de cérémonie</a></li>
+                    <li><a href="#" class="footer-link"><i class="fas fa-chevron-right"></i>Retouches & ajustements</a></li>
+                    <li><a href="#" class="footer-link"><i class="fas fa-chevron-right"></i>Conseils personnalisés</a></li>
+                    <li><a href="#" class="footer-link"><i class="fas fa-chevron-right"></i>Prise de mesures</a></li>
+                </ul>
+            </div>
+
+            {{-- Colonne contact --}}
+            <div class="footer-col">
+                <h4 class="footer-col-title">Contact</h4>
+                <ul class="footer-contact-list">
+                    <li>
+                        <span class="footer-contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+                        <span>Dakar, Sénégal</span>
+                    </li>
+                    <li>
+                        <span class="footer-contact-icon"><i class="fas fa-phone"></i></span>
+                        <a href="tel:+221771234567" class="footer-link">+221 77 123 45 67</a>
+                    </li>
+                    <li>
+                        <span class="footer-contact-icon"><i class="fas fa-envelope"></i></span>
+                        <a href="mailto:contact@couture.com" class="footer-link">contact@couture.com</a>
+                    </li>
+                    <li>
+                        <span class="footer-contact-icon"><i class="fas fa-clock"></i></span>
+                        <span>Lun – Sam : 9h – 19h</span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    {{-- Barre copyright --}}
+    <div class="footer-bottom">
+        <div class="footer-bottom-inner">
+            <span class="footer-copy">© {{ date('Y') }} SMC Couture. Tous droits réservés.</span>
+            <span class="footer-copy">Fait avec <i class="fas fa-heart" style="color:var(--gold); font-size:0.6rem;"></i> à Dakar</span>
+        </div>
+    </div>
+
+</footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>

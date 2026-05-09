@@ -1,12 +1,12 @@
 <?php $__env->startSection('title', 'Accueil - Couture App'); ?>
 
 <?php $__env->startSection('content'); ?>
-<section class="hero-section">
+<section class="hero-section" style="background-image: url('<?php echo e(asset('images/hero.jpeg')); ?>'); background-size: cover; background-position: center;">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="hero-title">L'Art de la Couture Sur Mesure</h1>
-                <p class="hero-subtitle">Découvrez nos créations exclusives et réservez votre rendez-vous pour une expérience personnalisée.</p>
+            <div class="col-lg-6" style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
+                <h1 class="hero-title" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.9);">L'Art de la Couture Sur Mesure</h1>
+                <p class="hero-subtitle" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.9);">Découvrez nos créations exclusives et réservez votre rendez-vous pour une expérience personnalisée.</p>
                 <div class="d-flex gap-3 flex-column flex-sm-row">
                     <?php if(auth()->guard()->guest()): ?>
                         <a href="<?php echo e(route('register')); ?>" class="btn btn-primary-custom" style="padding: 0.4rem 1rem; font-size: 0.85rem;">Commencer</a>

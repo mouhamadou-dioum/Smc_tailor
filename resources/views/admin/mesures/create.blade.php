@@ -3,12 +3,16 @@
 @section('title', 'Prendre les mesures - ' . ($client->nom ?? 'Client'))
 
 @section('content')
-<div class="py-4">
+<div class="rdv-page">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Prendre les mesures</h2>
-            <a href="{{ route('admin.rendezvous.index') }}" class="btn btn-outline-custom">
-                <i class="fas fa-arrow-left me-2"></i> Retour aux rendez-vous
+        {{-- Header --}}
+        <div class="rdv-header">
+            <div>
+                <h2><i class="fas fa-ruler"></i> Prendre les mesures</h2>
+                <div class="subtitle">Saisissez les mensurations du client</div>
+            </div>
+            <a href="{{ route('admin.rendezvous.index') }}" class="btn btn-outline-custom" style="color:#fff;border-color:rgba(255,255,255,0.3);">
+                <i class="fas fa-arrow-left me-2"></i> Rendez-vous
             </a>
         </div>
 
@@ -25,18 +29,29 @@
                         </div>
                     @endif
 
-                    <div class="mb-4 p-3 bg-light rounded">
-                        <strong>Client:</strong> {{ $client->nom }} {{ $client->prenom }}<br>
-                        <strong>Téléphone:</strong> {{ $client->telephone }}<br>
-                        <strong>Email:</strong> {{ $client->email }}
+                    {{-- Client Info Card --}}
+                    <div class="rdv-card mb-4" style="grid-template-columns: auto 1fr auto;">
+                        <div class="rdv-date-block" style="min-width:50px;padding:0.5rem;">
+                            <i class="fas fa-user-circle" style="font-size:2rem;color:var(--primary);"></i>
+                        </div>
+                        <div class="rdv-info">
+                            <div class="rdv-client">{{ $client->nom }} {{ $client->prenom }}</div>
+                            <div class="rdv-phone"><i class="fas fa-phone fa-xs me-1"></i>{{ $client->telephone }}</div>
+                            <div class="rdv-comment"><i class="fas fa-envelope fa-xs me-1"></i>{{ $client->email }}</div>
+                        </div>
+                        @if($mesure)
+                            <div class="rdv-actions">
+                                <a href="{{ route('admin.mesures.historique', $client->id) }}" class="btn-action view" title="Historique">
+                                    <i class="fas fa-history"></i>
+                                </a>
+                            </div>
+                        @endif
                     </div>
 
                     @if($mesure)
                         <div class="alert alert-custom alert-info-custom mb-4">
+                            <i class="fas fa-info-circle me-2"></i>
                             <strong>Dernière mesure:</strong> {{ $mesure->created_at->format('d/m/Y') }}
-                            <a href="{{ route('admin.mesures.historique', $client->id) }}" class="btn btn-sm btn-outline-custom ms-2">
-                                Voir l'historique
-                            </a>
                         </div>
                     @endif
 
@@ -49,7 +64,9 @@
                                    placeholder="Ex: Costume mariage, Boubou femme..." value="{{ old('nom') }}">
                         </div>
 
-                        <h5 class="mb-3 mt-4">Mensurations (en cm)</h5>
+                        <h5 class="mb-3 mt-4" style="font-family:'Playfair Display',serif;">
+                            <i class="fas fa-tshirt me-2" style="color:var(--primary);"></i>Mensurations (en cm)
+                        </h5>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -90,21 +107,23 @@
                             </div>
                         </div>
 
-                        <h5 class="mb-3 mt-4">Longueurs</h5>
+                        <h5 class="mb-3 mt-4" style="font-family:'Playfair Display',serif;">
+                            <i class="fas fa-ruler-vertical me-2" style="color:var(--primary);"></i>Longueurs
+                        </h5>
 
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label class="form-label-custom">Longueur Chemise</label>
+                                <label class="form-label-custom">Chemise</label>
                                 <input type="number" step="0.1" name="longueurChemise" class="form-control form-control-custom" 
                                        placeholder="Ex: 75" value="{{ old('longueurChemise', $mesure->longueurChemise ?? '') }}">
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label-custom">Longueur Boubou</label>
+                                <label class="form-label-custom">Boubou</label>
                                 <input type="number" step="0.1" name="longueurBoubou" class="form-control form-control-custom" 
                                        placeholder="Ex: 120" value="{{ old('longueurBoubou', $mesure->longueurBoubou ?? '') }}">
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label-custom">Longueur Pantalon</label>
+                                <label class="form-label-custom">Pantalon</label>
                                 <input type="number" step="0.1" name="longueurPantalon" class="form-control form-control-custom" 
                                        placeholder="Ex: 100" value="{{ old('longueurPantalon', $mesure->longueurPantalon ?? '') }}">
                             </div>
@@ -112,7 +131,7 @@
 
                         <div class="d-flex gap-3 mt-4">
                             <button type="submit" class="btn btn-primary-custom">
-                                <i class="fas fa-save me-2"></i> Enregistrer les mesures
+                                <i class="fas fa-save me-2"></i> Enregistrer
                             </button>
                             <a href="{{ route('admin.rendezvous.index') }}" class="btn btn-outline-custom">Annuler</a>
                         </div>

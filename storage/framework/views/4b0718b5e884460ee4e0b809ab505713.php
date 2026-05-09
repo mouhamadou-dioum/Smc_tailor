@@ -1,128 +1,129 @@
 <?php $__env->startSection('title', 'Admin - Tableau de bord'); ?>
 
 <?php $__env->startSection('content'); ?>
-<div class="py-4">
+
+
+<div class="rdv-page">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <h2 class="mb-0">Tableau de bord Admin</h2>
-            <div class="d-flex gap-2 flex-wrap">
-                <a href="<?php echo e(route('admin.categories.index')); ?>" class="btn btn-outline-custom btn-sm">
-                    <i class="fas fa-tags me-1"></i> Catégories
-                </a>
-                <form action="<?php echo e(route('admin.logout')); ?>" method="POST">
-                    <?php echo csrf_field(); ?>
-                    <button type="submit" class="btn btn-outline-custom btn-sm">Déconnexion</button>
-                </form>
+
+        
+        
+
+        
+        <br>
+        <br>
+        <div class="row g-4 mb-4">
+
+            <div class="col-md-3">
+                <div class="rdv-card stat-card">
+                    <i class="fas fa-tshirt"></i>
+                    <h3><?php echo e($stats['vetements']); ?></h3>
+                    <p>Vêtements</p>
+                </div>
             </div>
+
+            <div class="col-md-3">
+                <div class="rdv-card stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3><?php echo e($stats['clients']); ?></h3>
+                    <p>Clients</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="rdv-card stat-card statut-attente">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3><?php echo e($stats['rendezVous']); ?></h3>
+                    <p>Rendez-vous</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="rdv-card stat-card statut-attente">
+                    <i class="fas fa-clock"></i>
+                    <h3><?php echo e($stats['enAttente']); ?></h3>
+                    <p>En attente</p>
+                </div>
+            </div>
+
         </div>
 
-        <div class="row g-3 mb-4">
-            <div class="col-6 col-md-3">
-                <div class="card-custom p-3 p-md-4 text-center">
-                    <i class="fas fa-tshirt" style="font-size: 2rem; color: var(--primary);"></i>
-                    <h3 class="mt-2"><?php echo e($stats['vetements']); ?></h3>
-                    <p class="text-muted mb-0">Vêtements</p>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="card-custom p-3 p-md-4 text-center">
-                    <i class="fas fa-users" style="font-size: 2rem; color: var(--primary);"></i>
-                    <h3 class="mt-2"><?php echo e($stats['clients']); ?></h3>
-                    <p class="text-muted mb-0">Clients</p>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="card-custom p-3 p-md-4 text-center">
-                    <i class="fas fa-calendar-alt" style="font-size: 2rem; color: var(--primary);"></i>
-                    <h3 class="mt-2"><?php echo e($stats['rendezVous']); ?></h3>
-                    <p class="text-muted mb-0">Rendez-vous</p>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="card-custom p-3 p-md-4 text-center">
-                    <i class="fas fa-clock" style="font-size: 2rem; color: #ffc107;"></i>
-                    <h3 class="mt-2"><?php echo e($stats['enAttente']); ?></h3>
-                    <p class="text-muted mb-0">En attente</p>
-                </div>
-            </div>
-        </div>
-
+        
         <div class="row g-4">
+
+            
             <div class="col-lg-6">
                 <div class="card-custom p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4>Derniers vêtements</h4>
-                        <a href="<?php echo e(route('admin.vetements.index')); ?>" class="btn btn-outline-custom btn-sm">Voir tout</a>
+                    <div class="d-flex justify-content-between mb-3">
+                        <h4><i class="fas fa-tshirt me-2"></i> Derniers vêtements</h4>
+                        <a href="<?php echo e(route('admin.vetements.index')); ?>" class="btn btn-sm btn-outline-dark">Voir tout</a>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Nom</th>
-                                    <th>Prix</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $__currentLoopData = $vetements->take(5); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vetement): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <tr>
-                                    <td><?php echo e($vetement->nom); ?></td>
-                                    <td><?php echo e(number_format($vetement->prix, 0, ',', ' ')); ?> CFA</td>
-                                    <td>
-                                        <?php if($vetement->disponible): ?>
-                                            <span class="badge bg-success">Disponible</span>
-                                        <?php else: ?>
-                                            <span class="badge bg-secondary">Indisponible</span>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </tbody>
-                        </table>
-                    </div>
+
+                    <?php $__currentLoopData = $vetements->take(5); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vetement): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="rdv-card list-card d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong><?php echo e($vetement->nom); ?></strong><br>
+                                <small><?php echo e(number_format($vetement->prix, 0, ',', ' ')); ?> CFA</small>
+                            </div>
+
+                            <?php if($vetement->disponible): ?>
+                                <span class="status-pill confirme">Disponible</span>
+                            <?php else: ?>
+                                <span class="status-pill refuse">Indisponible</span>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
+
+            
             <div class="col-lg-6">
                 <div class="card-custom p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4>Rendez-vous récents</h4>
-                        <a href="<?php echo e(route('admin.rendezvous.index')); ?>" class="btn btn-outline-custom btn-sm">Voir tout</a>
+                    <div class="d-flex justify-content-between mb-3">
+                        <h4><i class="fas fa-calendar-alt me-2"></i> Rendez-vous récents</h4>
+                        <a href="<?php echo e(route('admin.rendezvous.index')); ?>" class="btn btn-sm btn-outline-dark">Voir tout</a>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Client</th>
-                                    <th>Date</th>
-                                    <th>Statut</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $__currentLoopData = $rendezVous->take(5); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rdv): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <tr>
-                                    <td><?php echo e($rdv->client->nom); ?></td>
-                                    <td><?php echo e($rdv->dateRendezVous->format('d/m/Y')); ?></td>
-                                    <td>
-                                        <?php if($rdv->statut === 'EN_ATTENTE'): ?>
-                                            <span class="badge badge-waiting">En attente</span>
-                                        <?php elseif($rdv->statut === 'CONFIRME'): ?>
-                                            <span class="badge badge-confirmed">Confirmé</span>
-                                        <?php else: ?>
-                                            <span class="badge badge-rejected">Refusé</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <a href="<?php echo e(route('admin.rendezvous.show', $rdv->id)); ?>" class="btn btn-sm btn-primary-custom">Voir</a>
-                                    </td>
-                                </tr>
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </tbody>
-                        </table>
-                    </div>
+
+                    <?php $__currentLoopData = $rendezVous->take(5); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rdv): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+
+                        <?php
+                            $class = match($rdv->statut) {
+                                \App\Models\RendezVous::STATUT_CONFIRME => 'statut-confirme',
+                                \App\Models\RendezVous::STATUT_REFUSE => 'statut-refuse',
+                                default => 'statut-attente',
+                            };
+                        ?>
+
+                        <div class="rdv-card list-card <?php echo e($class); ?> d-flex justify-content-between align-items-center">
+
+                            <div>
+                                <strong><?php echo e($rdv->client->prenom); ?> <?php echo e($rdv->client->nom); ?></strong><br>
+                                <small><?php echo e($rdv->dateRendezVous->format('d/m/Y')); ?> - <?php echo e($rdv->heure); ?></small>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                <?php if($rdv->statut === \App\Models\RendezVous::STATUT_CONFIRME): ?>
+                                    <span class="status-pill confirme">Confirmé</span>
+                                <?php elseif($rdv->statut === \App\Models\RendezVous::STATUT_REFUSE): ?>
+                                    <span class="status-pill refuse">Refusé</span>
+                                <?php else: ?>
+                                    <span class="status-pill attente">En attente</span>
+                                <?php endif; ?>
+
+                                <a href="<?php echo e(route('admin.rendezvous.show', $rdv->id)); ?>" class="btn-action">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+
+                            </div>
+                        </div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
                 </div>
             </div>
+
         </div>
+
     </div>
 </div>
 <?php $__env->stopSection(); ?>

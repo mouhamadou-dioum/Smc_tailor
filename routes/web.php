@@ -9,7 +9,13 @@ use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\MesureController;
 
 Route::get('/', function () {
-    return view('welcome');
+    $categories = App\Models\Categorie::all();
+    $vetements = App\Models\Vetement::with('categorie')
+        ->where('disponible', true)
+        ->orderBy('dateAjout', 'desc')
+        ->take(6)
+        ->get();
+    return view('welcome', compact('categories', 'vetements'));
 })->name('home');
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

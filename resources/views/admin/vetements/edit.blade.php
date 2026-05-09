@@ -3,11 +3,15 @@
 @section('title', 'Admin - Modifier le vêtement')
 
 @section('content')
-<div class="py-4">
+<div class="rdv-page">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Modifier le vêtement</h2>
-            <a href="{{ route('admin.vetements.index') }}" class="btn btn-outline-custom">
+        {{-- Header --}}
+        <div class="rdv-header">
+            <div>
+                <h2><i class="fas fa-edit"></i> Modifier le vêtement</h2>
+                <div class="subtitle">Mettez à jour les informations du modèle</div>
+            </div>
+            <a href="{{ route('admin.vetements.index') }}" class="btn btn-outline-custom" style="color:#fff;border-color:rgba(255,255,255,0.3);">
                 <i class="fas fa-arrow-left me-2"></i> Retour
             </a>
         </div>

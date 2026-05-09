@@ -3,11 +3,229 @@
 @section('title', 'Admin - Rendez-vous')
 
 @section('content')
-<div class="py-4">
+
+@php
+    $admin = \App\Models\Admin::first();
+    $adminPhone = '';
+    if ($admin && $admin->telephone) {
+        $adminPhone = preg_replace('/\D/', '', $admin->telephone);
+        if (!str_starts_with($adminPhone, '221')) {
+            $adminPhone = '221' . ltrim($adminPhone, '0');
+        }
+    }
+@endphp
+
+<style>
+    .rdv-page { padding: 2.5rem 0 4rem; min-height: 80vh; }
+
+    /* Hero header */
+    .rdv-header {
+        background: linear-gradient(135deg, var(--dark) 0%, #2d2d4e 100%);
+        border-radius: 20px;
+        padding: 2rem 2.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        box-shadow: 0 8px 32px rgba(26,26,46,0.18);
+    }
+    .rdv-header h2 {
+        color: #fff;
+        font-size: 1.7rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .rdv-header h2 i { color: var(--primary); }
+    .rdv-header .subtitle {
+        color: rgba(255,255,255,0.55);
+        font-size: 0.85rem;
+        margin-top: 0.2rem;
+    }
+
+    /* Cards layout */
+    .rdv-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .rdv-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        border: 1.5px solid var(--gray-200);
+        padding: 1.5rem 1.75rem;
+        display: grid;
+        grid-template-columns: auto 1fr auto auto auto;
+        align-items: center;
+        gap: 1.5rem;
+        transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+        position: relative;
+        overflow: hidden;
+    }
+    .rdv-card:hover {
+        box-shadow: 0 6px 24px rgba(201,169,89,0.12);
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+    .rdv-card::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 4px;
+        border-radius: 4px 0 0 4px;
+    }
+    .rdv-card.statut-attente::before  { background: #f59e0b; }
+    .rdv-card.statut-confirme::before { background: #22c55e; }
+    .rdv-card.statut-refuse::before   { background: #ef4444; }
+
+    /* Date block */
+    .rdv-date-block {
+        background: var(--gray-100);
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        text-align: center;
+        min-width: 72px;
+    }
+    .rdv-date-block .day {
+        font-size: 1.6rem;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--dark);
+        line-height: 1;
+    }
+    .rdv-date-block .month {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--primary);
+        margin-top: 2px;
+    }
+    .rdv-date-block .time {
+        font-size: 0.78rem;
+        color: var(--gray-600);
+        margin-top: 4px;
+        font-weight: 600;
+    }
+
+    /* Info block */
+    .rdv-info .rdv-client {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--dark);
+        font-family: 'Playfair Display', serif;
+    }
+    .rdv-info .rdv-phone {
+        font-size: 0.78rem;
+        color: var(--gray-600);
+        margin-top: 2px;
+    }
+    .rdv-info .rdv-vetement {
+        font-size: 0.82rem;
+        color: var(--gray-600);
+        margin-top: 4px;
+        font-style: italic;
+    }
+
+    /* Status badge */
+    .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+    }
+    .status-pill.attente  { background: #fef3c7; color: #92400e; }
+    .status-pill.confirme { background: #dcfce7; color: #166534; }
+    .status-pill.refuse   { background: #fee2e2; color: #991b1b; }
+
+    /* WhatsApp status */
+    .wa-status {}
+    .wa-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.72rem;
+        font-weight: 600;
+    }
+    .wa-badge.sent { background: #dcfce7; color: #166534; }
+    .wa-badge.failed { background: #fee2e2; color: #991b1b; }
+    .wa-badge.none { background: var(--gray-100); color: var(--gray-600); }
+
+    /* Actions */
+    .rdv-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        border: 1.5px solid var(--gray-300);
+        background: #fff;
+        color: var(--gray-600);
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+    }
+    .btn-action:hover { transform: translateY(-1px); }
+    .btn-action.view:hover { border-color: var(--primary); color: var(--primary); background: #fef9ef; }
+    .btn-action.confirm:hover { border-color: #22c55e; color: #22c55e; background: #f0fdf4; }
+    .btn-action.reject:hover { border-color: #ef4444; color: #ef4444; background: #fef2f2; }
+    .btn-action.wa { border-color: #bbf7d0; color: #25d366; background: #f0fdf4; }
+    .btn-action.wa:hover { background: #25d366; color: #fff; border-color: #25d366; }
+
+    /* Empty state */
+    .empty-state {
+        background: #fff;
+        border-radius: 16px;
+        padding: 4rem 2rem;
+        text-align: center;
+        border: 2px dashed var(--gray-300);
+    }
+    .empty-state i { font-size: 3rem; color: var(--gray-300); margin-bottom: 1rem; }
+
+    .confirme-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        color: #166534;
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    @media (max-width: 992px) {
+        .rdv-card {
+            grid-template-columns: auto 1fr;
+            grid-template-rows: auto auto auto;
+        }
+        .rdv-actions { grid-column: 1 / -1; justify-content: flex-start; }
+        .wa-status { grid-column: 1; }
+    }
+</style>
+
+<div class="rdv-page">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Gestion des Rendez-vous</h2>
-            <span class="badge bg-secondary fs-6">
+
+        {{-- Header --}}
+        <div class="rdv-header">
+            <div>
+                <h2><i class="fas fa-calendar-cog"></i> Gestion des Rendez-vous</h2>
+                <div class="subtitle">Gérez et suivez toutes les réservations de l'atelier</div>
+            </div>
+            <span class="badge bg-warning fs-6" style="color:#92400e;">
+                <i class="fas fa-clock me-1"></i>
                 {{ $rendezVous->where('statut', 'EN_ATTENTE')->count() }} en attente
             </span>
         </div>
@@ -18,130 +236,129 @@
             </div>
         @endif
 
-        <div class="card-custom">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0 align-middle">
-                    <thead style="background-color: var(--gray-100);">
-                        <tr>
-                            <th>Client</th>
-                            <th>Vêtement</th>
-                            <th>Date & Heure</th>
-                            <th>Statut RDV</th>
-                            <th title="Dernier WhatsApp envoyé au client">
-                                <i class="fab fa-whatsapp text-success"></i> WA Client
-                            </th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($rendezVous as $rdv)
-                        @php
-                            $lastWa = $rdv->notifications
-                                ->where('type', 'WHATSAPP')
-                                ->sortByDesc('dateEnvoi')
-                                ->first();
+        {{-- Liste --}}
+        <div class="rdv-grid">
+            @forelse($rendezVous as $rdv)
+            @php
+                $dateObj = $rdv->dateRendezVous;
+                $client = $rdv->client;
 
-                            $rawPhone = $rdv->client->telephone ?? '';
-                            $phone = preg_replace('/\D/', '', $rawPhone);
-                            if ($phone && !str_starts_with($phone, '221')) {
-                                $phone = '221' . ltrim($phone, '0');
-                            }
-                            $waText = urlencode(
-                                "Bonjour {$rdv->client->prenom}, je vous contacte concernant votre rendez-vous du {$rdv->dateRendezVous->format('d/m/Y')} à {$rdv->heure}."
-                            );
-                        @endphp
-                        <tr>
-                            <td>
-                                <strong>{{ $rdv->client->prenom }} {{ $rdv->client->nom }}</strong><br>
-                                <small class="text-muted">
-                                    <i class="fas fa-phone fa-xs me-1"></i>{{ $rdv->client->telephone ?? 'N/A' }}
-                                </small>
-                            </td>
-                            <td>
-                                @if($rdv->vetement)
-                                    {{ $rdv->vetement->nom }}
-                                @else
-                                    <span class="text-muted fst-italic">À définir</span>
-                                @endif
-                            </td>
-                            <td>
-                                <strong>{{ $rdv->dateRendezVous->format('d/m/Y') }}</strong><br>
-                                <small class="text-muted">{{ $rdv->heure }}</small>
-                            </td>
-                            <td>
-                                @if($rdv->statut === 'EN_ATTENTE')
-                                    <span class="badge badge-waiting">⏳ En attente</span>
-                                @elseif($rdv->statut === 'CONFIRME')
-                                    <span class="badge badge-confirmed">✅ Confirmé</span>
-                                @else
-                                    <span class="badge badge-rejected">❌ Refusé</span>
-                                @endif
-                            </td>
+                $statutClass = match($rdv->statut) {
+                    \App\Models\RendezVous::STATUT_CONFIRME => 'statut-confirme',
+                    \App\Models\RendezVous::STATUT_REFUSE   => 'statut-refuse',
+                    default                                 => 'statut-attente',
+                };
 
-                            {{-- Statut du dernier WhatsApp envoyé au client --}}
-                            <td>
-                                @if($lastWa)
-                                    @if($lastWa->statut === 'ENVOYE')
-                                        <span class="badge bg-success" title="{{ $lastWa->dateEnvoi->format('d/m/Y H:i') }}">
-                                            <i class="fab fa-whatsapp me-1"></i>Envoyé
-                                        </span>
-                                        <br><small class="text-muted">{{ $lastWa->dateEnvoi->diffForHumans() }}</small>
-                                    @else
-                                        <span class="badge bg-danger" title="Échec d'envoi">
-                                            <i class="fas fa-exclamation-triangle me-1"></i>Échec
-                                        </span>
-                                        <br><small class="text-muted">{{ $lastWa->dateEnvoi->diffForHumans() }}</small>
-                                    @endif
-                                @else
-                                    <span class="text-muted small">—</span>
-                                @endif
-                            </td>
+                $lastWa = $rdv->notifications
+                    ->where('type', 'WHATSAPP')
+                    ->sortByDesc('dateEnvoi')
+                    ->first();
 
-                            <td>
-                                <div class="d-flex gap-2 flex-wrap">
-                                    @if($phone)
-                                        <a href="https://wa.me/{{ $phone }}?text={{ $waText }}"
-                                           target="_blank"
-                                           class="btn btn-sm btn-success"
-                                           title="Contacter sur WhatsApp">
-                                            <i class="fab fa-whatsapp"></i>
-                                        </a>
-                                    @endif
+                $rawPhone = $client->telephone ?? '';
+                $phone = preg_replace('/\D/', '', $rawPhone);
+                if ($phone && !str_starts_with($phone, '221')) {
+                    $phone = '221' . ltrim($phone, '0');
+                }
+                $waText = urlencode(
+                    "Bonjour {$client->prenom}, je vous contacte concernant votre rendez-vous du {$dateObj->format('d/m/Y')} à {$rdv->heure}."
+                );
+                $waLink = $phone ? 'https://wa.me/' . $phone . '?text=' . $waText : null;
+            @endphp
+            <div class="rdv-card {{ $statutClass }}">
 
-                                    <a href="{{ route('admin.rendezvous.show', $rdv->id) }}"
-                                       class="btn btn-sm btn-outline-primary"
-                                       title="Voir détails">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
+                {{-- Date block --}}
+                <div class="rdv-date-block">
+                    <div class="day">{{ $dateObj->format('d') }}</div>
+                    <div class="month">{{ $dateObj->translatedFormat('M Y') }}</div>
+                    <div class="time"><i class="fas fa-clock fa-xs me-1"></i>{{ $rdv->heure }}</div>
+                </div>
 
-                                    @if($rdv->statut === 'EN_ATTENTE')
-                                        <a href="{{ route('admin.rendezvous.confirmer', $rdv->id) }}"
-                                           class="btn btn-sm btn-success"
-                                           title="Confirmer — envoie un WhatsApp au client"
-                                           onclick="return confirm('Confirmer ce RDV ? Un WhatsApp de confirmation sera envoyé au client.')">
-                                            <i class="fas fa-check"></i>
-                                        </a>
-                                        <a href="{{ route('admin.rendezvous.refuser', $rdv->id) }}"
-                                           class="btn btn-sm btn-danger"
-                                           title="Refuser — envoie un WhatsApp au client"
-                                           onclick="return confirm('Refuser ce RDV ? Un WhatsApp sera envoyé au client.')">
-                                            <i class="fas fa-times"></i>
-                                        </a>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6" class="text-center py-4 text-muted">
-                                Aucun rendez-vous pour le moment.
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                {{-- Info client & vêtement --}}
+                <div class="rdv-info">
+                    <div class="rdv-client">
+                        {{ $client->prenom }} {{ $client->nom }}
+                    </div>
+                    <div class="rdv-phone">
+                        <i class="fas fa-phone fa-xs me-1"></i>{{ $client->telephone ?? 'N/A' }}
+                    </div>
+                    <div class="rdv-vetement">
+                        <i class="fas fa-tshirt fa-xs me-1"></i>
+                        {{ $rdv->vetement->nom ?? 'À définir' }}
+                    </div>
+                </div>
+
+                {{-- Statut RDV --}}
+                <div>
+                    @if($rdv->statut === \App\Models\RendezVous::STATUT_CONFIRME)
+                        <span class="status-pill confirme">
+                            <i class="fas fa-check-circle"></i> Confirmé
+                        </span>
+                    @elseif($rdv->statut === \App\Models\RendezVous::STATUT_REFUSE)
+                        <span class="status-pill refuse">
+                            <i class="fas fa-times-circle"></i> Refusé
+                        </span>
+                    @else
+                        <span class="status-pill attente">
+                            <i class="fas fa-hourglass-half"></i> En attente
+                        </span>
+                    @endif
+                </div>
+
+                {{-- Statut WhatsApp --}}
+                <div class="wa-status">
+                    @if($lastWa)
+                        @if($lastWa->statut === 'ENVOYE')
+                            <span class="wa-badge sent" title="{{ $lastWa->dateEnvoi->format('d/m/Y H:i') }}">
+                                <i class="fab fa-whatsapp"></i> Envoyé
+                            </span>
+                            <div class="text-muted" style="font-size:0.7rem;margin-top:3px;">{{ $lastWa->dateEnvoi->diffForHumans() }}</div>
+                        @else
+                            <span class="wa-badge failed" title="Échec d'envoi">
+                                <i class="fas fa-exclamation-triangle"></i> Échec
+                            </span>
+                            <div class="text-muted" style="font-size:0.7rem;margin-top:3px;">{{ $lastWa->dateEnvoi->diffForHumans() }}</div>
+                        @endif
+                    @else
+                        <span class="wa-badge none">—</span>
+                    @endif
+                </div>
+
+                {{-- Actions --}}
+                <div class="rdv-actions">
+                    @if($waLink)
+                        <a href="{{ $waLink }}" target="_blank" class="btn-action wa" title="Contacter sur WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    @endif
+
+                    <a href="{{ route('admin.rendezvous.show', $rdv->id) }}" class="btn-action view" title="Voir détails">
+                        <i class="fas fa-eye"></i>
+                    </a>
+
+                    @if($rdv->statut === \App\Models\RendezVous::STATUT_EN_ATTENTE)
+                        <a href="{{ route('admin.rendezvous.confirmer', $rdv->id) }}"
+                           class="btn-action confirm" title="Confirmer — envoie un WhatsApp au client"
+                           onclick="return confirm('Confirmer ce RDV ? Un WhatsApp de confirmation sera envoyé au client.')">
+                            <i class="fas fa-check"></i>
+                        </a>
+                        <a href="{{ route('admin.rendezvous.refuser', $rdv->id) }}"
+                           class="btn-action reject" title="Refuser — envoie un WhatsApp au client"
+                           onclick="return confirm('Refuser ce RDV ? Un WhatsApp sera envoyé au client.')">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    @endif
+                </div>
+
             </div>
+            @empty
+            <div class="empty-state">
+                <i class="fas fa-calendar-xmark d-block"></i>
+                <h5 style="font-family:'Playfair Display',serif; color:var(--dark);">Aucun rendez-vous</h5>
+                <p class="text-muted mb-4">Aucun rendez-vous n'a été enregistré pour le moment.</p>
+            </div>
+            @endforelse
         </div>
+
     </div>
 </div>
 @endsection
