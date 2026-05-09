@@ -37,7 +37,7 @@ body {
 .hero-bg {
     position: absolute;
     inset: 0;
-    background: url("<?php echo e(asset('fallou.png')); ?>") center/cover no-repeat;
+    background: url("<?php echo e(asset('heros2.png')); ?>") center/cover no-repeat;
     transform: scale(1.04);
     transition: transform 14s ease-in-out;
 }
@@ -789,217 +789,6 @@ body {
 
 .submit-btn:hover { background: var(--gold-light); }
 
-/* ─── FOOTER ─── */
-.site-footer {
-    background: #111;
-    font-family: 'Jost', sans-serif;
-}
-
-/* CTA band */
-.footer-cta {
-    background: var(--charcoal);
-    border-top: 1px solid rgba(201,169,89,0.2);
-    border-bottom: 1px solid rgba(201,169,89,0.1);
-}
-
-.footer-cta-inner {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 3.5rem 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-}
-
-.footer-cta-tag {
-    font-size: 0.62rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 0.5rem;
-}
-
-.footer-cta-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    font-weight: 300;
-    color: #fff;
-    line-height: 1.2;
-}
-
-.footer-cta-title em {
-    font-style: italic;
-    color: var(--gold-light);
-}
-
-/* Body */
-.footer-body {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 5rem 3rem 4rem;
-}
-
-.footer-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1.4fr;
-    gap: 4rem;
-}
-
-.footer-col-title {
-    font-size: 0.62rem;
-    font-weight: 500;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 1.75rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid rgba(201,169,89,0.2);
-}
-
-/* Brand column */
-.footer-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem;
-    font-weight: 400;
-    color: #fff;
-    letter-spacing: 3px;
-    margin-bottom: 1.25rem;
-}
-
-.footer-logo span { color: var(--gold); margin: 0 0.25rem; }
-
-.footer-about {
-    font-size: 0.82rem;
-    font-weight: 300;
-    color: #666;
-    line-height: 1.85;
-    margin-bottom: 2rem;
-    max-width: 280px;
-}
-
-.footer-socials {
-    display: flex;
-    gap: 0.6rem;
-}
-
-.footer-social {
-    width: 36px;
-    height: 36px;
-    border: 1px solid rgba(201,169,89,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #555;
-    font-size: 0.75rem;
-    text-decoration: none;
-    transition: var(--transition);
-}
-
-.footer-social:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: #1a1a2e;
-}
-
-/* Nav links */
-.footer-links {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-.footer-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #555;
-    font-size: 0.82rem;
-    font-weight: 300;
-    text-decoration: none;
-    transition: color 0.3s ease, gap 0.3s ease;
-}
-
-.footer-link i { font-size: 0.5rem; color: var(--gold); opacity: 0; transition: opacity 0.3s ease; }
-.footer-link:hover { color: var(--gold-light); }
-.footer-link:hover i { opacity: 1; }
-
-/* Contact list */
-.footer-contact-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.footer-contact-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    font-size: 0.82rem;
-    font-weight: 300;
-    color: #555;
-    line-height: 1.5;
-}
-
-.footer-contact-icon {
-    width: 28px;
-    height: 28px;
-    border: 1px solid rgba(201,169,89,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gold);
-    font-size: 0.65rem;
-    flex-shrink: 0;
-    margin-top: 0.05rem;
-}
-
-/* Bottom bar */
-.footer-bottom {
-    border-top: 1px solid rgba(255,255,255,0.05);
-}
-
-.footer-bottom-inner {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 1.5rem 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-}
-
-.footer-copy {
-    font-size: 0.68rem;
-    color: #3a3a3a;
-    letter-spacing: 1px;
-}
-
-/* Footer responsive */
-@media (max-width: 1100px) {
-    .footer-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
-    .footer-col-brand { grid-column: 1 / -1; }
-    .footer-about { max-width: 100%; }
-    .footer-cta-inner { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
-}
-
-@media (max-width: 768px) {
-    .footer-body { padding: 3.5rem 1.5rem 3rem; }
-    .footer-grid { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
-    .footer-cta-inner { padding: 2.5rem 1.5rem; }
-    .footer-bottom-inner { padding: 1.25rem 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
-}
-
-@media (max-width: 480px) {
-    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
-    .footer-col-brand { grid-column: auto; }
-    .footer-body { padding: 3rem 1rem 2.5rem; }
-    .footer-cta-inner { padding: 2rem 1rem; }
-    .footer-bottom-inner { padding: 1rem; }
-}
-
 /* ─── ANIMATE IN ─── */
 [data-reveal] {
     opacity: 0;
@@ -1035,7 +824,7 @@ body {
     .process-grid { grid-template-columns: repeat(2, 1fr); gap: 3.5rem 2rem; }
     .process-grid::after { display: none; }
 
-    /* Testimonials 3 → 1 col scroll */
+    /* Testimonials 3 → 2 col */
     .testi-grid { grid-template-columns: repeat(2, 1fr); }
 
     /* Contact */
@@ -1055,8 +844,20 @@ body {
     .container { padding: 0 1.25rem; }
     .section { padding: 5rem 0; }
 
-    /* Hero */
-    .hero { min-height: 100svh; }
+    /* Hero — FIX IMAGE MOBILE */
+    .hero {
+        min-height: 100svh;
+        min-height: -webkit-fill-available;
+    }
+    .hero-bg {
+        background-size: cover;
+        background-position: 75% center; /* Décale vers le mannequin à droite */
+        transform: scale(1) !important;
+    }
+    .hero:hover .hero-bg {
+        transform: scale(1) !important;
+    }
+
     .hero-content {
         grid-template-columns: 1fr;
         padding: 0 1.5rem 4rem;
@@ -1097,9 +898,6 @@ body {
     .contact-form-side { padding: 3rem 1.5rem; }
     .form-row { grid-template-columns: 1fr; gap: 1.25rem; }
 
-    /* Footer */
-    .footer-strip { flex-direction: column; gap: 0.75rem; text-align: center; padding: 1.75rem 1.5rem; }
-
     /* Marquee — slow down slightly */
     .marquee-inner { animation-duration: 16s; }
 }
@@ -1111,8 +909,20 @@ body {
     .container { padding: 0 1rem; }
     .section { padding: 4rem 0; }
 
-    /* Hero — compact */
-    .hero { min-height: 100svh; align-items: flex-end; }
+    /* Hero — compact + FIX IMAGE */
+    .hero {
+        min-height: 100svh;
+        min-height: -webkit-fill-available;
+        align-items: flex-end;
+    }
+    .hero-bg {
+        background-size: cover;
+        background-position: 75% center; /* Décale vers le mannequin à droite */
+        transform: scale(1) !important;
+    }
+    .hero:hover .hero-bg {
+        transform: scale(1) !important;
+    }
     .hero-content { padding: 0 1rem 3rem; gap: 1.5rem; }
     .hero-title { font-size: clamp(2.8rem, 15vw, 4.5rem); line-height: 1; }
     .hero-year { font-size: 0.6rem; letter-spacing: 3px; margin-bottom: 1rem; }
@@ -1153,11 +963,6 @@ body {
     .contact-info-side { padding: 2.5rem 1rem; }
     .contact-form-side { padding: 2.5rem 1rem; }
     .submit-btn { width: 100%; justify-content: center; padding: 1rem; }
-
-    /* Footer */
-    .footer-strip { padding: 1.5rem 1rem; }
-    .footer-brand { font-size: 1rem; }
-    .footer-copy { font-size: 0.62rem; }
 }
 </style>
 <?php $__env->stopSection(); ?>
@@ -1482,106 +1287,6 @@ body {
         </div>
     </div>
 </section>
-
-
-<footer class="site-footer">
-
-    
-    <div class="footer-cta">
-        <div class="footer-cta-inner">
-            <div>
-                <p class="footer-cta-tag">Commencez dès aujourd'hui</p>
-                <h2 class="footer-cta-title">Votre création <em>vous attend</em></h2>
-            </div>
-            <a href="<?php echo e(route('register')); ?>" class="btn-gold">
-                <i class="fas fa-calendar-check" style="font-size:0.65rem;"></i>
-                Prendre rendez-vous
-            </a>
-        </div>
-    </div>
-
-    
-    <div class="footer-body">
-        <div class="footer-grid">
-
-            
-            <div class="footer-col footer-col-brand">
-                <div class="footer-logo">SMC<span>—</span>COUTURE</div>
-                <p class="footer-about">
-                    Maison de couture sur mesure fondée en 2020 à Dakar. Chaque création est unique, pensée pour sublimer votre style avec des matières d'exception.
-                </p>
-                <div class="footer-socials">
-                    <a href="#" class="footer-social" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="footer-social" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="footer-social" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                    <a href="#" class="footer-social" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-                </div>
-            </div>
-
-            
-            <div class="footer-col">
-                <h4 class="footer-col-title">Navigation</h4>
-                <ul class="footer-links">
-                    <li><a href="<?php echo e(route('home')); ?>" class="footer-link"><i class="fas fa-chevron-right"></i>Accueil</a></li>
-                    <li><a href="<?php echo e(route('vetements.index')); ?>" class="footer-link"><i class="fas fa-chevron-right"></i>Collection</a></li>
-                    <li><a href="<?php echo e(route('rendezvous.create')); ?>" class="footer-link"><i class="fas fa-chevron-right"></i>Réserver</a></li>
-                    <?php if(auth()->guard('client')->check()): ?>
-                    <li><a href="<?php echo e(route('rendezvous.index')); ?>" class="footer-link"><i class="fas fa-chevron-right"></i>Mes rendez-vous</a></li>
-                    <?php endif; ?>
-                    <?php if(auth()->guard('client')->guest()): ?>
-                    <li><a href="<?php echo e(route('login')); ?>" class="footer-link"><i class="fas fa-chevron-right"></i>Connexion</a></li>
-                    <li><a href="<?php echo e(route('register')); ?>" class="footer-link"><i class="fas fa-chevron-right"></i>S'inscrire</a></li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-
-            
-            <div class="footer-col">
-                <h4 class="footer-col-title">Nos services</h4>
-                <ul class="footer-links">
-                    <li><a href="#" class="footer-link"><i class="fas fa-chevron-right"></i>Vêtements sur mesure</a></li>
-                    <li><a href="#" class="footer-link"><i class="fas fa-chevron-right"></i>Tenues de cérémonie</a></li>
-                    <li><a href="#" class="footer-link"><i class="fas fa-chevron-right"></i>Retouches & ajustements</a></li>
-                    <li><a href="#" class="footer-link"><i class="fas fa-chevron-right"></i>Conseils personnalisés</a></li>
-                    <li><a href="#" class="footer-link"><i class="fas fa-chevron-right"></i>Prise de mesures</a></li>
-                </ul>
-            </div>
-
-            
-            <div class="footer-col">
-                <h4 class="footer-col-title">Contact</h4>
-                <ul class="footer-contact-list">
-                    <li>
-                        <span class="footer-contact-icon"><i class="fas fa-map-marker-alt"></i></span>
-                        <span>Dakar, Sénégal</span>
-                    </li>
-                    <li>
-                        <span class="footer-contact-icon"><i class="fas fa-phone"></i></span>
-                        <a href="tel:+221771234567" class="footer-link">+221 77 123 45 67</a>
-                    </li>
-                    <li>
-                        <span class="footer-contact-icon"><i class="fas fa-envelope"></i></span>
-                        <a href="mailto:contact@couture.com" class="footer-link">contact@couture.com</a>
-                    </li>
-                    <li>
-                        <span class="footer-contact-icon"><i class="fas fa-clock"></i></span>
-                        <span>Lun – Sam : 9h – 19h</span>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-    </div>
-
-    
-    <div class="footer-bottom">
-        <div class="footer-bottom-inner">
-            <span class="footer-copy">© <?php echo e(date('Y')); ?> SMC Couture. Tous droits réservés.</span>
-            <span class="footer-copy">Fait avec <i class="fas fa-heart" style="color:var(--gold); font-size:0.6rem;"></i> à Dakar</span>
-        </div>
-    </div>
-
-</footer>
 
 <?php $__env->stopSection(); ?>
 
