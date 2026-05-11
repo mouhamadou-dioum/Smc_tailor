@@ -295,6 +295,40 @@
         gap: 0.3rem;
     }
 
+    .lightbox-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.85);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    .lightbox-overlay.show { display: flex; }
+    .lightbox-overlay img {
+        max-width: 90vw;
+        max-height: 90vh;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        cursor: default;
+    }
+    .lightbox-close {
+        position: fixed;
+        top: 20px;
+        right: 30px;
+        color: #fff;
+        font-size: 2.5rem;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+        background: none;
+        border: none;
+        z-index: 10000;
+        line-height: 1;
+    }
+    .lightbox-close:hover { opacity: 1; }
+
     @media (max-width: 576px) {
         .histo-hero { padding: 1.25rem; border-radius: 16px; }
         .histo-hero-title { font-size: 1.35rem; }
@@ -405,21 +439,19 @@
                             @if($mesure->photo_tissu)
                             <div class="col-6">
                                 <div class="mesure-item-label mb-1">Tissu</div>
-                                <a href="{{ $mesure->photo_tissu }}" target="_blank">
-                                    <img src="{{ $mesure->photo_tissu }}" 
-                                         alt="Photo tissu" 
-                                         style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--gray-200);">
-                                </a>
+                                <img src="{{ $mesure->photo_tissu }}" 
+                                     alt="Photo tissu" 
+                                     onclick="openLightbox(this.src)"
+                                     style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--gray-200);cursor:pointer;">
                             </div>
                             @endif
                             @if($mesure->photo_modele)
                             <div class="col-6">
                                 <div class="mesure-item-label mb-1">Modèle</div>
-                                <a href="{{ $mesure->photo_modele }}" target="_blank">
-                                    <img src="{{ $mesure->photo_modele }}" 
-                                         alt="Photo modèle" 
-                                         style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--gray-200);">
-                                </a>
+                                <img src="{{ $mesure->photo_modele }}" 
+                                     alt="Photo modèle" 
+                                     onclick="openLightbox(this.src)"
+                                     style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--gray-200);cursor:pointer;">
                             </div>
                             @endif
                         </div>
@@ -440,4 +472,21 @@
 
     </div>
 </div>
+
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('show');
+    document.body.style.overflow = '';
+}
+</script>
 @endsection
