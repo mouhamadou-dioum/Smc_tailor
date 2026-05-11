@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\Mesure;
 use App\Models\Client;
 use App\Models\RendezVous;
+use Cloudinary\Cloudinary;
 
 class MesureController extends Controller
 {
@@ -54,11 +56,11 @@ class MesureController extends Controller
         ];
 
         if ($request->hasFile('photo_tissu')) {
-            $data['photo_tissu'] = $request->file('photo_tissu')->store('mesures/tissus', 'public');
+            $data['photo_tissu'] = $this->uploadToCloudinary($request->file('photo_tissu'), 'mesures/tissus');
         }
 
         if ($request->hasFile('photo_modele')) {
-            $data['photo_modele'] = $request->file('photo_modele')->store('mesures/modeles', 'public');
+            $data['photo_modele'] = $this->uploadToCloudinary($request->file('photo_modele'), 'mesures/modeles');
         }
 
         Mesure::create($data);
@@ -80,5 +82,31 @@ class MesureController extends Controller
         $mesures = $client->mesures()->orderBy('created_at', 'desc')->get();
         
         return view('admin.mesures.historique', compact('client', 'mesures'));
+    }
+
+    private function uploadToCloudinary(\Illuminate\Http\UploadedFile $file, string $folder): string
+    {
+        $cloudName = config('cloudinary.cloud_name');
+        $apiKey    = config('cloudinary.api_key');
+        $apiSecret = config('cloudinary.api_secret');
+
+        if (empty($cloudName) || empty($apiKey) || empty($apiSecret)) {
+            Log::error('Cloudinary: credentials manquants', [
+                'cloud_name' => $cloudName,
+                'api_key'    => $apiKey ? '***' : 'NULL',
+                'api_secret' => $apiSecret ? '***' : 'NULL',
+            ]);
+            throw new \RuntimeException('Cloudinary non configuré — vérifiez les variables d\'environnement.');
+        }
+
+        $client = new Cloudinary(
+            sprintf('cloudinary://%s:%s@%s', $apiKey, $apiSecret, $cloudName)
+        );
+
+        $result = $client->uploadApi()->upload($file->getRealPath(), [
+            'folder' => $folder,
+        ]);
+
+        return $result['secure_url'];
     }
 }

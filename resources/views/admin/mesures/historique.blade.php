@@ -405,8 +405,8 @@
                             @if($mesure->photo_tissu)
                             <div class="col-6">
                                 <div class="mesure-item-label mb-1">Tissu</div>
-                                <a href="{{ asset('storage/' . $mesure->photo_tissu) }}" target="_blank">
-                                    <img src="{{ asset('storage/' . $mesure->photo_tissu) }}" 
+                                <a href="{{ $mesure->photo_tissu }}" target="_blank">
+                                    <img src="{{ $mesure->photo_tissu }}" 
                                          alt="Photo tissu" 
                                          style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--gray-200);">
                                 </a>
@@ -415,8 +415,8 @@
                             @if($mesure->photo_modele)
                             <div class="col-6">
                                 <div class="mesure-item-label mb-1">Modèle</div>
-                                <a href="{{ asset('storage/' . $mesure->photo_modele) }}" target="_blank">
-                                    <img src="{{ asset('storage/' . $mesure->photo_modele) }}" 
+                                <a href="{{ $mesure->photo_modele }}" target="_blank">
+                                    <img src="{{ $mesure->photo_modele }}" 
                                          alt="Photo modèle" 
                                          style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--gray-200);">
                                 </a>
