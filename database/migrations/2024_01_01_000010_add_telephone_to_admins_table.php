@@ -8,9 +8,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('admins', function (Blueprint $table) {
-            $table->string('telephone')->nullable()->after('email');
-        });
+        // Colonne telephone déjà présente sur Railway — migration neutralisée
+        if (!Schema::hasColumn('admins', 'telephone')) {
+            Schema::table('admins', function (Blueprint $table) {
+                $table->string('telephone')->nullable()->after('email');
+            });
+        }
     }
 
     public function down(): void
