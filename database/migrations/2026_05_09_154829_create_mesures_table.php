@@ -6,22 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('mesures', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        // Migration neutralisée — la table mesures existe déjà
+        // Les nouvelles colonnes sont ajoutées dans la migration suivante
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('mesures');
+        //
     }
 };

@@ -33,9 +33,12 @@ class MesureController extends Controller
             'longueurBoubou' => 'nullable|numeric|min:0',
             'longueurPantalon' => 'nullable|numeric|min:0',
             'cuisse' => 'nullable|numeric|min:0',
+            'photo_tissu' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'modele' => 'nullable|string|max:255',
+            'photo_modele' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        Mesure::create([
+        $data = [
             'client_id' => $client->id,
             'nom' => $request->nom,
             'cou' => $request->cou,
@@ -47,7 +50,18 @@ class MesureController extends Controller
             'longueurBoubou' => $request->longueurBoubou,
             'longueurPantalon' => $request->longueurPantalon,
             'cuisse' => $request->cuisse,
-        ]);
+            'modele' => $request->modele,
+        ];
+
+        if ($request->hasFile('photo_tissu')) {
+            $data['photo_tissu'] = $request->file('photo_tissu')->store('mesures/tissus', 'public');
+        }
+
+        if ($request->hasFile('photo_modele')) {
+            $data['photo_modele'] = $request->file('photo_modele')->store('mesures/modeles', 'public');
+        }
+
+        Mesure::create($data);
 
         return redirect()->route('admin.rendezvous.index')->with('success', 'Mesures enregistrées avec succès!');
     }

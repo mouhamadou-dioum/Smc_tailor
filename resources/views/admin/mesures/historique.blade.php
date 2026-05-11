@@ -378,7 +378,12 @@
                             <span class="day">{{ $mesure->created_at->format('d') }}</span>
                             <span class="month">{{ $mesure->created_at->translatedFormat('M Y') }}</span>
                         </div>
-                        <div class="mesure-label">{{ $mesure->nom ?? 'Tenue sans nom' }}</div>
+                        <div class="mesure-label" title="{{ $mesure->modele ?? '' }}">
+                            {{ $mesure->nom ?? 'Tenue sans nom' }}
+                            @if($mesure->modele)
+                                <br><small style="font-size:0.75rem;opacity:0.7;">{{ $mesure->modele }}</small>
+                            @endif
+                        </div>
                     </div>
 
                     <div class="mesure-card-body">
@@ -394,6 +399,31 @@
                             </div>
                             @endforeach
                         </div>
+
+                        @if($mesure->photo_tissu || $mesure->photo_modele)
+                        <div class="row mt-3 g-2">
+                            @if($mesure->photo_tissu)
+                            <div class="col-6">
+                                <div class="mesure-item-label mb-1">Tissu</div>
+                                <a href="{{ asset('storage/' . $mesure->photo_tissu) }}" target="_blank">
+                                    <img src="{{ asset('storage/' . $mesure->photo_tissu) }}" 
+                                         alt="Photo tissu" 
+                                         style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--gray-200);">
+                                </a>
+                            </div>
+                            @endif
+                            @if($mesure->photo_modele)
+                            <div class="col-6">
+                                <div class="mesure-item-label mb-1">Modèle</div>
+                                <a href="{{ asset('storage/' . $mesure->photo_modele) }}" target="_blank">
+                                    <img src="{{ asset('storage/' . $mesure->photo_modele) }}" 
+                                         alt="Photo modèle" 
+                                         style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--gray-200);">
+                                </a>
+                            </div>
+                            @endif
+                        </div>
+                        @endif
                     </div>
 
                     <div class="mesure-card-footer">

@@ -379,7 +379,13 @@
                             <span class="day"><?php echo e($mesure->created_at->format('d')); ?></span>
                             <span class="month"><?php echo e($mesure->created_at->translatedFormat('M Y')); ?></span>
                         </div>
-                        <div class="mesure-label"><?php echo e($mesure->nom ?? 'Tenue sans nom'); ?></div>
+                        <div class="mesure-label" title="<?php echo e($mesure->modele ?? ''); ?>">
+                            <?php echo e($mesure->nom ?? 'Tenue sans nom'); ?>
+
+                            <?php if($mesure->modele): ?>
+                                <br><small style="font-size:0.75rem;opacity:0.7;"><?php echo e($mesure->modele); ?></small>
+                            <?php endif; ?>
+                        </div>
                     </div>
 
                     <div class="mesure-card-body">
@@ -395,6 +401,31 @@
                             </div>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
+
+                        <?php if($mesure->photo_tissu || $mesure->photo_modele): ?>
+                        <div class="row mt-3 g-2">
+                            <?php if($mesure->photo_tissu): ?>
+                            <div class="col-6">
+                                <div class="mesure-item-label mb-1">Tissu</div>
+                                <a href="<?php echo e(asset('storage/' . $mesure->photo_tissu)); ?>" target="_blank">
+                                    <img src="<?php echo e(asset('storage/' . $mesure->photo_tissu)); ?>" 
+                                         alt="Photo tissu" 
+                                         style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--gray-200);">
+                                </a>
+                            </div>
+                            <?php endif; ?>
+                            <?php if($mesure->photo_modele): ?>
+                            <div class="col-6">
+                                <div class="mesure-item-label mb-1">Modèle</div>
+                                <a href="<?php echo e(asset('storage/' . $mesure->photo_modele)); ?>" target="_blank">
+                                    <img src="<?php echo e(asset('storage/' . $mesure->photo_modele)); ?>" 
+                                         alt="Photo modèle" 
+                                         style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--gray-200);">
+                                </a>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php endif; ?>
                     </div>
 
                     <div class="mesure-card-footer">

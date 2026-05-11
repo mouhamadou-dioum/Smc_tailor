@@ -21,6 +21,9 @@ class Mesure extends Model
         'longueurBoubou',
         'longueurPantalon',
         'cuisse',
+        'photo_tissu',
+        'modele',
+        'photo_modele',
     ];
 
     public function client()

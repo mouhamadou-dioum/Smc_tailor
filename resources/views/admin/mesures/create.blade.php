@@ -55,7 +55,7 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('admin.mesures.store', $client->id) }}">
+                    <form method="POST" action="{{ route('admin.mesures.store', $client->id) }}" enctype="multipart/form-data">
                         @csrf
                         
                         <div class="mb-3">
@@ -127,6 +127,27 @@
                                 <input type="number" step="0.1" name="longueurPantalon" class="form-control form-control-custom" 
                                        placeholder="Ex: 100" value="{{ old('longueurPantalon', $mesure->longueurPantalon ?? '') }}">
                             </div>
+                        </div>
+
+                        <h5 class="mb-3 mt-4" style="font-family:'Playfair Display',serif;">
+                            <i class="fas fa-palette me-2" style="color:var(--primary);"></i>Tissu & Modèle
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Photo du tissu</label>
+                                <input type="file" name="photo_tissu" class="form-control form-control-custom" accept="image/*">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Photo du modèle</label>
+                                <input type="file" name="photo_modele" class="form-control form-control-custom" accept="image/*">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label-custom">Nom du modèle / Description</label>
+                            <input type="text" name="modele" class="form-control form-control-custom" 
+                                   placeholder="Ex: Boubou traditionnel, Costume moderne..." value="{{ old('modele') }}">
                         </div>
 
                         <div class="d-flex gap-3 mt-4">
