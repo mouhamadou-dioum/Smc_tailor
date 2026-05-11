@@ -106,7 +106,13 @@ class AdminController extends Controller
 
     private function uploadToCloudinary(\Illuminate\Http\UploadedFile $file): string
     {
-        $client = new Cloudinary(config('cloudinary'));
+        $client = new Cloudinary([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+        ]);
         $result = $client->uploadApi()->upload($file->getRealPath(), [
             'folder' => 'vetements',
         ]);
