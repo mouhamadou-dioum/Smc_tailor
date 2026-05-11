@@ -16,6 +16,7 @@ use App\Models\RendezVous;
 use App\Models\Client;
 use App\Models\Notification;
 use App\Models\Categorie;
+use Cloudinary\Cloudinary;
 
 class AdminController extends Controller
 {
@@ -103,6 +104,15 @@ class AdminController extends Controller
         }
     }
 
+    private function uploadToCloudinary(\Illuminate\Http\UploadedFile $file): string
+    {
+        $client = new Cloudinary(config('cloudinary'));
+        $result = $client->uploadApi()->upload($file->getRealPath(), [
+            'folder' => 'vetements',
+        ]);
+        return $result['secure_url'];
+    }
+
     public function vetementsStore(Request $request)
     {
         $request->validate([
@@ -127,15 +137,15 @@ class AdminController extends Controller
         ]);
 
         if ($request->hasFile('image_principale')) {
-            $path = $request->file('image_principale')->store('vetements', 'public');
-            $vetement->images()->create(['image_url' => $path, 'ordre' => 0]);
+            $url = $this->uploadToCloudinary($request->file('image_principale'));
+            $vetement->images()->create(['image_url' => $url, 'ordre' => 0]);
         }
 
         foreach (range(1, 3) as $i) {
             $field = "image_detail_{$i}";
             if ($request->hasFile($field)) {
-                $path = $request->file($field)->store('vetements', 'public');
-                $vetement->images()->create(['image_url' => $path, 'ordre' => $i]);
+                $url = $this->uploadToCloudinary($request->file($field));
+                $vetement->images()->create(['image_url' => $url, 'ordre' => $i]);
             }
         }
 
@@ -175,8 +185,8 @@ class AdminController extends Controller
         if ($request->hasFile('image_principale')) {
             $this->deleteImageFile($vetement->images()->where('ordre', 0)->first());
             $vetement->images()->where('ordre', 0)->delete();
-            $path = $request->file('image_principale')->store('vetements', 'public');
-            $vetement->images()->create(['image_url' => $path, 'ordre' => 0]);
+            $url = $this->uploadToCloudinary($request->file('image_principale'));
+            $vetement->images()->create(['image_url' => $url, 'ordre' => 0]);
         }
 
         foreach (range(1, 3) as $i) {
@@ -184,8 +194,8 @@ class AdminController extends Controller
             if ($request->hasFile($field)) {
                 $this->deleteImageFile($vetement->images()->where('ordre', $i)->first());
                 $vetement->images()->where('ordre', $i)->delete();
-                $path = $request->file($field)->store('vetements', 'public');
-                $vetement->images()->create(['image_url' => $path, 'ordre' => $i]);
+                $url = $this->uploadToCloudinary($request->file($field));
+                $vetement->images()->create(['image_url' => $url, 'ordre' => $i]);
             }
         }
 

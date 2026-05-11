@@ -228,7 +228,7 @@
                                 @php $mainImage = $vetement->images->where('ordre', 0)->first(); @endphp
                                 @if($mainImage)
                                     <div class="current-img-label">Actuelle :</div>
-                                    <img src="{{ \Illuminate\Support\Facades\Storage::url($mainImage->image_url) }}" class="current-image mb-2"
+                                    <img src="{{ str_starts_with($mainImage->image_url, 'http') ? $mainImage->image_url : \Illuminate\Support\Facades\Storage::url($mainImage->image_url) }}" class="current-image mb-2"
                                          onerror="this.style.display='none'">
                                 @endif
                                 <div class="upload-zone" id="zone-principale">
@@ -249,7 +249,7 @@
                                 @php $detailImage = $vetement->images->where('ordre', $i)->first(); @endphp
                                 @if($detailImage)
                                     <div class="current-img-label">Actuelle :</div>
-                                    <img src="{{ \Illuminate\Support\Facades\Storage::url($detailImage->image_url) }}" class="current-image mb-2"
+                                    <img src="{{ str_starts_with($detailImage->image_url, 'http') ? $detailImage->image_url : \Illuminate\Support\Facades\Storage::url($detailImage->image_url) }}" class="current-image mb-2"
                                          onerror="this.style.display='none'">
                                 @endif
                                 <div class="upload-zone" id="zone-detail-{{ $i }}">
