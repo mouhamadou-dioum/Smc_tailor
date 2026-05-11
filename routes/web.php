@@ -66,4 +66,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
         Route::get('/clients', [AdminController::class, 'clientsIndex'])->name('clients.index');
     });
+    // a supprimer apres
+    // routes/web.php — à supprimer après vérification !
+Route::get('/debug-env', function () {
+    return [
+        'cloud_name' => config('cloudinary.cloud_name'),
+        'api_key'    => config('cloudinary.api_key') ? '✅ présent' : '❌ NULL',
+        'api_secret' => config('cloudinary.api_secret') ? '✅ présent' : '❌ NULL',
+    ];
+});
 });
