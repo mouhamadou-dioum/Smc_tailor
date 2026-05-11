@@ -273,6 +273,69 @@
         object-position: top center;
     }
 
+    /* ── Modal Carousel ── */
+    .modal-carousel {
+        height: 100%;
+        min-height: 420px;
+    }
+    .modal-carousel .carousel-inner {
+        height: 100%;
+    }
+    .modal-carousel .carousel-item {
+        height: 100%;
+    }
+    .modal-carousel .carousel-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+    }
+    .modal-carousel .carousel-control-prev,
+    .modal-carousel .carousel-control-next {
+        width: 15%;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .modal-carousel:hover .carousel-control-prev,
+    .modal-carousel:hover .carousel-control-next {
+        opacity: 0.7;
+    }
+    .modal-carousel .carousel-control-prev-icon,
+    .modal-carousel .carousel-control-next-icon {
+        background-color: rgba(0,0,0,0.3);
+        border-radius: 50%;
+        padding: 1.2rem;
+        background-size: 50%;
+    }
+    .modal-carousel .carousel-indicators {
+        margin-bottom: 0.5rem;
+        gap: 0.35rem;
+    }
+    .modal-carousel .carousel-indicators button {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.6);
+        background: transparent;
+        opacity: 1;
+    }
+    .modal-carousel .carousel-indicators button.active {
+        background: #fff;
+        border-color: #fff;
+    }
+    .carousel-img-wrap {
+        height: 100%;
+        min-height: 420px;
+        position: relative;
+        background: var(--gray-200);
+    }
+    .carousel-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+    }
+
     .modal-info {
         padding: 2rem;
         display: flex;
@@ -419,15 +482,23 @@
         {{-- Grid --}}
         <div class="row g-4">
             @forelse($vetements as $vetement)
+            @php
+                $allImages = $vetement->images->sortBy('ordre');
+                $mainImg = $allImages->first()?->image_url;
+                $cardImgSrc = $mainImg
+                    ? (str_starts_with($mainImg, 'http') ? $mainImg : \Illuminate\Support\Facades\Storage::url($mainImg))
+                    : 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';
+                $fallbackUrl = 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';
+            @endphp
             <div class="col-md-6 col-lg-4">
                 <div class="vet-card">
 
                     {{-- Image --}}
                     <div class="vet-img-wrap">
                         <img
-                            src="{{ $vetement->imageUrl ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800' }}"
+                            src="{{ $cardImgSrc }}"
                             alt="{{ $vetement->nom }}"
-                            onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';"
+                            onerror="this.onerror=null;this.src='{{ $fallbackUrl }}';"
                         >
 
                         {{-- Catégorie --}}
@@ -461,10 +532,17 @@
                                 <i class="fas fa-eye"></i> Détails
                             </button>
                             @if($vetement->disponible)
+                                @auth('client')
                                 <a href="{{ route('rendezvous.create') }}?vetement={{ $vetement->id }}"
                                    class="btn-reserver">
                                     <i class="fas fa-calendar-plus"></i> Réserver
                                 </a>
+                                @else
+                                <a href="{{ route('register') }}"
+                                   class="btn-reserver">
+                                    <i class="fas fa-user-plus"></i> S'inscrire
+                                </a>
+                                @endauth
                             @endif
                         </div>
                     </div>
@@ -476,17 +554,50 @@
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <div class="row g-0" style="min-height: 420px;">
-                            {{-- Image --}}
-                            <div class="col-md-5 position-relative">
-                                <img
-                                    src="{{ $vetement->imageUrl ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200' }}"
-                                    alt="{{ $vetement->nom }}"
-                                    class="modal-img"
-                                    onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200';"
-                                >
-                                <button type="button" class="modal-close-btn d-md-none" data-bs-dismiss="modal">
-                                    <i class="fas fa-times"></i>
-                                </button>
+                            {{-- Image Carousel --}}
+                            <div class="col-md-5 p-0 modal-carousel">
+                                <div id="carousel-{{ $vetement->id }}" class="carousel slide h-100" data-bs-ride="false">
+                                    <div class="carousel-inner h-100">
+                                        @php
+                                            $allModalImages = $allImages->count() > 0 ? $allImages : collect([
+                                                (object)['image_url' => 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200']
+                                            ]);
+                                        @endphp
+                                        @foreach($allModalImages as $index => $img)
+                                        @php
+                                            $imgSrc = str_starts_with($img->image_url, 'http') ? $img->image_url : \Illuminate\Support\Facades\Storage::url($img->image_url);
+                                        @endphp
+                                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                            <div class="carousel-img-wrap">
+                                                <img src="{{ $imgSrc }}"
+                                                     alt="{{ $vetement->nom }} - Image {{ $index + 1 }}"
+                                                     onerror="this.onerror=null;this.src='{{ $fallbackUrl }}';">
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+
+                                    @if($allModalImages->count() > 1)
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ $vetement->id }}" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Précédent</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ $vetement->id }}" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Suivant</span>
+                                    </button>
+
+                                    <div class="carousel-indicators">
+                                        @foreach($allModalImages as $index => $img)
+                                        <button type="button"
+                                                data-bs-target="#carousel-{{ $vetement->id }}"
+                                                data-bs-slide-to="{{ $index }}"
+                                                class="{{ $index === 0 ? 'active' : '' }}"
+                                                aria-label="Image {{ $index + 1 }}"></button>
+                                        @endforeach
+                                    </div>
+                                    @endif
+                                </div>
                             </div>
 
                             {{-- Info --}}
@@ -512,10 +623,16 @@
                                 <p class="modal-desc">{{ $vetement->description }}</p>
 
                                 @if($vetement->disponible)
+                                    @auth('client')
                                     <a href="{{ route('rendezvous.create') }}?vetement={{ $vetement->id }}"
                                        class="btn-modal-reserver">
                                         <i class="fas fa-calendar-plus"></i> Réserver ce vêtement
                                     </a>
+                                    @else
+                                    <a href="{{ route('register') }}" class="btn-modal-reserver">
+                                        <i class="fas fa-user-plus"></i> Créer un compte pour réserver
+                                    </a>
+                                    @endauth
                                 @else
                                     <span style="background:#f8d7da;color:#721c24;padding:0.5rem 1rem;border-radius:10px;font-size:0.85rem;font-weight:600;display:inline-flex;align-items:center;gap:0.4rem;">
                                         <i class="fas fa-times-circle"></i> Indisponible actuellement

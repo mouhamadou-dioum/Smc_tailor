@@ -271,6 +271,69 @@
         object-position: top center;
     }
 
+    /* ── Modal Carousel ── */
+    .modal-carousel {
+        height: 100%;
+        min-height: 420px;
+    }
+    .modal-carousel .carousel-inner {
+        height: 100%;
+    }
+    .modal-carousel .carousel-item {
+        height: 100%;
+    }
+    .modal-carousel .carousel-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+    }
+    .modal-carousel .carousel-control-prev,
+    .modal-carousel .carousel-control-next {
+        width: 15%;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .modal-carousel:hover .carousel-control-prev,
+    .modal-carousel:hover .carousel-control-next {
+        opacity: 0.7;
+    }
+    .modal-carousel .carousel-control-prev-icon,
+    .modal-carousel .carousel-control-next-icon {
+        background-color: rgba(0,0,0,0.3);
+        border-radius: 50%;
+        padding: 1.2rem;
+        background-size: 50%;
+    }
+    .modal-carousel .carousel-indicators {
+        margin-bottom: 0.5rem;
+        gap: 0.35rem;
+    }
+    .modal-carousel .carousel-indicators button {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.6);
+        background: transparent;
+        opacity: 1;
+    }
+    .modal-carousel .carousel-indicators button.active {
+        background: #fff;
+        border-color: #fff;
+    }
+    .carousel-img-wrap {
+        height: 100%;
+        min-height: 420px;
+        position: relative;
+        background: var(--gray-200);
+    }
+    .carousel-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+    }
+
     .modal-info {
         padding: 2rem;
         display: flex;
@@ -418,15 +481,23 @@
         
         <div class="row g-4">
             <?php $__empty_1 = true; $__currentLoopData = $vetements; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vetement): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+            <?php
+                $allImages = $vetement->images->sortBy('ordre');
+                $mainImg = $allImages->first()?->image_url;
+                $cardImgSrc = $mainImg
+                    ? (str_starts_with($mainImg, 'http') ? $mainImg : \Illuminate\Support\Facades\Storage::url($mainImg))
+                    : 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';
+                $fallbackUrl = 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';
+            ?>
             <div class="col-md-6 col-lg-4">
                 <div class="vet-card">
 
                     
                     <div class="vet-img-wrap">
                         <img
-                            src="<?php echo e($vetement->imageUrl ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800'); ?>"
+                            src="<?php echo e($cardImgSrc); ?>"
                             alt="<?php echo e($vetement->nom); ?>"
-                            onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';"
+                            onerror="this.onerror=null;this.src='<?php echo e($fallbackUrl); ?>';"
                         >
 
                         
@@ -462,10 +533,17 @@
                                 <i class="fas fa-eye"></i> Détails
                             </button>
                             <?php if($vetement->disponible): ?>
+                                <?php if(auth()->guard('client')->check()): ?>
                                 <a href="<?php echo e(route('rendezvous.create')); ?>?vetement=<?php echo e($vetement->id); ?>"
                                    class="btn-reserver">
                                     <i class="fas fa-calendar-plus"></i> Réserver
                                 </a>
+                                <?php else: ?>
+                                <a href="<?php echo e(route('register')); ?>"
+                                   class="btn-reserver">
+                                    <i class="fas fa-user-plus"></i> S'inscrire
+                                </a>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -478,16 +556,49 @@
                     <div class="modal-content">
                         <div class="row g-0" style="min-height: 420px;">
                             
-                            <div class="col-md-5 position-relative">
-                                <img
-                                    src="<?php echo e($vetement->imageUrl ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200'); ?>"
-                                    alt="<?php echo e($vetement->nom); ?>"
-                                    class="modal-img"
-                                    onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200';"
-                                >
-                                <button type="button" class="modal-close-btn d-md-none" data-bs-dismiss="modal">
-                                    <i class="fas fa-times"></i>
-                                </button>
+                            <div class="col-md-5 p-0 modal-carousel">
+                                <div id="carousel-<?php echo e($vetement->id); ?>" class="carousel slide h-100" data-bs-ride="false">
+                                    <div class="carousel-inner h-100">
+                                        <?php
+                                            $allModalImages = $allImages->count() > 0 ? $allImages : collect([
+                                                (object)['image_url' => 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200']
+                                            ]);
+                                        ?>
+                                        <?php $__currentLoopData = $allModalImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php
+                                            $imgSrc = str_starts_with($img->image_url, 'http') ? $img->image_url : \Illuminate\Support\Facades\Storage::url($img->image_url);
+                                        ?>
+                                        <div class="carousel-item <?php echo e($index === 0 ? 'active' : ''); ?>">
+                                            <div class="carousel-img-wrap">
+                                                <img src="<?php echo e($imgSrc); ?>"
+                                                     alt="<?php echo e($vetement->nom); ?> - Image <?php echo e($index + 1); ?>"
+                                                     onerror="this.onerror=null;this.src='<?php echo e($fallbackUrl); ?>';">
+                                            </div>
+                                        </div>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </div>
+
+                                    <?php if($allModalImages->count() > 1): ?>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-<?php echo e($vetement->id); ?>" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Précédent</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carousel-<?php echo e($vetement->id); ?>" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Suivant</span>
+                                    </button>
+
+                                    <div class="carousel-indicators">
+                                        <?php $__currentLoopData = $allModalImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <button type="button"
+                                                data-bs-target="#carousel-<?php echo e($vetement->id); ?>"
+                                                data-bs-slide-to="<?php echo e($index); ?>"
+                                                class="<?php echo e($index === 0 ? 'active' : ''); ?>"
+                                                aria-label="Image <?php echo e($index + 1); ?>"></button>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
                             </div>
 
                             
@@ -515,10 +626,16 @@
                                 <p class="modal-desc"><?php echo e($vetement->description); ?></p>
 
                                 <?php if($vetement->disponible): ?>
+                                    <?php if(auth()->guard('client')->check()): ?>
                                     <a href="<?php echo e(route('rendezvous.create')); ?>?vetement=<?php echo e($vetement->id); ?>"
                                        class="btn-modal-reserver">
                                         <i class="fas fa-calendar-plus"></i> Réserver ce vêtement
                                     </a>
+                                    <?php else: ?>
+                                    <a href="<?php echo e(route('register')); ?>" class="btn-modal-reserver">
+                                        <i class="fas fa-user-plus"></i> Créer un compte pour réserver
+                                    </a>
+                                    <?php endif; ?>
                                 <?php else: ?>
                                     <span style="background:#f8d7da;color:#721c24;padding:0.5rem 1rem;border-radius:10px;font-size:0.85rem;font-weight:600;display:inline-flex;align-items:center;gap:0.4rem;">
                                         <i class="fas fa-times-circle"></i> Indisponible actuellement

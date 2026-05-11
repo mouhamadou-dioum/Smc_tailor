@@ -13,7 +13,7 @@ class VetementController extends Controller
         $categories = Categorie::all();
         $categorieId = $request->query('categorie');
 
-        $vetements = Vetement::with('categorie')
+        $vetements = Vetement::with('categorie', 'images')
             ->where('disponible', true)
             ->when($categorieId, function ($query) use ($categorieId) {
                 $query->where('categorie_id', $categorieId);
@@ -26,7 +26,7 @@ class VetementController extends Controller
 
     public function show($id)
     {
-        $vetement = Vetement::with('categorie')->findOrFail($id);
+        $vetement = Vetement::with('categorie', 'images')->findOrFail($id);
         return response()->json($vetement);
     }
 }

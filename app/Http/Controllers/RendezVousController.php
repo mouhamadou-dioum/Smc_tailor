@@ -18,7 +18,7 @@ class RendezVousController extends Controller
     {
         $vetementPreselect = null;
         if (request()->filled('vetement')) {
-            $vetementPreselect = Vetement::where('disponible', true)
+            $vetementPreselect = Vetement::with('images')->where('disponible', true)
                 ->whereKey(request('vetement'))
                 ->first();
         }

@@ -13,7 +13,6 @@ class Vetement extends Model
         'nom',
         'description',
         'prix',
-        'imageUrl',
         'disponible',
         'dateAjout',
         'admin_id',
@@ -42,5 +41,30 @@ class Vetement extends Model
     public function rendezVous()
     {
         return $this->hasMany(RendezVous::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(VetementImage::class)->orderBy('ordre');
+    }
+
+    public function mainImage()
+    {
+        return $this->hasOne(VetementImage::class)->where('ordre', 0);
+    }
+
+    public function detailImages()
+    {
+        return $this->hasMany(VetementImage::class)->where('ordre', '>', 0)->orderBy('ordre');
+    }
+
+    public function getImageUrlAttribute($value)
+    {
+        if ($this->relationLoaded('mainImage') && $this->mainImage) {
+            return $this->mainImage->image_url;
+        }
+
+        $main = $this->images()->where('ordre', 0)->first();
+        return $main ? $main->image_url : $value;
     }
 }

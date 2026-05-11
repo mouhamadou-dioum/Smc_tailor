@@ -54,27 +54,81 @@
         border-bottom: 2px solid var(--gray-200);
     }
 
-    .image-preview {
-        width: 100%;
-        height: 200px;
-        border-radius: 12px;
-        background: var(--gray-100);
+    .upload-zone {
+        border: 2px dashed var(--gray-300);
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: var(--gray-50);
+        position: relative;
+        min-height: 160px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
-        border: 2px dashed var(--gray-300);
     }
 
-    .image-preview img {
-        width: 100%;
-        height: 100%;
+    .upload-zone:hover {
+        border-color: var(--primary);
+        background: rgba(201,169,89,0.04);
+    }
+
+    .upload-zone.has-image {
+        border-style: solid;
+        border-color: var(--primary);
+        padding: 0.5rem;
+    }
+
+    .upload-zone i.upload-icon {
+        font-size: 2.5rem;
+        color: var(--gray-300);
+        margin-bottom: 0.5rem;
+    }
+
+    .upload-zone p {
+        color: var(--gray-500);
+        font-size: 0.85rem;
+        margin: 0;
+    }
+
+    .upload-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .upload-preview {
+        max-width: 100%;
+        max-height: 150px;
+        border-radius: 10px;
         object-fit: cover;
     }
 
-    .image-preview i {
-        font-size: 3rem;
-        color: var(--gray-300);
+    .upload-label {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .upload-label .badge-detail {
+        background: var(--primary);
+        color: #fff;
+        font-size: 0.7rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 999px;
+    }
+
+    .upload-label .optional {
+        color: var(--gray-400);
+        font-weight: 400;
+        font-size: 0.8rem;
     }
 </style>
 <?php $__env->stopSection(); ?>
@@ -82,7 +136,6 @@
 <?php $__env->startSection('content'); ?>
 <div class="admin-page">
     <div class="container">
-        
         <div class="admin-header">
             <div>
                 <h2><i class="fas fa-plus-circle"></i> Ajouter un vêtement</h2>
@@ -143,21 +196,38 @@
                             </div>
                         </div>
 
-                        <h5 class="form-section-title mt-4"><i class="fas fa-image me-2" style="color:var(--primary);"></i>Image</h5>
+                        <h5 class="form-section-title mt-4"><i class="fas fa-image me-2" style="color:var(--primary);"></i>Photos du vêtement</h5>
 
-                        <div class="mb-3">
-                            <label class="form-label-custom">URL de l'image</label>
-                            <input type="url" name="imageUrl" class="form-control form-control-custom" 
-                                   placeholder="https://exemple.com/image.jpg" value="<?php echo e(old('imageUrl')); ?>">
-                            <?php if(old('imageUrl')): ?>
-                            <div class="mt-3 image-preview">
-                                <img src="<?php echo e(old('imageUrl')); ?>" alt="Aperçu" onerror="this.parentElement.innerHTML='<i class=\'fas fa-image\'></i>'">
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <div class="upload-label">
+                                    <i class="fas fa-camera" style="color:var(--primary);"></i>
+                                    Photo principale *
+                                </div>
+                                <div class="upload-zone" id="zone-principale">
+                                    <input type="file" name="image_principale" accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" onchange="previewImage(this, 'preview-principale')">
+                                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                    <p>Cliquez ou glissez-déposez la photo principale</p>
+                                    <img id="preview-principale" class="upload-preview d-none">
+                                </div>
                             </div>
-                            <?php else: ?>
-                            <div class="mt-3 image-preview">
-                                <i class="fas fa-image"></i>
+
+                            <?php $__currentLoopData = range(1, 3); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="col-md-4">
+                                <div class="upload-label">
+                                    <i class="fas fa-image" style="color:var(--gray-400);"></i>
+                                    Détail <?php echo e($i); ?>
+
+                                    <span class="optional">(optionnel)</span>
+                                </div>
+                                <div class="upload-zone" id="zone-detail-<?php echo e($i); ?>">
+                                    <input type="file" name="image_detail_<?php echo e($i); ?>" accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" onchange="previewImage(this, 'preview-detail-<?php echo e($i); ?>')">
+                                    <i class="fas fa-plus-circle upload-icon" style="font-size:1.8rem;"></i>
+                                    <p style="font-size:0.8rem;">Photo détail <?php echo e($i); ?></p>
+                                    <img id="preview-detail-<?php echo e($i); ?>" class="upload-preview d-none">
+                                </div>
                             </div>
-                            <?php endif; ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
 
                         <div class="mb-4">
@@ -182,4 +252,28 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('scripts'); ?>
+<script>
+function previewImage(input, previewId) {
+    const preview = document.getElementById(previewId);
+    const zone = input.closest('.upload-zone');
+
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.classList.remove('d-none');
+            zone.classList.add('has-image');
+            const icon = zone.querySelector('.upload-icon');
+            if (icon) icon.style.display = 'none';
+            const p = zone.querySelector('p');
+            if (p) p.style.display = 'none';
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+<?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\fallou\projet laravel\couture-app\resources\views/admin/vetements/create.blade.php ENDPATH**/ ?>

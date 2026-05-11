@@ -148,6 +148,8 @@
     </div>
 </div>
 
+<?php $__env->stopSection(); ?>
+
 <?php $__env->startSection('scripts'); ?>
 <script>
 function togglePassword() {

@@ -9,6 +9,7 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Admin;
 use App\Models\Vetement;
 use App\Models\RendezVous;
@@ -79,7 +80,7 @@ class AdminController extends Controller
 
     public function vetementsIndex()
     {
-        $vetements = Vetement::with('categorie')->orderBy('dateAjout', 'desc')->get();
+        $vetements = Vetement::with('categorie', 'images')->orderBy('dateAjout', 'desc')->get();
         return view('admin.vetements.index', compact('vetements'));
     }
 
@@ -89,115 +90,116 @@ class AdminController extends Controller
         return view('admin.vetements.create', compact('categories'));
     }
 
-    /**
-     * Upload une image sur Cloudinary et retourne l'URL publique.
-     * Utilise l'API REST directement (pas de package externe).
-     */
-    private function uploadToCloudinary($file): string
+    private function deleteImageFile($image): void
     {
-        $cloudName = config('cloudinary.cloud_name');
-        $apiKey    = config('cloudinary.api_key');
-        $apiSecret = config('cloudinary.api_secret');
+        if (!$image || !$image->image_url) return;
 
-        $timestamp = time();
-        $params    = ['timestamp' => $timestamp];
-        ksort($params);
-        $signString = http_build_query($params) . $apiSecret;
-        $signature  = sha1($signString);
+        $path = $image->image_url;
 
-        $response = Http::attach(
-            'file', file_get_contents($file->getRealPath()), $file->getClientOriginalName()
-        )->post("https://api.cloudinary.com/v1_1/{$cloudName}/image/upload", [
-            'api_key'   => $apiKey,
-            'timestamp' => $timestamp,
-            'signature' => $signature,
-        ]);
+        if (str_starts_with($path, 'http')) return;
 
-        if ($response->failed()) {
-            throw new \Exception('Erreur upload Cloudinary : ' . $response->body());
+        if (Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
         }
-
-        return $response->json('secure_url');
     }
 
     public function vetementsStore(Request $request)
     {
         $request->validate([
-            'nom'          => 'required|string|max:255',
-            'description'  => 'nullable|string',
-            'prix'         => 'required|numeric|min:0',
-            'image'        => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'imageUrl'     => 'nullable|url',
-            'categorie_id' => 'nullable|exists:categories,id',
+            'nom'             => 'required|string|max:255',
+            'description'     => 'nullable|string',
+            'prix'            => 'required|numeric|min:0',
+            'image_principale' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image_detail_1'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image_detail_2'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image_detail_3'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'categorie_id'    => 'nullable|exists:categories,id',
         ]);
 
-        // Priorité : fichier uploadé > URL saisie > image par défaut
-        $imageUrl = 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=600';
-
-        if ($request->hasFile('image')) {
-            $imageUrl = $this->uploadToCloudinary($request->file('image'));
-        } elseif ($request->filled('imageUrl')) {
-            $imageUrl = $request->imageUrl;
-        }
-
-        Vetement::create([
+        $vetement = Vetement::create([
             'nom'          => $request->nom,
             'description'  => $request->description,
             'prix'         => $request->prix,
-            'imageUrl'     => $imageUrl,
             'disponible'   => $request->has('disponible'),
             'dateAjout'    => now(),
             'admin_id'     => Auth::guard('admin')->id(),
             'categorie_id' => $request->categorie_id,
         ]);
 
+        if ($request->hasFile('image_principale')) {
+            $path = $request->file('image_principale')->store('vetements', 'public');
+            $vetement->images()->create(['image_url' => $path, 'ordre' => 0]);
+        }
+
+        foreach (range(1, 3) as $i) {
+            $field = "image_detail_{$i}";
+            if ($request->hasFile($field)) {
+                $path = $request->file($field)->store('vetements', 'public');
+                $vetement->images()->create(['image_url' => $path, 'ordre' => $i]);
+            }
+        }
+
         return redirect()->route('admin.vetements.index')->with('success', 'Vêtement ajouté avec succès!');
     }
 
     public function vetementsEdit($id)
     {
-        $vetement = Vetement::findOrFail($id);
+        $vetement = Vetement::with('images')->findOrFail($id);
         $categories = Categorie::all();
         return view('admin.vetements.edit', compact('vetement', 'categories'));
     }
 
     public function vetementsUpdate(Request $request, $id)
     {
-        $vetement = Vetement::findOrFail($id);
+        $vetement = Vetement::with('images')->findOrFail($id);
 
         $request->validate([
-            'nom'          => 'required|string|max:255',
-            'description'  => 'nullable|string',
-            'prix'         => 'required|numeric|min:0',
-            'image'        => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'imageUrl'     => 'nullable|url',
-            'categorie_id' => 'nullable|exists:categories,id',
+            'nom'             => 'required|string|max:255',
+            'description'     => 'nullable|string',
+            'prix'            => 'required|numeric|min:0',
+            'image_principale' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image_detail_1'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image_detail_2'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image_detail_3'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'categorie_id'    => 'nullable|exists:categories,id',
         ]);
-
-        // Priorité : nouveau fichier > nouvelle URL > conserver l'ancienne image
-        $imageUrl = $vetement->imageUrl;
-
-        if ($request->hasFile('image')) {
-            $imageUrl = $this->uploadToCloudinary($request->file('image'));
-        } elseif ($request->filled('imageUrl')) {
-            $imageUrl = $request->imageUrl;
-        }
 
         $vetement->update([
             'nom'          => $request->nom,
             'description'  => $request->description,
             'prix'         => $request->prix,
-            'imageUrl'     => $imageUrl,
             'disponible'   => $request->has('disponible'),
             'categorie_id' => $request->categorie_id,
         ]);
+
+        if ($request->hasFile('image_principale')) {
+            $this->deleteImageFile($vetement->images()->where('ordre', 0)->first());
+            $vetement->images()->where('ordre', 0)->delete();
+            $path = $request->file('image_principale')->store('vetements', 'public');
+            $vetement->images()->create(['image_url' => $path, 'ordre' => 0]);
+        }
+
+        foreach (range(1, 3) as $i) {
+            $field = "image_detail_{$i}";
+            if ($request->hasFile($field)) {
+                $this->deleteImageFile($vetement->images()->where('ordre', $i)->first());
+                $vetement->images()->where('ordre', $i)->delete();
+                $path = $request->file($field)->store('vetements', 'public');
+                $vetement->images()->create(['image_url' => $path, 'ordre' => $i]);
+            }
+        }
 
         return redirect()->route('admin.vetements.index')->with('success', 'Vêtement mis à jour!');
     }
 
     public function vetementsDestroy($id)
     {
-        $vetement = Vetement::findOrFail($id);
+        $vetement = Vetement::with('images')->findOrFail($id);
+
+        foreach ($vetement->images as $image) {
+            $this->deleteImageFile($image);
+        }
+
         $vetement->delete();
 
         return redirect()->route('admin.vetements.index')->with('success', 'Vêtement supprimé!');

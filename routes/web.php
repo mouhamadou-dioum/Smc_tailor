@@ -10,7 +10,7 @@ use App\Http\Controllers\MesureController;
 
 Route::get('/', function () {
     $categories = App\Models\Categorie::all();
-    $vetements = App\Models\Vetement::with('categorie')
+    $vetements = App\Models\Vetement::with('categorie', 'images')
         ->where('disponible', true)
         ->orderBy('dateAjout', 'desc')
         ->take(6)
@@ -24,10 +24,10 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('regi
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('client.logout');
 
+Route::get('/vetements', [VetementController::class, 'index'])->name('vetements.index');
+Route::get('/vetements/{id}', [VetementController::class, 'show'])->name('vetements.show');
+
 Route::middleware(['auth:client'])->group(function () {
-    Route::get('/vetements', [VetementController::class, 'index'])->name('vetements.index');
-    Route::get('/vetements/{id}', [VetementController::class, 'show'])->name('vetements.show');
-    
     Route::get('/rendezvous/create', [RendezVousController::class, 'create'])->name('rendezvous.create');
     Route::post('/rendezvous', [RendezVousController::class, 'store'])->name('rendezvous.store');
     Route::get('/rendezvous', [RendezVousController::class, 'myRendezVous'])->name('rendezvous.index');

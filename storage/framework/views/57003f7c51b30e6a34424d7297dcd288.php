@@ -180,7 +180,11 @@
             <div class="col-md-6 col-lg-4" id="row-<?php echo e($vetement->id); ?>">
                 <div class="vetement-card" style="flex-direction:column;align-items:stretch;">
                     <div class="d-flex align-items-center gap-3">
-                        <img src="<?php echo e($vetement->imageUrl); ?>" alt="<?php echo e($vetement->nom); ?>" 
+                        <?php
+                            $imgUrl = $vetement->imageUrl;
+                            $imgSrc = $imgUrl && !str_starts_with($imgUrl, 'http') ? \Illuminate\Support\Facades\Storage::url($imgUrl) : $imgUrl;
+                        ?>
+                        <img src="<?php echo e($imgSrc); ?>" alt="<?php echo e($vetement->nom); ?>" 
                              class="vetement-image" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23f5f5f5%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 font-size=%2240%22 text-anchor=%22middle%22 fill=%22%23ccc%22>👔</text></svg>'">
                         <div class="vetement-info">
                             <div class="vetement-title"><?php echo e($vetement->nom); ?></div>

@@ -141,9 +141,13 @@
                             <input type="hidden" name="vetement_id" value="{{ $vetementPreselect->id }}">
                             <div class="vetement-preselect-card mb-4 p-3">
                                 <div class="d-flex gap-3 align-items-center flex-wrap flex-sm-nowrap">
-                                    @if($vetementPreselect->imageUrl)
+                                    @php
+                                        $_src = $vetementPreselect->imageUrl;
+                                        $_src = $_src && !str_starts_with($_src, 'http') ? \Illuminate\Support\Facades\Storage::url($_src) : $_src;
+                                    @endphp
+                                    @if($_src)
                                         <img
-                                            src="{{ $vetementPreselect->imageUrl }}"
+                                            src="{{ $_src }}"
                                             alt="{{ $vetementPreselect->nom }}"
                                             class="rounded"
                                             style="width:72px;height:72px;min-width:72px;object-fit:cover;"

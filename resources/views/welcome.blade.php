@@ -1115,7 +1115,11 @@ body {
             @foreach($vetements as $vetement)
             <div class="vet-card" data-reveal>
                 <div class="vet-img-wrap">
-                    <img src="{{ $vetement->imageUrl ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800' }}"
+                    @php
+                        $_src = $vetement->imageUrl;
+                        $_src = $_src && !str_starts_with($_src, 'http') ? \Illuminate\Support\Facades\Storage::url($_src) : ($_src ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800');
+                    @endphp
+                    <img src="{{ $_src }}"
                          alt="{{ $vetement->nom }}"
                          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';">
                     @if($vetement->categorie)

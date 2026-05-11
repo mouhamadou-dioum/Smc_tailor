@@ -640,6 +640,9 @@
                         </form>
 
                     <?php else: ?>
+                        <a href="<?php echo e(route('vetements.index')); ?>" class="nav-link-custom">
+                            <i class="fas fa-shirt"></i><span>Collection</span>
+                        </a>
                         <a href="<?php echo e(route('login')); ?>" class="nav-link-custom">
                             <i class="fas fa-right-to-bracket"></i><span>Connexion</span>
                         </a>
