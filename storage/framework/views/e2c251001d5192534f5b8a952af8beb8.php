@@ -799,6 +799,34 @@
                         </div>
                     </div>
 
+                    
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-badge" style="background:var(--primary); color:#fff;"><i class="fas fa-scissors"></i></div>
+                            <p class="step-title">Suivi de production (Timeline)</p>
+                        </div>
+                        <p class="step-desc">Mettez à jour l'étape de confection de la tenue pour le client.</p>
+
+                        <form action="<?php echo e(route('admin.rendezvous.production', $rendezVous->id)); ?>" method="POST" class="mt-2">
+                            <?php echo csrf_field(); ?>
+                            <div class="mb-3">
+                                <label class="form-label-custom" style="font-size:0.85rem; font-weight:600;">Étape de confection actuelle :</label>
+                                <select name="statut_production" class="form-select form-control-custom" style="border: 1.5px solid var(--gray-300); border-radius:10px; padding:0.6rem 0.85rem; font-size:0.875rem; background-color:#fff;">
+                                    <option value="EN_ATTENTE" <?php echo e($rendezVous->statut_production === 'EN_ATTENTE' ? 'selected' : ''); ?>>1. En attente du rendez-vous / des mesures</option>
+                                    <option value="MESURES" <?php echo e($rendezVous->statut_production === 'MESURES' ? 'selected' : ''); ?>>2. Mesures enregistrées</option>
+                                    <option value="COUPE" <?php echo e($rendezVous->statut_production === 'COUPE' ? 'selected' : ''); ?>>3. Coupe du tissu</option>
+                                    <option value="COUTURE" <?php echo e($rendezVous->statut_production === 'COUTURE' ? 'selected' : ''); ?>>4. Couture / Assemblage</option>
+                                    <option value="FINITIONS" <?php echo e($rendezVous->statut_production === 'FINITIONS' ? 'selected' : ''); ?>>5. Finitions & Repassage</option>
+                                    <option value="PRET" <?php echo e($rendezVous->statut_production === 'PRET' ? 'selected' : ''); ?>>6. Prêt pour retrait (Prêt !)</option>
+                                    <option value="LIVRE" <?php echo e($rendezVous->statut_production === 'LIVRE' ? 'selected' : ''); ?>>7. Livré au client</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary-custom-lg w-100" style="margin-top:0.5rem;">
+                                <i class="fas fa-sync-alt me-2"></i> Mettre à jour l'étape
+                            </button>
+                        </form>
+                    </div>
+
                 <?php else: ?>
 
                     <div class="step-card">

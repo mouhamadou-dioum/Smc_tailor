@@ -262,6 +262,125 @@
         .rdv-status { grid-column: 1; }
         .rdv-action { grid-column: 2; text-align: left; }
     }
+
+    /* Stepper Timeline */
+    .stepper-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+        position: relative;
+    }
+    .stepper-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background-color: var(--gray-200);
+        z-index: 1;
+    }
+    .stepper-item {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        z-index: 2;
+    }
+    .stepper-item::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: -50%;
+        width: 100%;
+        height: 4px;
+        background-color: var(--gray-200);
+        z-index: -1;
+    }
+    .stepper-item::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        right: -50%;
+        width: 100%;
+        height: 4px;
+        background-color: var(--gray-200);
+        z-index: -1;
+    }
+    .stepper-item:first-child::before { display: none; }
+    .stepper-item:last-child::after { display: none; }
+
+    .step-counter {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background-color: #fff;
+        border: 3px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        color: var(--gray-500);
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .step-name {
+        margin-top: 0.5rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+
+    /* Active Step */
+    .stepper-item.active .step-counter {
+        border-color: var(--primary);
+        color: var(--primary);
+        background-color: #fff;
+        box-shadow: 0 0 15px rgba(201,169,89,0.35);
+        transform: scale(1.1);
+        animation: pulseActive 2s infinite;
+    }
+    .stepper-item.active .step-name {
+        color: var(--primary);
+        font-weight: 800;
+    }
+
+    /* Completed Step */
+    .stepper-item.completed .step-counter {
+        border-color: #22c55e;
+        background-color: #22c55e;
+        color: #fff;
+    }
+    .stepper-item.completed .step-name {
+        color: #166534;
+    }
+    .stepper-item.completed::before,
+    .stepper-item.completed::after {
+        background-color: #22c55e;
+    }
+    .stepper-item.active::before {
+        background-color: #22c55e;
+    }
+
+    @keyframes pulseActive {
+        0% { box-shadow: 0 0 0 0 rgba(201,169,89,0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(201,169,89,0); }
+        100% { box-shadow: 0 0 0 0 rgba(201,169,89,0); }
+    }
+
+    @media (max-width: 576px) {
+        .step-name { font-size: 0.58rem; }
+        .step-counter { width: 34px; height: 34px; font-size: 0.8rem; }
+        .stepper-wrapper::before,
+        .stepper-item::before,
+        .stepper-item::after { top: 15px; }
+    }
 </style>
 
 <div class="rdv-page">
@@ -310,7 +429,7 @@
                         {{ $vetNom ?? 'Vêtement à définir' }}
                     </div>
                     @if($rdv->commentaire)
-                    <div class="rdv-comment">
+                    <div class="rdv-comment mt-1">
                         <i class="fas fa-comment-dots fa-xs me-1"></i>{{ \Illuminate\Support\Str::limit($rdv->commentaire, 70) }}
                     </div>
                     @endif
@@ -334,7 +453,7 @@
                 </div>
 
                 {{-- Action WhatsApp --}}
-                <div class="rdv-action">
+                <div class="rdv-action d-flex flex-column align-items-center gap-2">
                     @if($rdv->statut === \App\Models\RendezVous::STATUT_EN_ATTENTE)
                         @if($waLink)
                             <a href="{{ $waLink }}" target="_blank" class="btn-wa-discuss">
@@ -342,6 +461,9 @@
                             </a>
                             <div class="wa-hint">Contacter le tailleur pour confirmer</div>
                         @endif
+                        <a href="{{ route('rendezvous.edit', $rdv->id) }}" class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-1 w-100 justify-content-center" style="border-radius:50px; font-size:0.75rem; padding:0.35rem 0.85rem;">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
 
                     @elseif($rdv->statut === \App\Models\RendezVous::STATUT_CONFIRME)
                         <div class="confirme-label">
@@ -353,6 +475,9 @@
                                 </a>
                             @endif
                         </div>
+                        <a href="{{ route('rendezvous.edit', $rdv->id) }}" class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-1 w-100 justify-content-center" style="border-radius:50px; font-size:0.75rem; padding:0.35rem 0.85rem;">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
 
                     @else
                         @if($waLink)
@@ -362,6 +487,63 @@
                         @endif
                     @endif
                 </div>
+
+                @if($rdv->statut === \App\Models\RendezVous::STATUT_CONFIRME)
+                @php
+                    $currentProd = $rdv->statut_production ?? 'EN_ATTENTE';
+                    $steps = [
+                        'MESURES'   => ['label' => 'Mesures', 'icon' => 'fas fa-ruler-combined', 'active' => false, 'completed' => false],
+                        'COUPE'     => ['label' => 'Coupe', 'icon' => 'fas fa-scissors', 'active' => false, 'completed' => false],
+                        'COUTURE'   => ['label' => 'Couture', 'icon' => 'fas fa-tshirt', 'active' => false, 'completed' => false],
+                        'FINITIONS' => ['label' => 'Finitions', 'icon' => 'fas fa-magic', 'active' => false, 'completed' => false],
+                        'PRET'      => ['label' => 'Prêt !', 'icon' => 'fas fa-gift', 'active' => false, 'completed' => false]
+                    ];
+                    $order = ['EN_ATTENTE', 'MESURES', 'COUPE', 'COUTURE', 'FINITIONS', 'PRET', 'LIVRE'];
+                    $currentIndex = array_search($currentProd, $order);
+                    if ($currentProd === 'LIVRE') {
+                        $currentIndex = 5;
+                    }
+                    $stepKeys = array_keys($steps);
+                    foreach ($stepKeys as $idx => $key) {
+                        $stepIndexInOrder = $idx + 1;
+                        if ($currentIndex === $stepIndexInOrder) {
+                            $steps[$key]['active'] = true;
+                        } elseif ($currentIndex > $stepIndexInOrder) {
+                            $steps[$key]['completed'] = true;
+                        }
+                    }
+                @endphp
+                <div class="production-timeline-container" style="grid-column: 1 / -1; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--gray-200);">
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--dark); margin-bottom:0.75rem; font-family:'Playfair Display', serif; display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                        <i class="fas fa-spinner fa-spin" style="color:var(--primary); font-size: 0.85rem;"></i> État de confection de votre tenue : 
+                        <span style="color:var(--primary); font-weight:800;">
+                            @if($currentProd === 'EN_ATTENTE') En attente de prise des mesures
+                            @elseif($currentProd === 'MESURES') Mensurations prises & validées
+                            @elseif($currentProd === 'COUPE') Coupe du tissu en cours
+                            @elseif($currentProd === 'COUTURE') Couture & Assemblage des pièces
+                            @elseif($currentProd === 'FINITIONS') Finitions et repassage
+                            @elseif($currentProd === 'PRET') Tenue prête ! Vous pouvez passer la récupérer.
+                            @elseif($currentProd === 'LIVRE') Tenue livrée. Merci de votre confiance !
+                            @endif
+                        </span>
+                    </div>
+                    
+                    <div class="stepper-wrapper">
+                        @foreach($steps as $key => $stepData)
+                            <div class="stepper-item {{ $stepData['completed'] ? 'completed' : '' }} {{ $stepData['active'] ? 'active' : '' }}">
+                                <div class="step-counter">
+                                    @if($stepData['completed'])
+                                        <i class="fas fa-check"></i>
+                                    @else
+                                        <i class="{{ $stepData['icon'] }}"></i>
+                                    @endif
+                                </div>
+                                <div class="step-name">{{ $stepData['label'] }}</div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
 
             </div>
             @empty

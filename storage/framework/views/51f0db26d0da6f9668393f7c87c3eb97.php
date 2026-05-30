@@ -167,7 +167,10 @@ unset($__errorArgs, $__bag); ?>
                         </div>
                         
                         <div class="mb-4">
-                            <label class="auth-label">Mot de passe *</label>
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="auth-label mb-0">Mot de passe *</label>
+                                <a href="<?php echo e(route('password.request')); ?>" class="auth-link small" style="font-size: 0.85rem;">Mot de passe oublié ?</a>
+                            </div>
                             <div class="position-relative">
                                 
                                 <input

@@ -64,7 +64,14 @@ class Vetement extends Model
             return $this->mainImage->image_url;
         }
 
-        $main = $this->images()->where('ordre', 0)->first();
+        // CORRECTIF PERFORMANCE (N+1) : Si la relation 'images' est déjà chargée, on filtre en mémoire vive.
+        // Sinon, on effectue une requête ciblée pour éviter de charger toutes les images.
+        if ($this->relationLoaded('images')) {
+            $main = $this->images->where('ordre', 0)->first();
+        } else {
+            $main = $this->images()->where('ordre', 0)->first();
+        }
+        
         return $main ? $main->image_url : $value;
     }
 }

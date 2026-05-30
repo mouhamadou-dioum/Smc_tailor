@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['EMAIL', 'WHATSAPP']);
-            $table->string('contenu');
+            $table->text('contenu'); // CORRECTIF: modifié de string() à text() pour éviter les dépassements (max 255 caractères) lors des confirmations de RDV
             $table->timestamp('dateEnvoi')->nullable();
             $table->string('statut')->nullable();
             $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');

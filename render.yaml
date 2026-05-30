@@ -1,3 +1,4 @@
+# Configuration de déploiement Render
 services:
   - type: web
     name: couture-app
@@ -21,6 +22,7 @@ services:
         generateValue: true
       - key: APP_URL
         value: https://couture-app.onrender.com
+      # CORRECTIF : Utilisation du pilote MySQL comme demandé (les identifiants DB_HOST, DB_PASSWORD, etc. sont configurés sur le tableau de bord Render)
       - key: DB_CONNECTION
         value: mysql
       - key: SESSION_DRIVER
@@ -33,7 +35,3 @@ services:
         value: error
       - key: MAIL_MAILER
         value: smtp
-    databases:
-      - name: digit_tailor
-        databaseName: digit_tailor
-        user: root

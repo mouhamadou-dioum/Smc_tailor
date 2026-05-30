@@ -1,31 +1,9 @@
 @extends('layouts.master')
 
-@section('title', 'Réserver un Rendez-vous - Couture App')
-
-{{--
-    =====================================================
-    CORRECTIF DESIGN — Formulaire de prise de RDV
-    -------------------------------------------------------
-    Ce fichier utilisait des classes (form-custom, form-label-custom,
-    form-control-custom, btn-primary-custom, alert-custom) qui n'étaient
-    définies que dans layouts/app.blade.php et non dans layouts/master.blade.php.
-    Résultat : le formulaire était rendu sans style, incohérent avec le reste.
-
-    SOLUTION DOUBLE :
-      1. Les classes manquantes ont été ajoutées dans layouts/master.blade.php
-         (correctif dans master) pour que toutes les pages qui étendent master
-         bénéficient du même design système.
-      2. Ce fichier ajoute une section @styles locale avec un en-tête de page
-         stylisé (bandeau hero sombre) identique aux autres pages du site.
-    =====================================================
---}}
+@section('title', 'Modifier mon Rendez-vous - Couture App')
 
 @section('styles')
 <style>
-    /*
-     * En-tête de page — identique au style hero des autres pages
-     * (rendezvous/index, vetements/index…)
-     */
     .page-header {
         background: linear-gradient(135deg, var(--dark) 0%, #2d2d4a 100%);
         padding: 3.5rem 0 2.5rem;
@@ -44,30 +22,18 @@
         margin-bottom: 0;
     }
 
-    .page-header .section-subtitle a {
-        color: var(--primary);
-        text-decoration: none;
-    }
-
-    .page-header .section-subtitle a:hover {
-        text-decoration: underline;
-    }
-
-    /* Zone principale du formulaire */
     .rdv-form-section {
         padding: 3rem 0 4rem;
         background: var(--gray-100);
         min-height: calc(100vh - 280px);
     }
 
-    /* Carte vêtement pré-sélectionné */
     .vetement-preselect-card {
         background: var(--gray-100);
         border: 1.5px solid var(--gray-300) !important;
         border-radius: 10px;
     }
 
-    /* Options radio de notification */
     .notif-option {
         display: flex;
         align-items: center;
@@ -87,44 +53,34 @@
         color: var(--primary);
     }
 
-    /* Encart info bleu */
     .info-box {
-        background-color: #e8f4fd;
-        border-left: 4px solid #3b9ede;
+        background-color: #fef3c7;
+        border-left: 4px solid #f59e0b;
         border-radius: 0 8px 8px 0;
         padding: 0.85rem 1.1rem;
-        color: #0c5460;
+        color: #92400e;
         font-size: 0.9rem;
     }
 </style>
 @endsection
 
-{{-- ── En-tête de page ── --}}
 @section('content')
 <div class="page-header">
     <div class="container">
         <div class="text-center">
-            <h2 class="section-title">Réserver un rendez-vous</h2>
+            <h2 class="section-title">Modifier votre rendez-vous</h2>
             <p class="section-subtitle mt-3">
-                @if($vetementPreselect)
-                    Vous réservez pour le modèle sélectionné dans la collection.
-                @else
-                    Rendez-vous général (prise de mesures, conseil, autre demande).<br>
-                    Pour un modèle précis, passez par la
-                    <a href="{{ route('vetements.index') }}">collection</a> puis « Réserver ».
-                @endif
+                Vous modifiez votre rendez-vous initialement prévu le {{ $rendezVous->dateRendezVous->format('d/m/Y') }} à {{ $rendezVous->heure }}.
             </p>
         </div>
     </div>
 </div>
 
-{{-- ── Formulaire ── --}}
 <section class="rdv-form-section">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 col-xl-7">
 
-                {{-- Messages d'erreur globaux (validation Laravel) --}}
                 @if($errors->any())
                     <div class="alert alert-danger mb-4 rounded-3">
                         <i class="fas fa-exclamation-circle me-2"></i>
@@ -133,40 +89,37 @@
                 @endif
 
                 <div class="form-custom">
-                    <form id="rendezvousForm" method="POST" action="{{ route('rendezvous.store') }}">
+                    <form id="rendezvousForm" method="POST" action="{{ route('rendezvous.update', $rendezVous->id) }}">
                         @csrf
+                        @method('PUT')
 
-                        {{-- Vêtement pré-sélectionné --}}
-                        @if($vetementPreselect)
-                            <input type="hidden" name="vetement_id" value="{{ $vetementPreselect->id }}">
-                            <div class="vetement-preselect-card mb-4 p-3">
-                                <div class="d-flex gap-3 align-items-center flex-wrap flex-sm-nowrap">
-                                    @php
-                                        $_src = $vetementPreselect->imageUrl;
-                                        $_src = $_src && !str_starts_with($_src, 'http') ? \Illuminate\Support\Facades\Storage::url($_src) : $_src;
-                                    @endphp
-                                    @if($_src)
-                                        <img
-                                            src="{{ $_src }}"
-                                            alt="{{ $vetementPreselect->nom }}"
-                                            class="rounded"
-                                            style="width:72px;height:72px;min-width:72px;object-fit:cover;"
-                                        >
-                                    @endif
-                                    <div class="flex-grow-1">
-                                        <label class="form-label-custom mb-1" style="font-size:0.8rem;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-500);">Modèle concerné</label>
-                                        <div class="fw-bold" style="color:var(--dark);">{{ $vetementPreselect->nom }}</div>
-                                        <span class="text-muted" style="font-size:0.875rem;">{{ number_format($vetementPreselect->prix, 0, ',', ' ') }} CFA</span>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
+                        {{-- Choix du Modèle --}}
+                        <div class="mb-4">
+                            <label class="form-label-custom" for="vetementSelect">
+                                <i class="fas fa-tshirt me-1 text-muted"></i> Modèle de vêtement concerné <span class="text-muted fw-normal">(optionnel)</span>
+                            </label>
+                            <select
+                                name="vetement_id"
+                                id="vetementSelect"
+                                class="form-select form-control-custom @error('vetement_id') is-invalid @enderror"
+                            >
+                                <option value="">-- Aucun modèle particulier (conseil ou mesures généraux) --</option>
+                                @foreach($vetements as $v)
+                                    <option value="{{ $v->id }}" {{ old('vetement_id', $rendezVous->vetement_id) == $v->id ? 'selected' : '' }}>
+                                        {{ $v->nom }} ({{ number_format($v->prix, 0, ',', ' ') }} CFA)
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('vetement_id')
+                                <span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i>{{ $message }}</span>
+                            @enderror
+                        </div>
 
                         {{-- Date + Heure --}}
                         <div class="row">
                             <div class="col-md-6 mb-4">
                                 <label class="form-label-custom" for="dateInput">
-                                    <i class="fas fa-calendar me-1 text-muted"></i> Date du rendez-vous *
+                                    <i class="fas fa-calendar me-1 text-muted"></i> Nouvelle Date *
                                 </label>
                                 <input
                                     type="date"
@@ -175,7 +128,7 @@
                                     class="form-control form-control-custom @error('dateRendezVous') is-invalid @enderror"
                                     required
                                     min="{{ date('Y-m-d', strtotime('+1 day')) }}"
-                                    value="{{ old('dateRendezVous') }}"
+                                    value="{{ old('dateRendezVous', $rendezVous->dateRendezVous->format('Y-m-d')) }}"
                                 >
                                 @error('dateRendezVous')
                                     <span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i>{{ $message }}</span>
@@ -184,7 +137,7 @@
 
                             <div class="col-md-6 mb-4">
                                 <label class="form-label-custom" for="heureSelect">
-                                    <i class="fas fa-clock me-1 text-muted"></i> Heure *
+                                    <i class="fas fa-clock me-1 text-muted"></i> Heure du RDV *
                                 </label>
                                 <select
                                     name="heure"
@@ -194,7 +147,7 @@
                                 >
                                     <option value="">Sélectionnez l'heure</option>
                                     @foreach(['09:00','10:00','11:00','14:00','15:00','16:00','17:00'] as $h)
-                                        <option value="{{ $h }}" {{ old('heure') === $h ? 'selected' : '' }}>{{ $h }}</option>
+                                        <option value="{{ $h }}" {{ old('heure', $rendezVous->heure) === $h ? 'selected' : '' }}>{{ $h }}</option>
                                     @endforeach
                                 </select>
                                 @error('heure')
@@ -207,47 +160,41 @@
                         <div class="mb-4">
                             <label class="form-label-custom" for="commentaire">
                                 <i class="fas fa-comment me-1 text-muted"></i>
-                                @if($vetementPreselect)
-                                    Commentaire <span class="text-muted fw-normal">(optionnel)</span>
-                                @else
-                                    Décrivez votre demande *
-                                @endif
+                                Commentaire ou description des retouches *
                             </label>
                             <textarea
                                 name="commentaire"
                                 id="commentaire"
                                 class="form-control form-control-custom @error('commentaire') is-invalid @enderror"
                                 rows="4"
-                                placeholder="{{ $vetementPreselect ? 'Précisez vos attentes, mensurations particulières…' : 'Ex. : prise de mesures pour costume, retouches, consultation style…' }}"
-                                {{ $vetementPreselect ? '' : 'required' }}
-                            >{{ old('commentaire') }}</textarea>
+                                placeholder="Précisez votre demande, vos mensurations ou vos modifications..."
+                                required
+                            >{{ old('commentaire', $rendezVous->commentaire) }}</textarea>
                             @error('commentaire')
                                 <span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i>{{ $message }}</span>
                             @enderror
-                            @if(!$vetementPreselect)
-                                <small class="text-muted mt-1 d-block">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    Sans modèle lié, merci d'indiquer clairement l'objet du rendez-vous.
-                                </small>
-                            @endif
                         </div>
 
                         <input type="hidden" name="typeNotification" value="WHATSAPP">
 
                         {{-- Encart informatif --}}
                         <div class="info-box mb-4">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Votre demande sera traitée par l'administrateur.
-                            Vous recevrez une confirmation par WhatsApp.
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Note :</strong> Après modification, le statut de votre rendez-vous sera réinitialisé à <strong>En attente de re-confirmation</strong>. L'administrateur sera immédiatement notifié par WhatsApp.
                         </div>
 
-                        {{-- Bouton de soumission --}}
-                        <button type="submit" class="btn btn-primary-custom w-100" id="submitBtn">
-                            <i class="fas fa-paper-plane me-2"></i> Soumettre la demande
-                        </button>
+                        {{-- Boutons d'action --}}
+                        <div class="d-flex gap-3">
+                            <a href="{{ route('rendezvous.index') }}" class="btn btn-outline-custom w-50">
+                                Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary-custom w-50" id="submitBtn">
+                                <i class="fas fa-save me-2"></i> Enregistrer
+                            </button>
+                        </div>
 
                     </form>
-                </div><!-- /.form-custom -->
+                </div>
 
             </div>
         </div>
@@ -257,18 +204,12 @@
 
 @section('scripts')
 <script>
-/**
- * Met en surbrillance la carte de notification sélectionnée.
- * @param {HTMLInputElement} radio - le radio button cliqué
- */
 function updateNotifStyle(radio) {
-    // Réinitialise toutes les cartes de notification
     document.querySelectorAll('.notif-option').forEach(function(el) {
         el.style.borderColor = '';
         el.style.background  = '';
         el.style.color       = '';
     });
-    // Surligne la carte du choix courant avec la couleur primaire
     var label = radio.closest('.notif-option');
     if (label) {
         label.style.borderColor = 'var(--primary)';
@@ -278,32 +219,28 @@ function updateNotifStyle(radio) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-
-    /* ── Date minimum = demain ── */
     var dateInput = document.getElementById('dateInput');
     var tomorrow  = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     dateInput.min = tomorrow.toISOString().split('T')[0];
 
-    /* ── Initialise le style de la notification cochée par défaut ── */
     var checkedRadio = document.querySelector('input[name="typeNotification"]:checked');
     if (checkedRadio) updateNotifStyle(checkedRadio);
 
-    /* ── Soumission AJAX ── */
+    /* AJAX Submit */
     var form      = document.getElementById('rendezvousForm');
     var submitBtn = document.getElementById('submitBtn');
 
     form.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        // Feedback visuel pendant l'envoi
         submitBtn.disabled  = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Envoi en cours…';
 
         var formData = new FormData(this);
 
         fetch(this.action, {
-            method:  'POST',
+            method:  'POST', // Utilise fetch avec POST car Laravel simule le PUT via _method
             body:    formData,
             headers: {
                 'X-CSRF-TOKEN':     document.querySelector('input[name="_token"]').value,
@@ -315,31 +252,27 @@ document.addEventListener('DOMContentLoaded', function () {
             var data = await response.json().catch(function () { return {}; });
 
             if (response.ok && data.success) {
-                // Succès : on redirige vers la liste des RDV
-                alert(data.message || 'Votre demande de rendez-vous a été soumise avec succès !');
+                alert(data.message || 'Votre rendez-vous a été modifié avec succès !');
                 window.location.href = '{{ route("rendezvous.index") }}';
                 return;
             }
 
             if (response.status === 422 && data.errors) {
-                // Erreur de validation Laravel : affiche la première erreur
                 var first = Object.values(data.errors).flat()[0];
                 alert(first || 'Veuillez corriger le formulaire.');
             } else {
                 alert(data.message || 'Une erreur est survenue. Veuillez réessayer.');
             }
 
-            // Réactive le bouton en cas d'erreur pour permettre une nouvelle tentative
             submitBtn.disabled  = false;
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Soumettre la demande';
+            submitBtn.innerHTML = '<i class="fas fa-save me-2"></i> Enregistrer';
         })
         .catch(function () {
             alert('Une erreur réseau est survenue. Veuillez réessayer.');
             submitBtn.disabled  = false;
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Soumettre la demande';
+            submitBtn.innerHTML = '<i class="fas fa-save me-2"></i> Enregistrer';
         });
     });
-
 });
 </script>
 @endsection

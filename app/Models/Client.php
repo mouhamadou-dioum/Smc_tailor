@@ -59,3 +59,4 @@ class Client extends Authenticatable
         return $this->hasMany(Mesure::class);
     }
 }
+

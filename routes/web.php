@@ -1,4 +1,12 @@
 <?php
+/**
+ * Routes de l'application SMC Couture.
+ * 
+ * CORRECTIFS APPORTÉS :
+ * 1. Suppression de la route de debug publique non sécurisée '/admin/debug-env'.
+ * 2. Suppression de la route orpheline de confirmation client '/rendezvous/{id}/confirmer'
+ *    car elle n'était pas utilisée et ne modifiait pas la base de données.
+ */
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -24,6 +32,12 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('regi
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('client.logout');
 
+// Mot de passe oublié
+Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+
 Route::get('/vetements', [VetementController::class, 'index'])->name('vetements.index');
 Route::get('/vetements/{id}', [VetementController::class, 'show'])->name('vetements.show');
 
@@ -31,7 +45,8 @@ Route::middleware(['auth:client'])->group(function () {
     Route::get('/rendezvous/create', [RendezVousController::class, 'create'])->name('rendezvous.create');
     Route::post('/rendezvous', [RendezVousController::class, 'store'])->name('rendezvous.store');
     Route::get('/rendezvous', [RendezVousController::class, 'myRendezVous'])->name('rendezvous.index');
-    Route::put('/rendezvous/{id}/confirmer', [RendezVousController::class, 'confirmByClient'])->name('rendezvous.confirm');
+    Route::get('/rendezvous/{id}/edit', [RendezVousController::class, 'edit'])->name('rendezvous.edit');
+    Route::put('/rendezvous/{id}', [RendezVousController::class, 'update'])->name('rendezvous.update');
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -58,21 +73,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/rendezvous/{id}', [AdminController::class, 'rendezvousShow'])->name('rendezvous.show');
         Route::get('/rendezvous/{id}/confirmer', [AdminController::class, 'rendezvousConfirmer'])->name('rendezvous.confirmer');
         Route::get('/rendezvous/{id}/refuser', [AdminController::class, 'rendezvousRefuser'])->name('rendezvous.refuser');
+        Route::post('/rendezvous/{id}/production', [AdminController::class, 'updateProductionStatus'])->name('rendezvous.production');
         
         Route::get('/mesures/{clientId}/create', [MesureController::class, 'create'])->name('mesures.create');
         Route::post('/mesures/{clientId}', [MesureController::class, 'store'])->name('mesures.store');
         Route::get('/mesures/{clientId}', [MesureController::class, 'show'])->name('mesures.show');
         Route::get('/mesures/{clientId}/historique', [MesureController::class, 'historique'])->name('mesures.historique');
+        Route::get('/mesures/{clientId}/print/{mesureId}', [MesureController::class, 'print'])->name('mesures.print');
         
         Route::get('/clients', [AdminController::class, 'clientsIndex'])->name('clients.index');
     });
-    // a supprimer apres
-    // routes/web.php — à supprimer après vérification !
-Route::get('/debug-env', function () {
-    return [
-        'cloud_name' => config('cloudinary.cloud_name'),
-        'api_key'    => config('cloudinary.api_key') ? '✅ présent' : '❌ NULL',
-        'api_secret' => config('cloudinary.api_secret') ? '✅ présent' : '❌ NULL',
-    ];
-});
 });

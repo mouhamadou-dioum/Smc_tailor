@@ -655,14 +655,14 @@
             </div>
         </div>
     </nav>
-
+ 
     <main>
         @yield('content')
     </main>
-
+ 
     {{-- ─── FOOTER ─── --}}
     <footer class="site-footer">
-
+ 
         {{-- Bande CTA --}}
         <div class="footer-cta">
             <div class="footer-cta-inner">
@@ -676,11 +676,11 @@
                 </a>
             </div>
         </div>
-
+ 
         {{-- Corps --}}
         <div class="footer-body">
             <div class="footer-grid">
-
+ 
                 {{-- Marque --}}
                 <div class="footer-col footer-col-brand">
                     <a href="{{ route('home') }}" class="footer-logo">SMC<span>—</span>COUTURE</a>
@@ -694,7 +694,7 @@
                         <a href="#" class="footer-social" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
                     </div>
                 </div>
-
+ 
                 {{-- Navigation --}}
                 <div class="footer-col">
                     <h4 class="footer-col-title">Navigation</h4>

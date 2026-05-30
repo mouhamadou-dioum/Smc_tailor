@@ -65,7 +65,7 @@ class RendezVousController extends Controller
         ]);
 
         Notification::create([
-            'type' => $request->typeNotification ?? 'EMAIL',
+            'type' => $request->typeNotification ?? 'WHATSAPP',
             'contenu' => 'Votre demande de rendez-vous a été soumise. En attente de confirmation.',
             'dateEnvoi' => now(),
             'statut' => 'ENVOYE',
@@ -89,17 +89,67 @@ class RendezVousController extends Controller
         return view('rendezvous.index', compact('rendezVous'));
     }
 
-    public function confirmByClient(Request $request, $id)
+    public function edit($id)
     {
-        $rendezVous = RendezVous::with('vetement')
-            ->where('client_id', Auth::guard('client')->id())
-            ->where('id', $id)
-            ->where('statut', RendezVous::STATUT_EN_ATTENTE)
-            ->firstOrFail();
+        $rendezVous = RendezVous::where('client_id', Auth::guard('client')->id())->findOrFail($id);
+        $vetements = Vetement::where('disponible', true)->get();
+        
+        return view('rendezvous.edit', compact('rendezVous', 'vetements'));
+    }
 
-        $request->session()->put('rendezvous_confirme_' . $id, true);
+    public function update(Request $request, $id)
+    {
+        $rendezVous = RendezVous::where('client_id', Auth::guard('client')->id())->findOrFail($id);
 
-        return back()->with('success', 'Rendez-vous confirmé!');
+        $request->validate([
+            'vetement_id' => 'nullable|exists:vetements,id',
+            'dateRendezVous' => 'required|date|after:today',
+            'heure' => 'required',
+            'commentaire' => [
+                'nullable',
+                'string',
+                'max:5000',
+                Rule::requiredIf(fn () => !$request->filled('vetement_id')),
+            ],
+        ]);
+
+        $vetementId = $request->vetement_id;
+        if ($vetementId) {
+            $exists = Vetement::where('disponible', true)->whereKey($vetementId)->exists();
+            if (!$exists) {
+                if ($request->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Ce modèle n\'est plus disponible.'], 422);
+                }
+                return back()->withErrors(['vetement_id' => 'Ce modèle n\'est plus disponible.'])->withInput();
+            }
+        }
+
+        $client = Auth::guard('client')->user();
+        $vetement = $vetementId ? Vetement::find($vetementId) : null;
+
+        $rendezVous->update([
+            'dateRendezVous' => $request->dateRendezVous,
+            'heure' => $request->heure,
+            'statut' => RendezVous::STATUT_EN_ATTENTE,
+            'commentaire' => $request->commentaire,
+            'vetement_id' => $vetementId,
+        ]);
+
+        Notification::create([
+            'type' => $request->typeNotification ?? 'WHATSAPP',
+            'contenu' => 'Votre demande de rendez-vous a été modifiée et est en attente de re-confirmation.',
+            'dateEnvoi' => now(),
+            'statut' => 'ENVOYE',
+            'client_id' => $client->id,
+            'rendez_vous_id' => $rendezVous->id,
+        ]);
+
+        $this->notifyAdminModifiedAppointment($client, $rendezVous);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Rendez-vous modifié avec succès !'
+        ]);
     }
 
     /**
@@ -142,6 +192,54 @@ class RendezVousController extends Controller
         }
 
         $message .= "\n✅ Validez ou refusez ce RDV depuis votre tableau de bord.";
+
+        $waPhone      = $this->normalizeWhatsAppPhone($admin->telephone);
+        $token        = config('services.whatsapp.token');
+        $phoneNumberId = config('services.whatsapp.phone_number_id');
+
+        if (!empty($token) && !empty($phoneNumberId) && $waPhone) {
+            $this->sendWhatsAppTextMessage($token, $phoneNumberId, $waPhone, $message);
+        }
+    }
+
+    /**
+     * Envoie un message WhatsApp détaillé à l'admin lors d'une modification de réservation.
+     */
+    private function notifyAdminModifiedAppointment($client, RendezVous $rendezVous): void
+    {
+        $admin = Admin::first();
+        if (!$admin || empty($admin->telephone)) {
+            return;
+        }
+
+        $clientNom    = "{$client->prenom} {$client->nom}";
+        $clientTel    = $client->telephone;
+        $dateRdv      = $rendezVous->dateRendezVous->format('d/m/Y');
+        $heureRdv     = $rendezVous->heure;
+        $commentaire  = trim((string) $rendezVous->commentaire);
+
+        $vetement = $rendezVous->vetement;
+        if ($vetement) {
+            $vetementNom  = $vetement->nom;
+            $vetementPrix = $vetement->prix
+                ? number_format($vetement->prix, 0, ',', ' ') . ' CFA'
+                : 'Prix non spécifié';
+            $vetementLine = "👗 Vêtement : {$vetementNom} ({$vetementPrix})";
+        } else {
+            $vetementLine = "👗 Vêtement : *(à définir avec le client)*";
+        }
+
+        $message  = "🔄 *Modification de réservation*\n\n";
+        $message .= "👤 Client : {$clientNom}\n";
+        $message .= "📞 Tél : {$clientTel}\n";
+        $message .= "📅 Nouveau créneau : {$dateRdv} à {$heureRdv}\n";
+        $message .= "{$vetementLine}\n";
+
+        if ($commentaire !== '') {
+            $message .= "💬 Nouvelle Note : {$commentaire}\n";
+        }
+
+        $message .= "\n✅ Validez ou refusez ce RDV modifié depuis votre tableau de bord.";
 
         $waPhone      = $this->normalizeWhatsAppPhone($admin->telephone);
         $token        = config('services.whatsapp.token');

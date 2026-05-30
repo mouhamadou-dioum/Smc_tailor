@@ -282,7 +282,7 @@
         border-top: 1px solid var(--gray-200);
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: space-between;
         gap: 0.4rem;
         background: var(--gray-100);
     }
@@ -346,15 +346,15 @@
     );
 
     $fields = [
-        'cou'      => 'Cou',
-        'epaule'   => 'Épaule',
-        'manche'   => 'Manche',
-        'poitrine' => 'Poitrine',
-        'taille'   => 'Taille',
-        'hanche'   => 'Hanche',
-        'tourbras' => 'Bras',
-        'cuisse'   => 'Cuisse',
-        'longueur' => 'Longueur',
+        'cou'              => 'Cou',
+        'epaule'           => 'Épaule',
+        'manche'           => 'Manche',
+        'hanche'           => 'Hanche',
+        'tourbras'         => 'Bras',
+        'cuisse'           => 'Cuisse',
+        'longueurChemise'  => 'Lg. Chemise',
+        'longueurBoubou'   => 'Lg. Boubou',
+        'longueurPantalon' => 'Lg. Pantalon',
     ];
 @endphp
 
@@ -463,6 +463,9 @@
                             <i class="fas fa-clock fa-xs"></i>
                             {{ $mesure->created_at->diffForHumans() }}
                         </span>
+                        <a href="{{ route('admin.mesures.print', ['clientId' => $client->id, 'mesureId' => $mesure->id]) }}" target="_blank" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1" style="font-size:0.72rem; padding:0.2rem 0.5rem; border-radius:6px; font-weight:600; color:var(--primary); border-color:var(--primary); background:transparent; text-decoration:none;">
+                            <i class="fas fa-print"></i> PDF / Imprimer
+                        </a>
                     </div>
 
                 </div>

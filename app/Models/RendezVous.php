@@ -13,10 +13,20 @@ class RendezVous extends Model
     const STATUT_CONFIRME = 'CONFIRME';
     const STATUT_REFUSE = 'REFUSE';
 
+    // Statuts de production
+    const PROD_EN_ATTENTE = 'EN_ATTENTE';
+    const PROD_MESURES    = 'MESURES';
+    const PROD_COUPE      = 'COUPE';
+    const PROD_COUTURE    = 'COUTURE';
+    const PROD_FINITIONS  = 'FINITIONS';
+    const PROD_PRET       = 'PRET';
+    const PROD_LIVRE      = 'LIVRE';
+
     protected $fillable = [
         'dateRendezVous',
         'heure',
         'statut',
+        'statut_production',
         'commentaire',
         'dateCreation',
         'client_id',

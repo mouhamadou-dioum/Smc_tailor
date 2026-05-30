@@ -25,13 +25,63 @@
         pointer-events: none;
     }
 
-    /* ── Category Filter Bar ── */
-    .filter-bar {
+    /* ── Category Filter & Search Bar ── */
+    .filter-box {
+        background: #fff;
+        padding: 1.25rem 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.03);
+        margin-bottom: 2.5rem;
         display: flex;
+        align-items: center;
+        justify-content: space-between;
         flex-wrap: wrap;
-        justify-content: center;
+        gap: 1.25rem;
+        border: 1px solid var(--gray-200);
+    }
+
+    .filter-groups {
+        display: flex;
         gap: 0.5rem;
-        margin-bottom: 3rem;
+        flex-wrap: wrap;
+    }
+
+    .search-input-group {
+        position: relative;
+        min-width: 250px;
+        flex-grow: 1;
+    }
+
+    @media (min-width: 992px) {
+        .search-input-group {
+            flex-grow: 0;
+            width: 300px;
+        }
+    }
+
+    .search-input-group i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-500);
+    }
+
+    .search-control {
+        width: 100%;
+        padding: 0.55rem 1rem 0.55rem 2.5rem;
+        border-radius: 50px;
+        border: 1.5px solid var(--gray-300);
+        background: var(--gray-100);
+        font-size: 0.85rem;
+        transition: all 0.25s;
+    }
+
+    .search-control:focus {
+        background: #fff;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(201,169,89,0.15);
+        outline: none;
     }
 
     .filter-btn {
@@ -463,24 +513,31 @@
 <section class="py-5" style="background: var(--gray-100);">
     <div class="container">
 
-        {{-- Category Filter --}}
-        @if($categories->count() > 0)
-        <div class="filter-bar">
-            <a href="{{ route('vetements.index') }}"
-               class="filter-btn {{ !$categorieId ? 'active' : '' }}">
-                <i class="fas fa-th-large me-1"></i> Tous
-            </a>
-            @foreach($categories as $categorie)
-                <a href="{{ route('vetements.index', ['categorie' => $categorie->id]) }}"
-                   class="filter-btn {{ $categorieId == $categorie->id ? 'active' : '' }}">
-                    {{ $categorie->nom }}
+        {{-- Category Filter & Search Bar --}}
+        <div class="filter-box">
+            <div class="filter-groups">
+                <a href="{{ route('vetements.index') }}"
+                   class="filter-btn {{ !$categorieId ? 'active' : '' }}">
+                    <i class="fas fa-th-large me-1"></i> Tous
                 </a>
-            @endforeach
+                @if($categories->count() > 0)
+                    @foreach($categories as $categorie)
+                        <a href="{{ route('vetements.index', ['categorie' => $categorie->id]) }}"
+                           class="filter-btn {{ $categorieId == $categorie->id ? 'active' : '' }}">
+                            {{ $categorie->nom }}
+                        </a>
+                    @endforeach
+                @endif
+            </div>
+
+            <div class="search-input-group">
+                <i class="fas fa-search"></i>
+                <input type="text" id="vetementSearch" class="search-control" placeholder="Rechercher un modèle...">
+            </div>
         </div>
-        @endif
 
         {{-- Grid --}}
-        <div class="row g-4">
+        <div class="row g-4" id="vetementsGrid">
             @forelse($vetements as $vetement)
             @php
                 $allImages = $vetement->images->sortBy('ordre');
@@ -490,7 +547,7 @@
                     : 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';
                 $fallbackUrl = 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';
             @endphp
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-4 vetement-item" data-nom="{{ strtolower($vetement->nom) }}" data-desc="{{ strtolower($vetement->description ?? '') }}">
                 <div class="vet-card">
 
                     {{-- Image --}}
@@ -659,4 +716,29 @@
 
     </div>
 </section>
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var searchInput = document.getElementById('vetementSearch');
+    var items       = document.querySelectorAll('.vetement-item');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function (e) {
+            var val = e.target.value.toLowerCase().trim();
+
+            items.forEach(function (item) {
+                var nom  = item.getAttribute('data-nom') || '';
+                var desc = item.getAttribute('data-desc') || '';
+                if (nom.includes(val) || desc.includes(val)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    }
+});
+</script>
 @endsection

@@ -84,6 +84,14 @@ class MesureController extends Controller
         return view('admin.mesures.historique', compact('client', 'mesures'));
     }
 
+    public function print($clientId, $mesureId)
+    {
+        $client = Client::findOrFail($clientId);
+        $mesure = Mesure::where('client_id', $clientId)->findOrFail($mesureId);
+        
+        return view('admin.mesures.print', compact('client', 'mesure'));
+    }
+
     private function uploadToCloudinary(\Illuminate\Http\UploadedFile $file, string $folder): string
     {
         $cloudName = config('cloudinary.cloud_name');

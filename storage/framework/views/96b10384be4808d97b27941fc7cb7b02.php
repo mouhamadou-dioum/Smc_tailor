@@ -655,14 +655,14 @@
             </div>
         </div>
     </nav>
-
+ 
     <main>
         <?php echo $__env->yieldContent('content'); ?>
     </main>
-
+ 
     
     <footer class="site-footer">
-
+ 
         
         <div class="footer-cta">
             <div class="footer-cta-inner">
@@ -676,11 +676,11 @@
                 </a>
             </div>
         </div>
-
+ 
         
         <div class="footer-body">
             <div class="footer-grid">
-
+ 
                 
                 <div class="footer-col footer-col-brand">
                     <a href="<?php echo e(route('home')); ?>" class="footer-logo">SMC<span>—</span>COUTURE</a>
@@ -694,7 +694,7 @@
                         <a href="#" class="footer-social" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
                     </div>
                 </div>
-
+ 
                 
                 <div class="footer-col">
                     <h4 class="footer-col-title">Navigation</h4>

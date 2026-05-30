@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Connexion - Couture App')
+@section('title', 'Réinitialisation du mot de passe - Couture App')
 
 @section('styles')
 <style>
@@ -115,21 +115,11 @@
         background: #e9ecef;
     }
 
-    /* =====================================================
-       CORRECTIF #2 — Double icône "œil" sur le champ password
-       -------------------------------------------------------
-       Chrome, Edge et Safari injectent nativement leur icône
-       d'œil sur les champs type="password". On la désactive
-       pour ne conserver que l'icône Font Awesome personnalisée.
-    ===================================================== */
-
-    /* Masque l'icône native de Edge / IE */
     .auth-input[type="password"]::-ms-reveal,
     .auth-input[type="password"]::-ms-clear {
         display: none !important;
     }
 
-    /* Masque l'icône native de Chrome / Edge Chromium */
     .auth-input[type="password"]::-webkit-credentials-auto-fill-button,
     .auth-input[type="password"]::-webkit-strong-password-auto-fill-button,
     .auth-input[type="password"]::-webkit-contacts-auto-fill-button {
@@ -146,108 +136,100 @@
             <div class="col-lg-5">
                 <div class="text-center mb-4">
                     <a href="{{ route('home') }}" class="auth-logo">COUTURE</a>
-                    <h1 class="auth-title">Connexion</h1>
-                    <p class="auth-subtitle">Accédez à votre compte client</p>
+                    <h1 class="auth-title">Nouveau mot de passe</h1>
+                    <p class="auth-subtitle">Saisissez les informations de réinitialisation</p>
                 </div>
                 
                 <div class="auth-card">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-                        <div class="mb-3">
-                            <label class="auth-label">Email *</label>
-                            <input type="email" name="email" class="auth-input" required placeholder="votre@email.com">
-                            @error('email')
-                                <span class="text-danger small">{{ $message }}</span>
-                            @enderror
+                    @if($errors->any())
+                        <div class="alert alert-danger" style="background:#f8d7da; border-color:#f5c2c7; color:#842029; border-radius:8px; padding:0.85rem; font-size:0.875rem; margin-bottom:1.5rem;">
+                            <ul class="mb-0 ps-3">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('password.update') }}">
+                        @csrf
                         
-                        <div class="mb-4">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <label class="auth-label mb-0">Mot de passe *</label>
-                                <a href="{{ route('password.request') }}" class="auth-link small" style="font-size: 0.85rem;">Mot de passe oublié ?</a>
-                            </div>
+                        <input type="hidden" name="token" value="{{ $token }}">
+
+                        <div class="mb-3">
+                            <label class="auth-label">Adresse e-mail *</label>
+                            <input type="email" name="email" class="auth-input" required readonly placeholder="votre@email.com" value="{{ old('email', $email) }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="auth-label">Nouveau mot de passe *</label>
                             <div class="position-relative">
-                                {{--
-                                    autocomplete="current-password" : indique au navigateur qu'il
-                                    s'agit d'un champ de saisie (pas de création), ce qui désactive
-                                    l'icône de suggestion de mot de passe fort sur Safari/Firefox
-                                    en complément du CSS ci-dessus.
-                                --}}
                                 <input
                                     type="password"
                                     id="motDePasse"
                                     name="motDePasse"
                                     class="auth-input"
                                     required
-                                    autocomplete="current-password"
                                     style="padding-right:45px;"
                                     placeholder="••••••••"
                                 >
                                 <button
                                     type="button"
                                     class="password-toggle position-absolute"
-                                    onclick="togglePassword()"
+                                    onclick="togglePassword('motDePasse', 'toggleIcon1')"
                                     style="right:2px;top:50%;transform:translateY(-50%);border:none;background:transparent;"
-                                    aria-label="Afficher / masquer le mot de passe"
+                                    aria-label="Afficher / masquer"
                                 >
-                                    <i class="fas fa-eye" id="toggleIcon"></i>
+                                    <i class="fas fa-eye" id="toggleIcon1"></i>
                                 </button>
                             </div>
-                            @error('motDePasse')
-                                <span class="text-danger small">{{ $message }}</span>
-                            @enderror
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="auth-label">Confirmer le mot de passe *</label>
+                            <div class="position-relative">
+                                <input
+                                    type="password"
+                                    id="motDePasse_confirmation"
+                                    name="motDePasse_confirmation"
+                                    class="auth-input"
+                                    required
+                                    style="padding-right:45px;"
+                                    placeholder="••••••••"
+                                >
+                                <button
+                                    type="button"
+                                    class="password-toggle position-absolute"
+                                    onclick="togglePassword('motDePasse_confirmation', 'toggleIcon2')"
+                                    style="right:2px;top:50%;transform:translateY(-50%);border:none;background:transparent;"
+                                    aria-label="Afficher / masquer"
+                                >
+                                    <i class="fas fa-eye" id="toggleIcon2"></i>
+                                </button>
+                            </div>
                         </div>
                         
-                        <button type="submit" class="auth-btn mb-3">Se connecter</button>
+                        <button type="submit" class="auth-btn mb-3">Réinitialiser le mot de passe</button>
                     </form>
-                    
-                    <p class="text-center" style="color:#6c757d;">
-                        Pas de compte? <a href="{{ route('register') }}" class="auth-link">S'inscrire</a>
-                    </p>
-                </div>
-                
-                <div class="text-center mt-4">
-                    <a href="{{ route('home') }}" class="auth-back">
-                        <i class="fas fa-arrow-left me-1"></i> Retour à l'accueil
-                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{{--
-    =====================================================
-    CORRECTIF #1 — Navbar positionnée en bas de page
-    -------------------------------------------------------
-    BUG : @section('scripts') était imbriqué INSIDE @section('content').
-    Blade interprète mal les sections imbriquées : le <main> n'était
-    pas fermé proprement dans le DOM rendu, ce qui faisait sortir la
-    navbar de son flux sticky et la faisait apparaître en bas.
-
-    SOLUTION : on ferme @section('content') ici, puis on ouvre
-    @section('scripts') de façon indépendante juste en dessous.
-    =====================================================
---}}
 @endsection
 
-{{-- ↓ Section scripts SÉPARÉE — jamais imbriquée dans 'content' ↓ --}}
 @section('scripts')
 <script>
-/**
- * togglePassword()
- * Bascule la visibilité du champ mot de passe et met à jour
- * l'icône Font Awesome (œil ouvert / barré).
- */
-function togglePassword() {
-    const input = document.getElementById('motDePasse');
-    const icon  = document.getElementById('toggleIcon');
+function togglePassword(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon  = document.getElementById(iconId);
 
     if (input.type === 'password') {
         input.type     = 'text';
-        icon.className = 'fas fa-eye-slash'; // œil barré = mot de passe visible
+        icon.className = 'fas fa-eye-slash';
     } else {
         input.type     = 'password';
-        icon.className = 'fas fa-eye';       // œil ouvert = mot de passe masqué
+        icon.className = 'fas fa-eye';
     }
 }
 </script>

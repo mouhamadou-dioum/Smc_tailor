@@ -67,15 +67,16 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        $vetements = Vetement::orderBy('dateAjout', 'desc')->get();
-        $rendezVous = RendezVous::with(['client', 'vetement', 'notifications'])->orderBy('dateRendezVous', 'desc')->get();
-        $clients = Client::orderBy('dateInscription', 'desc')->get();
+        // CORRECTIF PERFORMANCE : take(5) au niveau SQL pour éviter de charger en mémoire la totalité des vêtements et RDV.
+        $vetements = Vetement::orderBy('dateAjout', 'desc')->take(5)->get();
+        $rendezVous = RendezVous::with(['client', 'vetement', 'notifications'])->orderBy('dateRendezVous', 'desc')->take(5)->get();
         
+        // CORRECTIF PERFORMANCE : Utilisation de count() direct au niveau SQL au lieu de ->count() sur des collections PHP.
         $stats = [
-            'vetements' => $vetements->count(),
-            'rendezVous' => $rendezVous->count(),
-            'enAttente' => $rendezVous->where('statut', 'EN_ATTENTE')->count(),
-            'clients' => $clients->count(),
+            'vetements'  => Vetement::count(),
+            'rendezVous' => RendezVous::count(),
+            'enAttente'  => RendezVous::where('statut', 'EN_ATTENTE')->count(),
+            'clients'    => Client::count(),
         ];
 
         return view('admin.dashboard', compact('vetements', 'rendezVous', 'stats'));
@@ -452,6 +453,10 @@ class AdminController extends Controller
      */
     private function resolveWhatsappTemplateName(string $waEvent): ?string
     {
+        if ($waEvent !== 'confirm' && $waEvent !== 'refuse') {
+            return null;
+        }
+
         $default = trim((string) config('services.whatsapp.template_name', ''));
         $confirm = trim((string) config('services.whatsapp.template_confirm_name', ''));
         $refuse = trim((string) config('services.whatsapp.template_refuse_name', ''));
@@ -541,5 +546,44 @@ class AdminController extends Controller
         }
 
         return $country.$digits;
+    }
+
+    public function updateProductionStatus(Request $request, $id)
+    {
+        $request->validate([
+            'statut_production' => 'required|in:EN_ATTENTE,MESURES,COUPE,COUTURE,FINITIONS,PRET,LIVRE',
+        ]);
+
+        $rendezVous = RendezVous::with(['client', 'vetement'])->findOrFail($id);
+        $rendezVous->update([
+            'statut_production' => $request->statut_production
+        ]);
+
+        $etapes = [
+            'EN_ATTENTE' => 'En attente',
+            'MESURES'    => 'Mesures enregistrées',
+            'COUPE'      => 'Coupe du tissu',
+            'COUTURE'    => 'Couture en cours',
+            'FINITIONS'  => 'Finitions en cours',
+            'PRET'       => 'Prêt pour retrait !',
+            'LIVRE'      => 'Livré'
+        ];
+        
+        $etapeNom = $etapes[$request->statut_production] ?? $request->statut_production;
+
+        // Notification automatique par WhatsApp & Email
+        $clientPrenom = $rendezVous->client?->prenom ?? 'Client';
+        $vetNom = $rendezVous->vetement?->nom ?? 'votre commande';
+        
+        $message  = "🧵 *Suivi SMC Couture*\n";
+        $message .= "Bonjour {$clientPrenom},\n";
+        $message .= "Avancement de votre tenue ({$vetNom}) :\n";
+        $message .= "👉 *{$etapeNom}*\n";
+        $message .= "Suivi disponible en ligne dans votre espace client.\n";
+        $message .= "Merci ! 🙏";
+
+        $this->sendAppointmentNotifications($rendezVous, $message, 'production');
+
+        return back()->with('success', 'Statut de confection mis à jour : ' . $etapeNom);
     }
 }
