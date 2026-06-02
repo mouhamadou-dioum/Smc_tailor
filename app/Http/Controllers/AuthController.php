@@ -73,25 +73,27 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email'      => ['required', 'string', 'email'],
+            'login'      => ['required', 'string'],
             'motDePasse' => ['required', 'string'],
         ]);
 
-        // --- Rate limiting (5 essais / 60 s par IP+email) ---
-        $throttleKey = 'login|' . Str::lower($request->email) . '|' . $request->ip();
+        $loginInput = trim($request->login);
+        $password = $request->motDePasse;
+
+        // --- Rate limiting (5 essais / 60 s par IP+login) ---
+        $throttleKey = 'login|' . Str::lower($loginInput) . '|' . $request->ip();
 
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
             return back()->withErrors([
-                'email' => "Trop de tentatives. Réessayez dans {$seconds} secondes.",
-            ])->withInput($request->only('email'));
+                'login' => "Trop de tentatives. Réessayez dans {$seconds} secondes.",
+            ])->withInput($request->only('login'));
         }
 
-        $email    = strtolower(trim($request->email));
-        $password = $request->motDePasse;
-
-        // Recherche client uniquement
-        $client = Client::where('email', $email)->first();
+        // Recherche par email ou téléphone
+        $client = Client::where('email', strtolower($loginInput))
+            ->orWhere('telephone', $loginInput)
+            ->first();
 
         if ($client && Hash::check($password, $client->motDePasse)) {
             RateLimiter::clear($throttleKey);
@@ -100,12 +102,12 @@ class AuthController extends Controller
             return redirect()->intended(route('home'))->with('success', 'Connexion réussie !');
         }
 
-        // Incrémenter le compteur même en cas d'email inexistant (protection énumération)
+        // Incrémenter le compteur même en cas d'identifiant inexistant
         RateLimiter::hit($throttleKey, 60);
 
         return back()->withErrors([
-            'email' => 'Identifiants incorrects.',
-        ])->withInput($request->only('email'));
+            'login' => 'Identifiants incorrects.',
+        ])->withInput($request->only('login'));
     }
 
     // ────────────────────────────────────────────────────────────

@@ -14,6 +14,41 @@ use App\Models\Admin;
 
 class RendezVousController extends Controller
 {
+    public function suivi(Request $request)
+    {
+        $telephone = $request->query('telephone');
+        $rendezVous = collect();
+        $error = null;
+
+        if ($request->has('telephone')) {
+            $request->validate([
+                'telephone' => 'required|string|max:50',
+            ]);
+
+            $telephone = trim($telephone);
+
+            // Recherche du client
+            $client = \App\Models\Client::where('telephone', $telephone)
+                ->orWhere('telephone', 'like', '%' . $telephone . '%')
+                ->first();
+
+            if ($client) {
+                $rendezVous = RendezVous::with('vetement')
+                    ->where('client_id', $client->id)
+                    ->orderBy('dateRendezVous', 'desc')
+                    ->get();
+
+                if ($rendezVous->isEmpty()) {
+                    $error = 'Aucun rendez-vous trouvé pour ce numéro de téléphone.';
+                }
+            } else {
+                $error = 'Aucun rendez-vous ou compte associé à ce numéro de téléphone.';
+            }
+        }
+
+        return view('rendezvous.suivi', compact('rendezVous', 'telephone', 'error'));
+    }
+
     public function create()
     {
         $vetementPreselect = null;
@@ -28,7 +63,7 @@ class RendezVousController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $rules = [
             'vetement_id' => 'nullable|exists:vetements,id',
             'dateRendezVous' => 'required|date|after:today',
             'heure' => 'required',
@@ -38,7 +73,17 @@ class RendezVousController extends Controller
                 'max:5000',
                 Rule::requiredIf(fn () => !$request->filled('vetement_id')),
             ],
-        ]);
+        ];
+
+        // S'il n'est pas connecté, on valide les champs d'identification du client invité
+        if (!Auth::guard('client')->check()) {
+            $rules['nom'] = 'required|string|max:255';
+            $rules['prenom'] = 'required|string|max:255';
+            $rules['telephone'] = 'required|string|max:50';
+            $rules['email'] = 'nullable|email|max:255';
+        }
+
+        $request->validate($rules);
 
         $vetementId = $request->vetement_id;
         if ($vetementId) {
@@ -51,7 +96,57 @@ class RendezVousController extends Controller
             }
         }
 
-        $client = Auth::guard('client')->user();
+        // Identification ou création du client
+        if (Auth::guard('client')->check()) {
+            $client = Auth::guard('client')->user();
+        } else {
+            // Rechercher le client par téléphone
+            $client = \App\Models\Client::where('telephone', $request->telephone)->first();
+            
+            if (!$client) {
+                // Générer une adresse email unique s'il n'en a pas fourni
+                $email = $request->email;
+                if (!$email) {
+                    $cleanedPhone = preg_replace('/\D+/', '', $request->telephone) ?: rand(100000, 999999);
+                    $email = $cleanedPhone . '@smc-couture.com';
+                }
+                
+                $originalEmail = $email;
+                $i = 1;
+                while (\App\Models\Client::where('email', $email)->exists()) {
+                    $email = $i . '_' . $originalEmail;
+                    $i++;
+                }
+
+                $client = \App\Models\Client::create([
+                    'nom' => $request->nom,
+                    'prenom' => $request->prenom,
+                    'telephone' => $request->telephone,
+                    'email' => $email,
+                    'motDePasse' => \Illuminate\Support\Facades\Hash::make('password'),
+                    'dateInscription' => now(),
+                ]);
+            }
+        }
+
+        // Vérification de rendez-vous actif en cours
+        // Un rendez-vous est en cours s'il est EN_ATTENTE ou CONFIRME et sa production n'est pas LIVREE
+        $activeRdv = RendezVous::where('client_id', $client->id)
+            ->whereIn('statut', [RendezVous::STATUT_EN_ATTENTE, RendezVous::STATUT_CONFIRME])
+            ->where('statut_production', '!=', RendezVous::PROD_LIVRE)
+            ->exists();
+
+        if ($activeRdv) {
+            $errorMsg = 'Vous avez déjà un rendez-vous en cours. Vous ne pourrez pas en planifier un autre tant qu\'il ne sera pas terminé.';
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorMsg
+                ], 422);
+            }
+            return back()->withErrors(['error' => $errorMsg])->withInput();
+        }
+
         $vetement = $vetementId ? Vetement::find($vetementId) : null;
 
         $rendezVous = RendezVous::create([
@@ -75,9 +170,15 @@ class RendezVousController extends Controller
 
         $this->notifyAdminNewAppointment($client, $rendezVous, $vetement);
 
+        // Si le client est connecté, on le redirige vers sa liste de RDV, sinon vers la page d'accueil
+        $redirectUrl = Auth::guard('client')->check() ? route('rendezvous.index') : route('home');
+
+        $msg = 'Votre demande de rendez-vous a été soumise avec succès ! Vous recevrez une confirmation par WhatsApp.';
+
         return response()->json([
             'success' => true,
-            'message' => 'Rendez-vous soumis avec succès!'
+            'message' => $msg,
+            'redirect' => $redirectUrl
         ]);
     }
 

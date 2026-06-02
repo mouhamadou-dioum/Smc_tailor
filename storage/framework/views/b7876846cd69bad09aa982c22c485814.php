@@ -145,6 +145,138 @@
                         <?php endif; ?>
 
                         
+                        <?php if(auth()->guard('client')->guest()): ?>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label-custom" for="prenomInput">
+                                        <i class="fas fa-user me-1 text-muted"></i> Prénom *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="prenom"
+                                        id="prenomInput"
+                                        class="form-control form-control-custom <?php $__errorArgs = ['prenom'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                        required
+                                        value="<?php echo e(old('prenom')); ?>"
+                                    >
+                                    <?php $__errorArgs = ['prenom'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i><?php echo e($message); ?></span>
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label-custom" for="nomInput">
+                                        <i class="fas fa-user me-1 text-muted"></i> Nom *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="nom"
+                                        id="nomInput"
+                                        class="form-control form-control-custom <?php $__errorArgs = ['nom'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                        required
+                                        value="<?php echo e(old('nom')); ?>"
+                                    >
+                                    <?php $__errorArgs = ['nom'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i><?php echo e($message); ?></span>
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label-custom" for="telephoneInput">
+                                        <i class="fas fa-phone me-1 text-muted"></i> Téléphone *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="telephone"
+                                        id="telephoneInput"
+                                        class="form-control form-control-custom <?php $__errorArgs = ['telephone'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                        required
+                                        value="<?php echo e(old('telephone')); ?>"
+                                        placeholder="Ex : +221 77 123 45 67"
+                                    >
+                                    <?php $__errorArgs = ['telephone'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i><?php echo e($message); ?></span>
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label-custom" for="emailInput">
+                                        <i class="fas fa-envelope me-1 text-muted"></i> Adresse Email <span class="text-muted fw-normal">(optionnel)</span>
+                                    </label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        id="emailInput"
+                                        class="form-control form-control-custom <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                        value="<?php echo e(old('email')); ?>"
+                                        placeholder="Ex : client@email.com"
+                                    >
+                                    <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i><?php echo e($message); ?></span>
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        
                         <div class="row">
                             <div class="col-md-6 mb-4">
                                 <label class="form-label-custom" for="dateInput">
@@ -340,9 +472,9 @@ document.addEventListener('DOMContentLoaded', function () {
             var data = await response.json().catch(function () { return {}; });
 
             if (response.ok && data.success) {
-                // Succès : on redirige vers la liste des RDV
+                // Succès : on redirige dynamiquement selon la réponse (accueil ou liste des RDV)
                 alert(data.message || 'Votre demande de rendez-vous a été soumise avec succès !');
-                window.location.href = '<?php echo e(route("rendezvous.index")); ?>';
+                window.location.href = data.redirect || '<?php echo e(route("home")); ?>';
                 return;
             }
 

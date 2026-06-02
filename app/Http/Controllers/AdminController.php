@@ -571,19 +571,6 @@ class AdminController extends Controller
         
         $etapeNom = $etapes[$request->statut_production] ?? $request->statut_production;
 
-        // Notification automatique par WhatsApp & Email
-        $clientPrenom = $rendezVous->client?->prenom ?? 'Client';
-        $vetNom = $rendezVous->vetement?->nom ?? 'votre commande';
-        
-        $message  = "🧵 *Suivi SMC Couture*\n";
-        $message .= "Bonjour {$clientPrenom},\n";
-        $message .= "Avancement de votre tenue ({$vetNom}) :\n";
-        $message .= "👉 *{$etapeNom}*\n";
-        $message .= "Suivi disponible en ligne dans votre espace client.\n";
-        $message .= "Merci ! 🙏";
-
-        $this->sendAppointmentNotifications($rendezVous, $message, 'production');
-
         return back()->with('success', 'Statut de confection mis à jour : ' . $etapeNom);
     }
 }

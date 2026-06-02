@@ -162,6 +162,82 @@
                             </div>
                         @endif
 
+                        {{-- Infos Client Invité (si non connecté) --}}
+                        @guest('client')
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label-custom" for="prenomInput">
+                                        <i class="fas fa-user me-1 text-muted"></i> Prénom *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="prenom"
+                                        id="prenomInput"
+                                        class="form-control form-control-custom @error('prenom') is-invalid @enderror"
+                                        required
+                                        value="{{ old('prenom') }}"
+                                    >
+                                    @error('prenom')
+                                        <span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i>{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label-custom" for="nomInput">
+                                        <i class="fas fa-user me-1 text-muted"></i> Nom *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="nom"
+                                        id="nomInput"
+                                        class="form-control form-control-custom @error('nom') is-invalid @enderror"
+                                        required
+                                        value="{{ old('nom') }}"
+                                    >
+                                    @error('nom')
+                                        <span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i>{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label-custom" for="telephoneInput">
+                                        <i class="fas fa-phone me-1 text-muted"></i> Téléphone *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="telephone"
+                                        id="telephoneInput"
+                                        class="form-control form-control-custom @error('telephone') is-invalid @enderror"
+                                        required
+                                        value="{{ old('telephone') }}"
+                                        placeholder="Ex : +221 77 123 45 67"
+                                    >
+                                    @error('telephone')
+                                        <span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i>{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label-custom" for="emailInput">
+                                        <i class="fas fa-envelope me-1 text-muted"></i> Adresse Email <span class="text-muted fw-normal">(optionnel)</span>
+                                    </label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        id="emailInput"
+                                        class="form-control form-control-custom @error('email') is-invalid @enderror"
+                                        value="{{ old('email') }}"
+                                        placeholder="Ex : client@email.com"
+                                    >
+                                    @error('email')
+                                        <span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i>{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        @endguest
+
                         {{-- Date + Heure --}}
                         <div class="row">
                             <div class="col-md-6 mb-4">
@@ -315,9 +391,9 @@ document.addEventListener('DOMContentLoaded', function () {
             var data = await response.json().catch(function () { return {}; });
 
             if (response.ok && data.success) {
-                // Succès : on redirige vers la liste des RDV
+                // Succès : on redirige dynamiquement selon la réponse (accueil ou liste des RDV)
                 alert(data.message || 'Votre demande de rendez-vous a été soumise avec succès !');
-                window.location.href = '{{ route("rendezvous.index") }}';
+                window.location.href = data.redirect || '{{ route("home") }}';
                 return;
             }
 

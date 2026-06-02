@@ -39,12 +39,8 @@ body {
 .hero-bg {
     position: absolute;
     inset: 0;
-    background: url("{{ asset('heros2.png') }}") center/cover no-repeat;
-    transform: scale(1.04);
-    transition: transform 14s ease-in-out;
+    background: url("{{ asset('heros5.png') }}") center/cover no-repeat;
 }
-
-.hero:hover .hero-bg { transform: scale(1); }
 
 .hero-overlay {
     position: absolute;
@@ -133,35 +129,7 @@ body {
     width: 100%;
 }
 
-/* Scroll indicator */
-.hero-scroll {
-    position: absolute;
-    bottom: 2.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    color: rgba(255,255,255,0.35);
-    font-size: 0.6rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-decoration: none;
-    z-index: 3;
-}
-
-.scroll-line {
-    width: 1px;
-    height: 48px;
-    background: linear-gradient(to bottom, var(--gold), transparent);
-    animation: scrollDrop 2s ease-in-out infinite;
-}
-
-@keyframes scrollDrop {
-    0%, 100% { opacity: 0.3; transform: scaleY(0.5); transform-origin: top; }
-    50% { opacity: 1; transform: scaleY(1); }
-}
+/* Scroll indicator removed */
 
 .btn-gold {
     display: inline-flex;
@@ -241,9 +209,9 @@ body {
 }
 
 /* ─── SECTION BASE ─── */
-.section { padding: 7rem 0; }
-.section-alt { background: var(--charcoal); }
-.section-warm { background: #F2EDE3; }
+.section { padding: 7rem 0; background: #ffffff; }
+.section-alt { background: #ffffff; }
+.section-warm { background: #ffffff; }
 
 .container { max-width: 1280px; margin: 0 auto; padding: 0 3rem; }
 
@@ -277,8 +245,8 @@ body {
 }
 
 .section-heading em { font-style: italic; color: var(--gold-dark); }
-.section-alt .section-heading { color: #fff; }
-.section-alt .section-heading em { color: var(--gold-light); }
+.section-alt .section-heading { color: var(--charcoal); }
+.section-alt .section-heading em { color: var(--gold-dark); }
 
 .section-body {
     font-size: 0.95rem;
@@ -287,7 +255,7 @@ body {
     line-height: 1.85;
     max-width: 440px;
 }
-.section-alt .section-body { color: #9A9080; }
+.section-alt .section-body { color: var(--warm-gray); }
 
 /* ─── STATS ─── */
 .stats-grid {
@@ -411,7 +379,7 @@ body {
     transition: color 0.4s ease;
 }
 
-.service-item:hover .service-desc { color: #7A7060; }
+.service-item:hover .service-desc { color: rgba(255, 255, 255, 0.75); }
 
 .service-arrow {
     display: inline-flex;
@@ -474,43 +442,66 @@ body {
 
 .vet-cat {
     position: absolute;
-    top: 1rem;
-    left: 1rem;
-    font-size: 0.6rem;
-    font-weight: 500;
+    top: 1.25rem;
+    left: 1.25rem;
+    font-size: 0.65rem;
+    font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--charcoal);
-    background: rgba(248,245,238,0.9);
-    backdrop-filter: blur(4px);
-    padding: 0.35rem 0.75rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(201, 169, 89, 0.3);
+    padding: 0.4rem 0.9rem;
+    z-index: 2;
 }
 
-.vet-price {
+.vet-img-wrap::before {
+    content: '';
     position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
-    font-weight: 500;
-    color: #fff;
-    background: var(--charcoal);
-    padding: 0.4rem 0.9rem;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26,26,26,0.3) 0%, transparent 40%);
+    opacity: 0.8;
+    transition: opacity 0.5s ease;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.vet-card:hover .vet-img-wrap::before {
+    opacity: 1;
 }
 
 .vet-body {
-    padding: 1.5rem;
+    padding: 1.75rem 1.5rem 1.5rem;
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
+.vet-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
 .vet-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
-    font-weight: 400;
+    font-size: 1.35rem;
+    font-weight: 500;
     color: var(--charcoal);
-    margin-bottom: 0.4rem;
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+
+.vet-price-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--gold-dark);
+    white-space: nowrap;
 }
 
 .vet-desc {
@@ -519,25 +510,48 @@ body {
     color: var(--warm-gray);
     line-height: 1.7;
     flex: 1;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
 }
 
 .vet-btn {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.75rem 1rem;
-    background: var(--ivory);
+    padding: 0.85rem 1.2rem;
+    background: transparent;
     color: var(--charcoal);
-    font-size: 0.65rem;
+    font-size: 0.68rem;
+    font-weight: 500;
     letter-spacing: 2px;
     text-transform: uppercase;
     text-decoration: none;
-    border: 1px solid var(--border-gold);
+    border: 1px solid var(--gold);
     transition: var(--transition);
 }
 
-.vet-btn:hover { background: var(--charcoal); color: var(--gold-light); }
+.vet-btn:hover { background: var(--charcoal); border-color: var(--charcoal); color: var(--gold-light); }
+
+.vet-btn-wa {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1.2rem;
+    background: #25d366;
+    color: #fff !important;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid #25d366;
+    transition: var(--transition);
+}
+
+.vet-btn-wa:hover {
+    background: #20ba5a;
+    border-color: #20ba5a;
+    color: #fff !important;
+}
 
 /* ─── PROCESS ─── */
 .process-grid {
@@ -575,7 +589,7 @@ body {
     font-weight: 300;
     color: var(--gold);
     margin: 0 auto 2rem;
-    background: var(--charcoal);
+    background: #ffffff;
     position: relative;
     z-index: 1;
     transition: var(--transition);
@@ -591,7 +605,7 @@ body {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.15rem;
     font-weight: 400;
-    color: var(--gold-light);
+    color: var(--charcoal);
     margin-bottom: 0.75rem;
 }
 
@@ -682,123 +696,259 @@ body {
 
 .testi-card:hover .testi-role { color: #6A6458; }
 
-/* ─── CONTACT ─── */
-.contact-wrap {
-    display: grid;
-    grid-template-columns: 5fr 7fr;
-    gap: 0;
-    border: 1px solid rgba(255,255,255,0.08);
+/* Contact styles removed */
+
+/* ─── ANIMATE IN & SMOOTH SCROLL ─── */
+html {
+    scroll-behavior: smooth;
 }
 
-.contact-info-side {
-    padding: 5rem;
-    border-right: 1px solid rgba(255,255,255,0.08);
-}
-
-.contact-detail {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.25rem;
-    margin-bottom: 2rem;
-}
-
-.contact-icon {
-    width: 36px;
-    height: 36px;
-    border: 1px solid var(--border-gold);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    color: var(--gold);
-    flex-shrink: 0;
-    margin-top: 0.15rem;
-}
-
-.contact-lbl {
-    font-size: 0.62rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 0.3rem;
-}
-
-.contact-val {
-    font-size: 0.88rem;
-    font-weight: 300;
-    color: #9A9080;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.contact-val:hover { color: var(--gold); }
-
-.contact-form-side {
-    padding: 5rem;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.field-group { display: flex; flex-direction: column; gap: 0.5rem; }
-
-.field-label {
-    font-size: 0.62rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--gold);
-}
-
-.field-input,
-.field-textarea {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
-    color: #fff;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 300;
-    padding: 0.75rem 0;
-    outline: none;
-    transition: border-color 0.3s ease;
-    width: 100%;
-}
-
-.field-input:focus, .field-textarea:focus { border-bottom-color: var(--gold); }
-.field-textarea { resize: none; min-height: 100px; }
-
-.submit-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem 2.5rem;
-    background: var(--gold);
-    color: var(--charcoal);
-    font-family: 'Jost', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    border: none;
-    cursor: pointer;
-    transition: var(--transition);
-    margin-top: 1rem;
-}
-
-.submit-btn:hover { background: var(--gold-light); }
-
-/* ─── ANIMATE IN ─── */
+/* Scroll Reveal System */
 [data-reveal] {
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-[data-reveal].revealed { opacity: 1; transform: translateY(0); }
+[data-reveal="fade-up"] {
+    transform: translateY(40px);
+}
+
+[data-reveal="fade-down"] {
+    transform: translateY(-40px);
+}
+
+[data-reveal="fade-left"] {
+    transform: translateX(-40px);
+}
+
+[data-reveal="fade-right"] {
+    transform: translateX(40px);
+}
+
+[data-reveal="zoom-in"] {
+    transform: scale(0.93);
+}
+
+[data-reveal].revealed {
+    opacity: 1;
+    transform: translate(0) scale(1);
+}
+
+/* Hero page load animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInBg {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.hero-bg {
+    animation: fadeInBg 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-year {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 0.2s;
+}
+
+.hero-title {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 0.4s;
+}
+
+.hero-side .hero-tagline {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 0.6s;
+}
+
+.hero-side .hero-actions {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 0.8s;
+}
+
+/* Scroll indicator animation removed */
+
+/* Premium micro-interactions for Collection cards */
+.vet-card {
+    position: relative;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.vet-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid var(--gold);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.vet-card:hover::before {
+    opacity: 1;
+}
+
+.vet-img-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.25) 50%,
+        rgba(255,255,255,0) 100%
+    );
+    transform: skewX(-25deg);
+    transition: none;
+}
+
+.vet-card:hover .vet-img-wrap::after {
+    left: 150%;
+    transition: left 1s ease-in-out;
+}
+
+.vet-btn i {
+    transition: transform 0.3s ease;
+}
+
+.vet-btn:hover i {
+    transform: translateX(4px);
+}
+
+/* Micro-animations for services */
+.service-item {
+    transition: background-color 0.5s ease, transform 0.5s ease !important;
+}
+
+.service-item:hover {
+    transform: translateY(-5px);
+}
+
+.service-item .service-arrow i {
+    transition: transform 0.3s ease;
+}
+
+.service-item:hover .service-arrow i {
+    transform: translateX(4px);
+}
+
+/* Micro-animations for process step dot */
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(201, 169, 89, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(201, 169, 89, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(201, 169, 89, 0);
+    }
+}
+
+.step-dot {
+    animation: pulseGlow 2.5s infinite;
+}
+
+.step-item:hover .step-dot {
+    animation: none;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--gold);
+}
+
+/* ═══════════════════════════════════════
+   DESKTOP SPLIT SCREEN — min-width: 1101px
+   ═══════════════════════════════════════ */
+@media (min-width: 1101px) {
+    .hero {
+        background: #111;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100svh;
+    }
+
+    .hero-bg {
+        left: 50%;
+        right: 0;
+        width: 50%;
+        background-position: center;
+        background-size: cover;
+    }
+
+    .hero-overlay {
+        left: 50%;
+        right: 0;
+        width: 50%;
+        background: linear-gradient(
+            to right,
+            #111 0%,
+            rgba(17,17,17,0.75) 35%,
+            rgba(17,17,17,0.15) 100%
+        );
+    }
+
+    .hero-content {
+        width: 50%;
+        grid-template-columns: 1fr;
+        padding: 4rem 4rem 4rem 5rem;
+        gap: 3rem;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .hero-title {
+        font-size: clamp(3.5rem, 5vw, 5.2rem);
+        line-height: 1.05;
+        margin-bottom: 0;
+    }
+
+    .hero-side {
+        align-items: flex-start;
+        min-width: auto;
+        padding-bottom: 0;
+        width: 100%;
+        gap: 1.75rem;
+    }
+
+    .hero-tagline {
+        text-align: left;
+        border-top: none;
+        border-bottom: 1px solid rgba(201,169,89,0.25);
+        padding-top: 0;
+        padding-bottom: 1.25rem;
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .hero-actions {
+        flex-direction: row;
+        width: auto;
+        gap: 1rem;
+    }
+
+    /* Scroll indicator responsive removed */
+}
 
 /* ═══════════════════════════════════════
    RESPONSIVE — tablet landscape  ≤ 1100px
@@ -829,14 +979,7 @@ body {
     /* Testimonials 3 → 2 col */
     .testi-grid { grid-template-columns: repeat(2, 1fr); }
 
-    /* Contact */
-    .contact-wrap { grid-template-columns: 1fr; }
-    .contact-info-side {
-        border-right: none;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-        padding: 3.5rem 2.5rem;
-    }
-    .contact-form-side { padding: 3.5rem 2.5rem; }
+    /* Contact responsive removed */
 }
 
 /* ═══════════════════════════════════════
@@ -868,7 +1011,7 @@ body {
     .hero-title { font-size: clamp(3.8rem, 12vw, 6rem); letter-spacing: -0.5px; }
     .hero-year { margin-bottom: 1.25rem; }
     .hero-actions { flex-direction: column; gap: 0.75rem; width: 100%; max-width: 280px; }
-    .hero-scroll { display: none; }
+    /* Scroll indicator display none removed */
 
     /* Stats — 2×2 */
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -895,10 +1038,7 @@ body {
     .testi-grid { grid-template-columns: 1fr; gap: 1.5rem; }
     .testi-card { padding: 2rem; }
 
-    /* Contact */
-    .contact-info-side { padding: 3rem 1.5rem; }
-    .contact-form-side { padding: 3rem 1.5rem; }
-    .form-row { grid-template-columns: 1fr; gap: 1.25rem; }
+    /* Contact responsive removed */
 
     /* Marquee — slow down slightly */
     .marquee-inner { animation-duration: 16s; }
@@ -961,10 +1101,7 @@ body {
     .testi-text { font-size: 1rem; }
     .testi-quote { font-size: 2.5rem; }
 
-    /* Contact */
-    .contact-info-side { padding: 2.5rem 1rem; }
-    .contact-form-side { padding: 2.5rem 1rem; }
-    .submit-btn { width: 100%; justify-content: center; padding: 1rem; }
+    /* Contact responsive removed */
 }
 </style>
 @endsection
@@ -997,7 +1134,7 @@ body {
                     <i class="fas fa-th-large" style="font-size:0.65rem;"></i>
                     Découvrir
                 </a>
-                <a href="{{ route('register') }}" class="btn-outline-gold" style="border-color:rgba(255,255,255,0.25); color:#fff;">
+                <a href="{{ route('rendezvous.create') }}" class="btn-outline-gold" style="border-color:rgba(255,255,255,0.25); color:#fff;">
                     <i class="fas fa-calendar-check" style="font-size:0.65rem;"></i>
                     Rendez-vous
                 </a>
@@ -1005,10 +1142,7 @@ body {
         </div>
     </div>
 
-    <a href="#stats" class="hero-scroll">
-        <div class="scroll-line"></div>
-        <span>Défiler</span>
-    </a>
+
 </section>
 
 {{-- ─── MARQUEE ─── --}}
@@ -1029,91 +1163,25 @@ body {
     </div>
 </div>
 
-{{-- ─── STATS ─── --}}
-<section id="stats" class="section" style="background: var(--ivory); padding-bottom: 0;">
-    <div class="container">
-        <div class="stats-grid">
-            <div class="stat-item" data-reveal>
-                <span class="stat-icon-sm"></span>
-                <div class="stat-num">500+</div>
-                <div class="stat-lbl">Rendez-vous honorés</div>
-            </div>
-            <div class="stat-item" data-reveal>
-                <span class="stat-icon-sm"></span>
-                <div class="stat-num">200+</div>
-                <div class="stat-lbl">Créations réalisées</div>
-            </div>
-            <div class="stat-item" data-reveal>
-                <span class="stat-icon-sm"></span>
-                <div class="stat-num">150+</div>
-                <div class="stat-lbl">Clients satisfaits</div>
-            </div>
-            <div class="stat-item" data-reveal>
-                <span class="stat-icon-sm"></span>
-                <div class="stat-num">4</div>
-                <div class="stat-lbl">Années d'expertise</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- ─── SERVICES ─── --}}
-<section class="section" style="background: var(--ivory);">
-    <div class="container">
-        <div class="services-intro">
-            <div data-reveal>
-                <div class="label-row">
-                    <span class="label-line"></span>
-                    <span class="section-label">Savoir-faire</span>
-                </div>
-                <h2 class="section-heading">Un atelier <em>d'exception</em></h2>
-            </div>
-            <p class="section-body" style="padding-top: 1.5rem;" data-reveal>
-                De la conception à la réalisation, chaque détail est soigneusement pensé. Nos artisans mettent tout leur talent au service de votre élégance.
-            </p>
-        </div>
-        <div class="services-grid" data-reveal>
-            <div class="service-item">
-                <div class="service-num">01</div>
-                <h3 class="service-title">Vêtements Sur Mesure</h3>
-                <p class="service-desc">Des pièces uniques adaptées à votre morphologie et à votre style, avec les plus beaux tissus soigneusement sélectionnés.</p>
-                <div class="service-arrow">Découvrir <i class="fas fa-arrow-right" style="font-size:0.6rem;"></i></div>
-            </div>
-            <div class="service-item">
-                <div class="service-num">02</div>
-                <h3 class="service-title">Réservation en Ligne</h3>
-                <p class="service-desc">Planifiez facilement vos rendez-vous de prise de mesures et d'essayage depuis le confort de votre maison.</p>
-                <div class="service-arrow">Réserver <i class="fas fa-arrow-right" style="font-size:0.6rem;"></i></div>
-            </div>
-            <div class="service-item">
-                <div class="service-num">03</div>
-                <h3 class="service-title">Suivi & Notifications</h3>
-                <p class="service-desc">Recevez toutes vos confirmations par email ou WhatsApp et suivez l'avancement de votre création en temps réel.</p>
-                <div class="service-arrow">En savoir plus <i class="fas fa-arrow-right" style="font-size:0.6rem;"></i></div>
-            </div>
-        </div>
-    </div>
-</section>
-
 {{-- ─── COLLECTION ─── --}}
 @if($vetements->count() > 0)
-<section class="section section-warm">
+<section id="collection-section" class="section section-warm">
     <div class="container">
         <div class="collection-header">
-            <div data-reveal>
+            <div data-reveal="fade-up">
                 <div class="label-row">
                     <span class="label-line"></span>
                     <span class="section-label">Collection</span>
                 </div>
                 <h2 class="section-heading">Nos créations <em>récentes</em></h2>
             </div>
-            <a href="{{ route('vetements.index') }}" class="btn-outline-gold" data-reveal>
+            <a href="{{ route('vetements.index') }}" class="btn-outline-gold" data-reveal="fade-up" data-delay="100">
                 Voir tout <i class="fas fa-arrow-right" style="font-size:0.6rem;"></i>
             </a>
         </div>
         <div class="collection-grid">
             @foreach($vetements as $vetement)
-            <div class="vet-card" data-reveal>
+            <div class="vet-card" data-reveal="fade-up" data-delay="{{ $loop->index * 100 }}">
                 <div class="vet-img-wrap">
                     @php
                         $_src = $vetement->imageUrl;
@@ -1125,14 +1193,25 @@ body {
                     @if($vetement->categorie)
                         <span class="vet-cat">{{ $vetement->categorie->nom }}</span>
                     @endif
-                    <span class="vet-price">{{ number_format($vetement->prix, 0, ',', ' ') }} CFA</span>
                 </div>
                 <div class="vet-body">
-                    <h4 class="vet-name">{{ $vetement->nom }}</h4>
+                    <div class="vet-info-row">
+                        <h4 class="vet-name">{{ $vetement->nom }}</h4>
+                        <span class="vet-price-tag">{{ number_format($vetement->prix, 0, ',', ' ') }} CFA</span>
+                    </div>
                     <p class="vet-desc">{{ \Illuminate\Support\Str::limit($vetement->description ?? '', 90) }}</p>
-                    <a href="{{ route('rendezvous.create') }}?vetement={{ $vetement->id }}" class="vet-btn">
-                        <span>Réserver ce modèle</span>
-                        <i class="fas fa-arrow-right" style="font-size:0.6rem;"></i>
+                    @php
+                        $adminPhone = \App\Models\Admin::first()?->telephone ?? '221771234567';
+                        $waPhone = preg_replace('/\D+/', '', $adminPhone);
+                        if (strlen($waPhone) === 9 && (str_starts_with($waPhone, '77') || str_starts_with($waPhone, '78') || str_starts_with($waPhone, '76') || str_starts_with($waPhone, '70') || str_starts_with($waPhone, '75'))) {
+                            $waPhone = '221' . $waPhone;
+                        }
+                    @endphp
+                    <a href="https://wa.me/{{ $waPhone }}?text=Bonjour%20SMC%20Couture,%20je%20souhaite%20commander%20le%20mod%C3%A8le%20{{ urlencode($vetement->nom) }}%20(Prix%20:%20{{ number_format($vetement->prix, 0, ',', ' ') }}%20CFA)."
+                       target="_blank"
+                       class="vet-btn-wa">
+                        <span>Commander</span>
+                        <i class="fab fa-whatsapp" style="font-size:0.85rem;"></i>
                     </a>
                 </div>
             </div>
@@ -1142,34 +1221,100 @@ body {
 </section>
 @endif
 
+{{-- ─── STATS ─── --}}
+<section id="stats" class="section" style="background: #ffffff; padding-bottom: 0;">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item" data-reveal="fade-up" data-delay="0">
+                <span class="stat-icon-sm"></span>
+                <div class="stat-num" data-count="500" data-suffix="+">0</div>
+                <div class="stat-lbl">Rendez-vous honorés</div>
+            </div>
+            <div class="stat-item" data-reveal="fade-up" data-delay="100">
+                <span class="stat-icon-sm"></span>
+                <div class="stat-num" data-count="200" data-suffix="+">0</div>
+                <div class="stat-lbl">Créations réalisées</div>
+            </div>
+            <div class="stat-item" data-reveal="fade-up" data-delay="200">
+                <span class="stat-icon-sm"></span>
+                <div class="stat-num" data-count="150" data-suffix="+">0</div>
+                <div class="stat-lbl">Clients satisfaits</div>
+            </div>
+            <div class="stat-item" data-reveal="fade-up" data-delay="300">
+                <span class="stat-icon-sm"></span>
+                <div class="stat-num" data-count="4" data-suffix="">0</div>
+                <div class="stat-lbl">Années d'expertise</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ─── SERVICES ─── --}}
+<section class="section" style="background: #ffffff;">
+    <div class="container">
+        <div class="services-intro">
+            <div data-reveal="fade-up">
+                <div class="label-row">
+                    <span class="label-line"></span>
+                    <span class="section-label">Savoir-faire</span>
+                </div>
+                <h2 class="section-heading">Un atelier <em>d'exception</em></h2>
+            </div>
+            <p class="section-body" style="padding-top: 1.5rem;" data-reveal="fade-up" data-delay="100">
+                De la conception à la réalisation, chaque détail est soigneusement pensé. Nos artisans mettent tout leur talent au service de votre élégance.
+            </p>
+        </div>
+        <div class="services-grid">
+            <div class="service-item" data-reveal="fade-up" data-delay="0">
+                <div class="service-num">01</div>
+                <h3 class="service-title">Vêtements Sur Mesure</h3>
+                <p class="service-desc">Des pièces uniques adaptées à votre morphologie et à votre style, avec les plus beaux tissus soigneusement sélectionnés.</p>
+                <div class="service-arrow">Découvrir <i class="fas fa-arrow-right" style="font-size:0.6rem;"></i></div>
+            </div>
+            <div class="service-item" data-reveal="fade-up" data-delay="100">
+                <div class="service-num">02</div>
+                <h3 class="service-title">Réservation en Ligne</h3>
+                <p class="service-desc">Planifiez facilement vos rendez-vous de prise de mesures et d'essayage depuis le confort de votre maison.</p>
+                <div class="service-arrow">Réserver <i class="fas fa-arrow-right" style="font-size:0.6rem;"></i></div>
+            </div>
+            <div class="service-item" data-reveal="fade-up" data-delay="200">
+                <div class="service-num">03</div>
+                <h3 class="service-title">Notifications WhatsApp</h3>
+                <p class="service-desc">Recevez toutes vos confirmations et mises à jour de rendez-vous directement par WhatsApp en temps réel.</p>
+                <div class="service-arrow">Prendre RDV <i class="fas fa-arrow-right" style="font-size:0.6rem;"></i></div>
+            </div>
+        </div>
+    </div>
+</section>
+
 {{-- ─── PROCESS ─── --}}
 <section class="section section-alt">
     <div class="container">
-        <div style="text-align: center; margin-bottom: 5rem;" data-reveal>
+        <div style="text-align: center; margin-bottom: 5rem;" data-reveal="fade-up">
             <div class="label-row" style="justify-content: center;">
                 <span class="label-line"></span>
                 <span class="section-label">Comment ça marche</span>
                 <span class="label-line"></span>
             </div>
-            <h2 class="section-heading" style="color: #fff; margin-top: 1.25rem;">Votre expérience <em>couture</em></h2>
+            <h2 class="section-heading" style="margin-top: 1.25rem;">Votre expérience <em>couture</em></h2>
         </div>
-        <div class="process-grid" data-reveal>
-            <div class="step-item">
+        <div class="process-grid">
+            <div class="step-item" data-reveal="fade-up" data-delay="0">
                 <div class="step-dot">I</div>
                 <h4 class="step-name">Inscrivez-vous</h4>
                 <p class="step-desc">Créez votre compte client en quelques clics, simplement et rapidement.</p>
             </div>
-            <div class="step-item">
+            <div class="step-item" data-reveal="fade-up" data-delay="100">
                 <div class="step-dot">II</div>
                 <h4 class="step-name">Choisissez</h4>
                 <p class="step-desc">Parcourez notre collection et sélectionnez le modèle qui vous inspire.</p>
             </div>
-            <div class="step-item">
+            <div class="step-item" data-reveal="fade-up" data-delay="200">
                 <div class="step-dot">III</div>
                 <h4 class="step-name">Réservez</h4>
                 <p class="step-desc">Prenez rendez-vous pour la prise de mesures à votre convenance.</p>
             </div>
-            <div class="step-item">
+            <div class="step-item" data-reveal="fade-up" data-delay="300">
                 <div class="step-dot">IV</div>
                 <h4 class="step-name">Sublimez</h4>
                 <p class="step-desc">Recevez votre création unique et arborez votre style avec élégance.</p>
@@ -1178,142 +1323,69 @@ body {
     </div>
 </section>
 
-{{-- ─── TESTIMONIALS ─── --}}
-<section class="section" style="background: var(--ivory);">
-    <div class="container">
-        <div style="margin-bottom: 4rem;" data-reveal>
-            <div class="label-row">
-                <span class="label-line"></span>
-                <span class="section-label">Témoignages</span>
-            </div>
-            <h2 class="section-heading">La voix de nos <em>clients</em></h2>
-        </div>
-        <div class="testi-grid">
-            <div class="testi-card" data-reveal>
-                <div class="testi-quote">"</div>
-                <div class="testi-stars">★★★★★</div>
-                <p class="testi-text">Un travail d'une qualité exceptionnelle ! Le costume sur mesure taillé pour mon mariage était parfait. Merci pour votre professionnalisme.</p>
-                <div class="testi-footer">
-                    <img src="https://ui-avatars.com/api/?name=Aissatou+Diop&background=c9a959&color=1a1a1a&size=40" alt="" class="testi-avatar">
-                    <div>
-                        <div class="testi-name">Aïssatou Diop</div>
-                        <div class="testi-role">Mariage 2024</div>
-                    </div>
-                </div>
-            </div>
-            <div class="testi-card" data-reveal>
-                <div class="testi-quote">"</div>
-                <div class="testi-stars">★★★★★</div>
-                <p class="testi-text">Je recommande vivement SMC Couture ! La robe confectionnée est magnifique et les délais ont été respectés à la lettre.</p>
-                <div class="testi-footer">
-                    <img src="https://ui-avatars.com/api/?name=Marieme+Fall&background=c9a959&color=1a1a1a&size=40" alt="" class="testi-avatar">
-                    <div>
-                        <div class="testi-name">Marième Fall</div>
-                        <div class="testi-role">Robe de cérémonie</div>
-                    </div>
-                </div>
-            </div>
-            <div class="testi-card" data-reveal>
-                <div class="testi-quote">"</div>
-                <div class="testi-stars">★★★★★</div>
-                <p class="testi-text">La réservation en ligne est très pratique et le suivi WhatsApp est un vrai plus. Client fidèle depuis l'ouverture, jamais déçu !</p>
-                <div class="testi-footer">
-                    <img src="https://ui-avatars.com/api/?name=Oumar+Sy&background=c9a959&color=1a1a1a&size=40" alt="" class="testi-avatar">
-                    <div>
-                        <div class="testi-name">Oumar Sy</div>
-                        <div class="testi-role">Client fidèle</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
-{{-- ─── CONTACT ─── --}}
-<section class="section section-alt" style="padding: 0;">
-    <div class="container" style="padding: 0; max-width: 100%;">
-        <div class="contact-wrap">
-            <div class="contact-info-side" data-reveal>
-                <div class="label-row" style="margin-bottom: 2rem;">
-                    <span class="label-line"></span>
-                    <span class="section-label">Contact</span>
-                </div>
-                <h2 class="section-heading" style="margin-bottom: 1.5rem;">Parlons de<br><em>votre projet</em></h2>
-                <p class="section-body" style="margin-bottom: 3rem;">
-                    Une idée précise ou besoin de conseils ? Notre équipe est à votre écoute pour créer la pièce de vos rêves.
-                </p>
-                <div class="contact-detail">
-                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                    <div>
-                        <div class="contact-lbl">Adresse</div>
-                        <div class="contact-val">Dakar, Sénégal</div>
-                    </div>
-                </div>
-                <div class="contact-detail">
-                    <div class="contact-icon"><i class="fas fa-phone"></i></div>
-                    <div>
-                        <div class="contact-lbl">Téléphone</div>
-                        <a href="tel:+221771234567" class="contact-val">+221 77 123 45 67</a>
-                    </div>
-                </div>
-                <div class="contact-detail">
-                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                    <div>
-                        <div class="contact-lbl">Email</div>
-                        <a href="mailto:contact@couture.com" class="contact-val">contact@couture.com</a>
-                    </div>
-                </div>
-            </div>
-            <div class="contact-form-side" data-reveal>
-                <form id="contactForm">
-                    <div class="form-row">
-                        <div class="field-group">
-                            <label class="field-label">Nom complet</label>
-                            <input type="text" class="field-input" required>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">Email</label>
-                            <input type="email" class="field-input" required>
-                        </div>
-                    </div>
-                    <div class="field-group" style="margin-bottom: 1.5rem;">
-                        <label class="field-label">Sujet</label>
-                        <input type="text" class="field-input">
-                    </div>
-                    <div class="field-group" style="margin-bottom: 0;">
-                        <label class="field-label">Message</label>
-                        <textarea class="field-textarea" rows="4" required></textarea>
-                    </div>
-                    <button type="submit" class="submit-btn">
-                        <i class="fas fa-paper-plane" style="font-size:0.7rem;"></i>
-                        Envoyer le message
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 @endsection
 
 @section('scripts')
 <script>
-document.getElementById('contactForm')?.addEventListener('submit', function(e) {
-    e.preventDefault();
-    alert('Merci pour votre message ! Nous vous contacterons dans les plus brefs délais.');
-    this.reset();
-});
+
+
+function animateCounter(el) {
+    const target = parseInt(el.getAttribute('data-count'), 10);
+    if (isNaN(target)) return;
+    const suffix = el.getAttribute('data-suffix') || '';
+    const duration = 2000; // 2 seconds
+    const startTime = performance.now();
+    
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Easing function (easeOutQuad)
+        const ease = progress * (2 - progress);
+        const currentValue = Math.floor(ease * target);
+        
+        el.textContent = currentValue + suffix;
+        
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        } else {
+            el.textContent = target + suffix;
+        }
+    }
+    
+    requestAnimationFrame(update);
+}
 
 const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
+    entries.forEach((entry) => {
         if (entry.isIntersecting) {
+            const delay = entry.target.getAttribute('data-delay') || '0';
             setTimeout(() => {
                 entry.target.classList.add('revealed');
-            }, 80);
+                
+                // Animate stats counters if present
+                const counters = entry.target.querySelectorAll('.stat-num[data-count]');
+                counters.forEach(counter => {
+                    if (!counter.classList.contains('counted')) {
+                        counter.classList.add('counted');
+                        animateCounter(counter);
+                    }
+                });
+                
+                // If the element itself is a counter
+                if (entry.target.classList.contains('stat-num') && entry.target.hasAttribute('data-count')) {
+                    if (!entry.target.classList.contains('counted')) {
+                        entry.target.classList.add('counted');
+                        animateCounter(entry.target);
+                    }
+                }
+            }, parseInt(delay, 10));
             revealObserver.unobserve(entry.target);
         }
     });
-}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.05, rootMargin: '0px 0px -50px 0px' });
 
 document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
 </script>

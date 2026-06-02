@@ -550,6 +550,60 @@
 
             .hero-section { padding: 3rem 0; }
         }
+
+        @media (min-width: 992px) {
+            .navbar-wrapper {
+                justify-content: flex-start !important;
+                gap: 3rem;
+            }
+        }
+
+        /* Floating WhatsApp Button */
+        .floating-whatsapp {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #25d366;
+            color: #fff !important;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .floating-whatsapp:hover {
+            background-color: #20ba5a;
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+        }
+        .floating-whatsapp::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #25d366;
+            opacity: 0.5;
+            z-index: -1;
+            animation: waPulse 2s infinite;
+        }
+        @keyframes waPulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1.6);
+                opacity: 0;
+            }
+        }
     </style>
     @yield('styles')
 </head>
@@ -557,9 +611,10 @@
     <nav class="navbar-custom">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center navbar-wrapper">
-                <a class="navbar-brand" href="{{ route('home') }}">
-    {{-- <img src="{{ asset('lg-smc.png') }}" alt="COUTURE" style="height: 40px;"> --}}
-</a>
+                <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('home') }}">
+                    <img src="{{ asset('logo.png') }}?v=3" alt="SMC Couture" style="height: 40px; width: auto; object-fit: contain; border-radius: 4px;">
+                    <span>SMC<span style="color:rgba(201,169,89,0.5); margin:0 0.2rem;">—</span>COUTURE</span>
+                </a>
 
                 {{-- Bouton hamburger (visible ≤991px) --}}
                 <button class="navbar-toggler-custom" id="navToggler" aria-label="Menu">
@@ -568,18 +623,7 @@
 
                 <div class="nav-actions" id="navMenu">
                     @php
-                        $authUser = null;
-                        try {
-                            $authUser = \Illuminate\Support\Facades\Auth::guard('admin')->user();
-                            if (!$authUser) {
-                                $authUser = \Illuminate\Support\Facades\Auth::guard('client')->user();
-                            }
-                        } catch (\Exception $e) {
-                            $authUser = null;
-                        }
-                        $isAdmin  = $authUser instanceof \App\Models\Admin;
-                        $isClient = $authUser instanceof \App\Models\Client;
-                        $logoutRoute = $isAdmin ? route('admin.logout') : ($isClient ? route('client.logout') : '#');
+                        $isAdmin = Auth::guard('admin')->check();
                     @endphp
 
                     @if($isAdmin)
@@ -598,14 +642,13 @@
                         <a href="{{ route('admin.clients.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-users"></i><span>Clients</span>
                         </a>
-                        <form action="{{ $logoutRoute }}" method="POST" class="d-inline">
+                        <form action="{{ route('admin.logout') }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-outline-custom btn-sm">
                                 <i class="fas fa-right-from-bracket me-1"></i> Déconnexion
                             </button>
                         </form>
-
-                    @elseif($isClient)
+                    @else
                         <a href="{{ route('home') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-house"></i><span>Accueil</span>
                         </a>
@@ -614,23 +657,6 @@
                         </a>
                         <a href="{{ route('rendezvous.create') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
                             <i class="fas fa-calendar-plus"></i><span>Réserver</span>
-                        </a>
-                        <a href="{{ route('rendezvous.index') }}" class="nav-link-custom nav-link-with-icon me-2 me-md-3">
-                            <i class="fas fa-calendar-check"></i><span>Mes rendez-vous</span>
-                        </a>
-                        <form action="{{ $logoutRoute }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-custom btn-sm">
-                                <i class="fas fa-right-from-bracket me-1"></i> Déconnexion
-                            </button>
-                        </form>
-
-                    @else
-                        <a href="{{ route('login') }}" class="btn btn-outline-custom btn-sm nav-link-with-icon me-2 me-md-3">
-                            <i class="fas fa-right-to-bracket"></i> Connexion
-                        </a>
-                        <a href="{{ route('register') }}" class="btn btn-primary-custom btn-sm nav-link-with-icon">
-                            <i class="fas fa-user-plus"></i> S'inscrire
                         </a>
                     @endif
                 </div>
@@ -685,7 +711,7 @@
                 <p class="footer-cta-tag">Commencez dès aujourd'hui</p>
                 <h2 class="footer-cta-title">Votre création <em>vous attend</em></h2>
             </div>
-            <a href="{{ route('register') }}" class="btn-gold">
+            <a href="{{ route('rendezvous.create') }}" class="btn-gold">
                 <i class="fas fa-calendar-check" style="font-size:0.65rem;"></i>
                 Prendre rendez-vous
             </a>
@@ -717,13 +743,6 @@
                     <li><a href="{{ route('home') }}" class="footer-link"><i class="fas fa-chevron-right"></i>Accueil</a></li>
                     <li><a href="{{ route('vetements.index') }}" class="footer-link"><i class="fas fa-chevron-right"></i>Collection</a></li>
                     <li><a href="{{ route('rendezvous.create') }}" class="footer-link"><i class="fas fa-chevron-right"></i>Réserver</a></li>
-                    @auth('client')
-                    <li><a href="{{ route('rendezvous.index') }}" class="footer-link"><i class="fas fa-chevron-right"></i>Mes rendez-vous</a></li>
-                    @endauth
-                    @guest('client')
-                    <li><a href="{{ route('login') }}" class="footer-link"><i class="fas fa-chevron-right"></i>Connexion</a></li>
-                    <li><a href="{{ route('register') }}" class="footer-link"><i class="fas fa-chevron-right"></i>S'inscrire</a></li>
-                    @endguest
                 </ul>
             </div>
 
@@ -835,6 +854,17 @@
         });
     })();
     </script>
+
+    @php
+        $adminPhone = \App\Models\Admin::first()?->telephone ?? '221771234567';
+        $waPhone = preg_replace('/\D+/', '', $adminPhone);
+        if (strlen($waPhone) === 9 && (str_starts_with($waPhone, '77') || str_starts_with($waPhone, '78') || str_starts_with($waPhone, '76') || str_starts_with($waPhone, '70') || str_starts_with($waPhone, '75'))) {
+            $waPhone = '221' . $waPhone;
+        }
+    @endphp
+    <a href="https://wa.me/{{ $waPhone }}?text=Bonjour%20SMC%20Couture,%20je%20souhaite%20avoir%20des%20informations." class="floating-whatsapp" target="_blank" aria-label="Contactez-nous sur WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
     @yield('scripts')
     @yield('extraScripts')

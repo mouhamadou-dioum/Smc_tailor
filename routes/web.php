@@ -41,9 +41,14 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('
 Route::get('/vetements', [VetementController::class, 'index'])->name('vetements.index');
 Route::get('/vetements/{id}', [VetementController::class, 'show'])->name('vetements.show');
 
+Route::get('/rendezvous/create', [RendezVousController::class, 'create'])->name('rendezvous.create');
+Route::post('/rendezvous', [RendezVousController::class, 'store'])->name('rendezvous.store');
+// Désactivation temporaire de la fonctionnalité de suivi client
+Route::get('/suivi', function () {
+    return redirect()->route('home');
+})->name('rendezvous.suivi');
+
 Route::middleware(['auth:client'])->group(function () {
-    Route::get('/rendezvous/create', [RendezVousController::class, 'create'])->name('rendezvous.create');
-    Route::post('/rendezvous', [RendezVousController::class, 'store'])->name('rendezvous.store');
     Route::get('/rendezvous', [RendezVousController::class, 'myRendezVous'])->name('rendezvous.index');
     Route::get('/rendezvous/{id}/edit', [RendezVousController::class, 'edit'])->name('rendezvous.edit');
     Route::put('/rendezvous/{id}', [RendezVousController::class, 'update'])->name('rendezvous.update');

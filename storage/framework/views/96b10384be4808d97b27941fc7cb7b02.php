@@ -127,6 +127,13 @@
             height: 64px;
         }
 
+        @media (min-width: 992px) {
+            .navbar-inner {
+                justify-content: flex-start;
+                gap: 3rem;
+            }
+        }
+
         .navbar-brand {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.4rem;
@@ -576,6 +583,53 @@
             .footer-cta-inner { padding: 2rem 1rem; }
             .footer-bottom-inner { padding: 1rem; }
         }
+
+        /* Floating WhatsApp Button */
+        .floating-whatsapp {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #25d366;
+            color: #fff !important;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .floating-whatsapp:hover {
+            background-color: #20ba5a;
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+        }
+        .floating-whatsapp::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #25d366;
+            opacity: 0.5;
+            z-index: -1;
+            animation: waPulse 2s infinite;
+        }
+        @keyframes waPulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1.6);
+                opacity: 0;
+            }
+        }
     </style>
     <?php echo $__env->yieldContent('styles'); ?>
 </head>
@@ -586,7 +640,10 @@
         <div class="container">
             <div class="navbar-inner">
 
-                <a class="navbar-brand" href="<?php echo e(route('home')); ?>">SMC<span style="color:rgba(201,169,89,0.5); margin:0 0.2rem;">—</span>COUTURE</a>
+                <a class="navbar-brand d-flex align-items-center gap-2" href="<?php echo e(route('home')); ?>">
+                    <img src="<?php echo e(asset('logo.png')); ?>?v=3" alt="SMC Couture" style="height: 40px; width: auto; object-fit: contain; border-radius: 4px;">
+                    <span>SMC<span style="color:rgba(201,169,89,0.5); margin:0 0.2rem;">—</span>COUTURE</span>
+                </a>
 
                 <button class="navbar-toggler-custom" id="navToggler" aria-label="Menu">
                     <i class="fas fa-bars" id="navIcon"></i>
@@ -594,10 +651,7 @@
 
                 <div class="nav-actions" id="navMenu">
                     <?php
-                        $user        = Auth::guard('admin')->user() ?? Auth::guard('client')->user();
-                        $isAdmin     = $user instanceof \App\Models\Admin;
-                        $isClient    = $user instanceof \App\Models\Client;
-                        $logoutRoute = $isAdmin ? route('admin.logout') : ($isClient ? route('client.logout') : '#');
+                        $isAdmin = Auth::guard('admin')->check();
                     ?>
 
                     <?php if($isAdmin): ?>
@@ -616,12 +670,11 @@
                         <a href="<?php echo e(route('admin.clients.index')); ?>" class="nav-link-custom">
                             <i class="fas fa-users"></i><span>Clients</span>
                         </a>
-                        <form action="<?php echo e($logoutRoute); ?>" method="POST" class="d-inline">
+                        <form action="<?php echo e(route('admin.logout')); ?>" method="POST" class="d-inline">
                             <?php echo csrf_field(); ?>
                             <button type="submit" class="btn btn-outline-custom btn-sm">Déconnexion</button>
                         </form>
-
-                    <?php elseif($isClient): ?>
+                    <?php else: ?>
                         <a href="<?php echo e(route('home')); ?>" class="nav-link-custom">
                             <i class="fas fa-house"></i><span>Accueil</span>
                         </a>
@@ -630,24 +683,6 @@
                         </a>
                         <a href="<?php echo e(route('rendezvous.create')); ?>" class="nav-link-custom">
                             <i class="fas fa-calendar-plus"></i><span>Réserver</span>
-                        </a>
-                        <a href="<?php echo e(route('rendezvous.index')); ?>" class="nav-link-custom">
-                            <i class="fas fa-calendar-check"></i><span>Mes rdvs</span>
-                        </a>
-                        <form action="<?php echo e($logoutRoute); ?>" method="POST" class="d-inline">
-                            <?php echo csrf_field(); ?>
-                            <button type="submit" class="btn btn-outline-custom btn-sm">Déconnexion</button>
-                        </form>
-
-                    <?php else: ?>
-                        <a href="<?php echo e(route('vetements.index')); ?>" class="nav-link-custom">
-                            <i class="fas fa-shirt"></i><span>Collection</span>
-                        </a>
-                        <a href="<?php echo e(route('login')); ?>" class="nav-link-custom">
-                            <i class="fas fa-right-to-bracket"></i><span>Connexion</span>
-                        </a>
-                        <a href="<?php echo e(route('register')); ?>" class="btn btn-primary-custom btn-sm ms-2">
-                            <i class="fas fa-user-plus me-1"></i>S'inscrire
                         </a>
                     <?php endif; ?>
                 </div>
@@ -670,7 +705,7 @@
                     <p class="footer-cta-tag">Commencez dès aujourd'hui</p>
                     <h2 class="footer-cta-title">Votre création <em>vous attend</em></h2>
                 </div>
-                <a href="<?php echo e(route('register')); ?>" class="footer-cta-btn">
+                <a href="<?php echo e(route('rendezvous.create')); ?>" class="footer-cta-btn">
                     <i class="fas fa-calendar-check" style="font-size:0.65rem;"></i>
                     Prendre rendez-vous
                 </a>
@@ -702,13 +737,6 @@
                         <li><a href="<?php echo e(route('home')); ?>" class="footer-nav-link"><i class="fas fa-chevron-right"></i>Accueil</a></li>
                         <li><a href="<?php echo e(route('vetements.index')); ?>" class="footer-nav-link"><i class="fas fa-chevron-right"></i>Collection</a></li>
                         <li><a href="<?php echo e(route('rendezvous.create')); ?>" class="footer-nav-link"><i class="fas fa-chevron-right"></i>Réserver</a></li>
-                        <?php if(auth()->guard('client')->check()): ?>
-                        <li><a href="<?php echo e(route('rendezvous.index')); ?>" class="footer-nav-link"><i class="fas fa-chevron-right"></i>Mes rendez-vous</a></li>
-                        <?php endif; ?>
-                        <?php if(auth()->guard('client')->guest()): ?>
-                        <li><a href="<?php echo e(route('login')); ?>" class="footer-nav-link"><i class="fas fa-chevron-right"></i>Connexion</a></li>
-                        <li><a href="<?php echo e(route('register')); ?>" class="footer-nav-link"><i class="fas fa-chevron-right"></i>S'inscrire</a></li>
-                        <?php endif; ?>
                     </ul>
                 </div>
 
@@ -798,6 +826,17 @@
         });
     })();
     </script>
+
+    <?php
+        $adminPhone = \App\Models\Admin::first()?->telephone ?? '221771234567';
+        $waPhone = preg_replace('/\D+/', '', $adminPhone);
+        if (strlen($waPhone) === 9 && (str_starts_with($waPhone, '77') || str_starts_with($waPhone, '78') || str_starts_with($waPhone, '76') || str_starts_with($waPhone, '70') || str_starts_with($waPhone, '75'))) {
+            $waPhone = '221' . $waPhone;
+        }
+    ?>
+    <a href="https://wa.me/<?php echo e($waPhone); ?>?text=Bonjour%20SMC%20Couture,%20je%20souhaite%20avoir%20des%20informations." class="floating-whatsapp" target="_blank" aria-label="Contactez-nous sur WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
     <?php echo $__env->yieldContent('scripts'); ?>
 </body>

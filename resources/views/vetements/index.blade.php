@@ -287,6 +287,31 @@
         box-shadow: 0 6px 16px rgba(201,169,89,0.4);
     }
 
+    .btn-commander-wa {
+        flex: 1;
+        background: #25d366;
+        color: #fff !important;
+        border: none;
+        border-radius: 10px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        transition: all 0.25s;
+        box-shadow: 0 4px 10px rgba(37, 211, 102, 0.25);
+    }
+
+    .btn-commander-wa:hover {
+        background: #20ba5a;
+        color: #fff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+    }
+
     /* ── Empty State ── */
     .empty-vetements {
         background: #fff;
@@ -305,197 +330,454 @@
         color: var(--dark);
     }
 
-    /* ── Modal ── */
+    /* ── Modal Premium Couture ── */
     .modal-content {
-        border: none;
-        border-radius: 20px;
+        border: 1px solid rgba(201,169,89,0.2);
+        border-radius: 24px;
         overflow: hidden;
-        box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+        box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+        background: #fdfcf9; /* Teinte ivoire douce */
     }
 
-    .modal-body { padding: 0; }
-
-    .modal-img {
-        width: 100%;
-        height: 100%;
-        min-height: 280px;
-        object-fit: cover;
-        object-position: top center;
+    .modal-body {
+        padding: 0;
     }
 
-    /* ── Modal Carousel ── */
+    /* ── Image & Carousel section ── */
+    .modal-carousel-panel {
+        background: #f4f0e6;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 1.5rem;
+        border-right: 1px solid rgba(201,169,89,0.15);
+    }
+
     .modal-carousel {
-        height: 100%;
-        min-height: 420px;
-    }
-    .modal-carousel .carousel-inner {
-        height: 100%;
-    }
-    .modal-carousel .carousel-item {
-        height: 100%;
-    }
-    .modal-carousel .carousel-item img {
         width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center top;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        border: 1px solid rgba(201,169,89,0.15);
     }
-    .modal-carousel .carousel-control-prev,
-    .modal-carousel .carousel-control-next {
-        width: 15%;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-    .modal-carousel:hover .carousel-control-prev,
-    .modal-carousel:hover .carousel-control-next {
-        opacity: 0.7;
-    }
-    .modal-carousel .carousel-control-prev-icon,
-    .modal-carousel .carousel-control-next-icon {
-        background-color: rgba(0,0,0,0.3);
-        border-radius: 50%;
-        padding: 1.2rem;
-        background-size: 50%;
-    }
-    .modal-carousel .carousel-indicators {
-        margin-bottom: 0.5rem;
-        gap: 0.35rem;
-    }
-    .modal-carousel .carousel-indicators button {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        border: 2px solid rgba(255,255,255,0.6);
-        background: transparent;
-        opacity: 1;
-    }
-    .modal-carousel .carousel-indicators button.active {
-        background: #fff;
-        border-color: #fff;
-    }
+
     .carousel-img-wrap {
-        height: 100%;
-        min-height: 420px;
+        aspect-ratio: 3/4;
         position: relative;
-        background: var(--gray-200);
+        background: #fdfcf9;
     }
+
     .carousel-img-wrap img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         object-position: center top;
+        transition: transform 0.6s ease;
     }
 
+    .modal-carousel .carousel-control-prev,
+    .modal-carousel .carousel-control-next {
+        width: 12%;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .modal-carousel:hover .carousel-control-prev,
+    .modal-carousel:hover .carousel-control-next {
+        opacity: 1;
+    }
+
+    .modal-carousel .carousel-control-prev-icon,
+    .modal-carousel .carousel-control-next-icon {
+        background-color: rgba(26, 26, 26, 0.7);
+        border-radius: 50%;
+        padding: 1rem;
+        background-size: 40%;
+        border: 1px solid rgba(201,169,89,0.3);
+    }
+
+    /* Vignettes Interactives (Thumbnails) */
+    .thumbnail-btn {
+        width: 60px;
+        height: 80px;
+        padding: 0;
+        border: 1.5px solid var(--gray-300);
+        border-radius: 8px;
+        overflow: hidden;
+        background: transparent;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+    }
+
+    .thumbnail-btn img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+    }
+
+    .thumbnail-btn:hover {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .thumbnail-btn.active {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(201,169,89,0.35);
+        transform: translateY(-2px);
+    }
+
+    /* ── Info Panel ── */
     .modal-info {
-        padding: 2rem;
+        padding: 3rem 2.5rem;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
+        max-height: 85vh;
+        overflow-y: auto;
     }
 
-    .modal-vet-name {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--dark);
-        margin: 0 0 0.75rem;
-    }
-
-    /* ── Modal Price Badge ── */
-    .modal-price-badge {
-        display: inline-flex;
+    .modal-meta-row {
+        display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 0.4rem;
-        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-        color: #fff;
-        font-family: 'Playfair Display', serif;
-        font-size: 1.15rem;
-        font-weight: 700;
-        padding: 0.45rem 1.1rem;
-        border-radius: 999px;
-        box-shadow: 0 4px 14px rgba(201,169,89,0.35);
-        margin-bottom: 1rem;
-        width: fit-content;
-    }
-
-    .modal-price-badge .cfa {
-        font-family: 'Lato', sans-serif;
-        font-size: 0.75rem;
-        opacity: 0.85;
-        font-weight: 600;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
     }
 
     .modal-cat-badge {
         display: inline-flex;
         align-items: center;
-        gap: 0.3rem;
-        background: var(--gray-100);
-        border: 1px solid var(--gray-200);
-        color: var(--gray-700);
-        font-size: 0.72rem;
+        gap: 0.35rem;
+        background: rgba(201,169,89,0.1);
+        border: 1px solid rgba(201,169,89,0.25);
+        color: var(--gold-dark);
+        font-size: 0.7rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.6px;
-        padding: 0.28rem 0.75rem;
+        letter-spacing: 1px;
+        padding: 0.35rem 0.85rem;
         border-radius: 999px;
-        margin-bottom: 0.5rem;
+    }
+
+    .modal-status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: #065f46;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 0.3rem 0.75rem;
+        border-radius: 999px;
+    }
+
+    .modal-status-badge.indispo {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.2);
+        color: #991b1b;
+    }
+
+    .modal-vet-name {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.2rem;
+        font-weight: 400;
+        color: var(--charcoal);
+        margin: 0 0 1rem;
+        line-height: 1.15;
+    }
+
+    /* ── Price Block Couture ── */
+    .modal-price-box {
+        background: rgba(201,169,89,0.05);
+        border: 1.5px solid rgba(201,169,89,0.25);
+        border-radius: 12px;
+        padding: 0.8rem 1.2rem;
         width: fit-content;
+        margin-bottom: 1.5rem;
+    }
+
+    .modal-price-box-label {
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--gold-dark);
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        display: block;
+    }
+
+    .modal-price-box-val {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--gold-dark);
+        line-height: 1;
+        display: flex;
+        align-items: baseline;
+        gap: 0.35rem;
+    }
+
+    .modal-price-box-val .cfa {
+        font-family: 'Lato', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+    }
+
+    .modal-divider {
+        height: 1px;
+        background: linear-gradient(to right, rgba(201,169,89,0.25), rgba(201,169,89,0.05));
+        margin: 1.5rem 0;
+        width: 100%;
+    }
+
+    .modal-desc-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.15rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--charcoal-mid);
+        margin-bottom: 0.5rem;
     }
 
     .modal-desc {
         font-size: 0.88rem;
-        color: var(--gray-600);
-        line-height: 1.65;
-        margin: 0.75rem 0 1.5rem;
+        color: var(--warm-gray);
+        line-height: 1.75;
+        margin-bottom: 1.5rem;
     }
 
-    .btn-modal-reserver {
-        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-        color: #fff;
-        border: none;
+    /* ── Fiche Technique Grid ── */
+    .specs-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1.75rem;
+    }
+
+    .spec-item {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+        padding: 0.8rem;
+        background: #fcfbfa;
         border-radius: 12px;
-        padding: 0.7rem 1.5rem;
-        font-size: 0.9rem;
+        border: 1px solid rgba(201,169,89,0.15);
+        transition: transform 0.3s ease;
+    }
+
+    .spec-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .spec-item i {
+        font-size: 1.1rem;
+        color: var(--primary);
+        margin-top: 0.1rem;
+    }
+
+    .spec-item-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--gray-500);
         font-weight: 600;
-        text-decoration: none;
+        margin-bottom: 0.15rem;
+        line-height: 1;
+    }
+
+    .spec-item-value {
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--charcoal-mid);
+        line-height: 1.3;
+    }
+
+    /* ── Timeline ── */
+    .process-timeline {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin: 2rem 0;
+        padding: 0.5rem 0 1rem;
+    }
+
+    .process-timeline::before {
+        content: '';
+        position: absolute;
+        top: 21px;
+        left: 10%;
+        right: 10%;
+        height: 1px;
+        background: linear-gradient(to right, transparent, rgba(201,169,89,0.35) 20%, rgba(201,169,89,0.35) 80%, transparent);
+        z-index: 1;
+    }
+
+    .timeline-step {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        width: 22%;
+    }
+
+    .timeline-dot {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid var(--primary);
+        background: #fdfcf9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 0.9rem;
+        color: var(--primary);
+        margin: 0 auto 0.5rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .timeline-step:hover .timeline-dot {
+        background: var(--primary);
+        color: #fff;
+        transform: scale(1.1);
+        box-shadow: 0 0 8px rgba(201,169,89,0.4);
+    }
+
+    .timeline-lbl {
+        font-size: 0.65rem;
+        color: var(--gray-600);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        line-height: 1.2;
+    }
+
+    /* ── Boutons d'Action Premium ── */
+    .modal-actions-container {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+    }
+
+    .btn-modal-reserve-premium {
+        flex-grow: 1;
+        background: linear-gradient(135deg, var(--charcoal), var(--charcoal-mid));
+        color: var(--gold-light) !important;
+        border: 1.5px solid var(--gold);
+        border-radius: 8px;
+        padding: 0.85rem 1.75rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        transition: all 0.25s;
-        box-shadow: 0 4px 14px rgba(201,169,89,0.35);
-        width: fit-content;
+        justify-content: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.15);
     }
 
-    .btn-modal-reserver:hover {
-        color: #fff;
+    .btn-modal-reserve-premium:hover {
+        background: var(--gold);
+        color: var(--charcoal) !important;
+        border-color: var(--gold);
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(201,169,89,0.45);
+        box-shadow: 0 8px 24px rgba(201,169,89,0.35);
+    }
+
+    .btn-modal-whatsapp {
+        background: transparent;
+        color: #25d366 !important;
+        border: 1.5px solid #25d366;
+        border-radius: 8px;
+        padding: 0.85rem 1.5rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .btn-modal-whatsapp:hover {
+        background: #25d366;
+        color: #fff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(37, 211, 102, 0.25);
+    }
+
+    .modal-disclaimer {
+        font-size: 0.72rem;
+        color: var(--gray-500);
+        margin-top: 1rem;
+        display: block;
+        line-height: 1.4;
     }
 
     .modal-close-btn {
         position: absolute;
-        top: 12px;
-        right: 12px;
-        width: 32px;
-        height: 32px;
+        top: 20px;
+        right: 20px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
-        background: rgba(255,255,255,0.9);
-        border: none;
+        background: #fdfcf9;
+        border: 1px solid rgba(201,169,89,0.25);
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        z-index: 10;
-        transition: background 0.2s;
-        font-size: 0.8rem;
+        z-index: 100;
+        transition: all 0.3s;
+        font-size: 0.9rem;
         color: var(--dark);
     }
 
-    .modal-close-btn:hover { background: #fff; }
+    .modal-close-btn:hover {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+        transform: rotate(90deg);
+    }
+
+    @media (max-width: 991px) {
+        .modal-carousel-panel {
+            border-right: none;
+            border-bottom: 1px solid rgba(201,169,89,0.15);
+        }
+        .modal-info {
+            padding: 2rem 1.5rem;
+            max-height: none;
+            overflow-y: visible;
+        }
+    }
 
     @media (max-width: 576px) {
         .vet-img-wrap { aspect-ratio: 2/3; }
         .vetements-hero { padding: 2.5rem 0 2rem; }
+        .specs-grid { grid-template-columns: 1fr; }
+        .process-timeline::before { display: none; }
+        .process-timeline { flex-direction: column; gap: 1rem; align-items: flex-start; margin: 1.5rem 0; }
+        .timeline-step { width: 100%; display: flex; align-items: center; gap: 1rem; text-align: left; }
+        .timeline-dot { margin: 0; }
     }
 </style>
 @endsection
@@ -588,19 +870,18 @@
                                     data-bs-target="#vetementModal{{ $vetement->id }}">
                                 <i class="fas fa-eye"></i> Détails
                             </button>
-                            @if($vetement->disponible)
-                                @auth('client')
-                                <a href="{{ route('rendezvous.create') }}?vetement={{ $vetement->id }}"
-                                   class="btn-reserver">
-                                    <i class="fas fa-calendar-plus"></i> Réserver
-                                </a>
-                                @else
-                                <a href="{{ route('register') }}"
-                                   class="btn-reserver">
-                                    <i class="fas fa-user-plus"></i> S'inscrire
-                                </a>
-                                @endauth
-                            @endif
+                            @php
+                                $adminPhone = \App\Models\Admin::first()?->telephone ?? '221771234567';
+                                $waPhone = preg_replace('/\D+/', '', $adminPhone);
+                                if (strlen($waPhone) === 9 && (str_starts_with($waPhone, '77') || str_starts_with($waPhone, '78') || str_starts_with($waPhone, '76') || str_starts_with($waPhone, '70') || str_starts_with($waPhone, '75'))) {
+                                    $waPhone = '221' . $waPhone;
+                                }
+                            @endphp
+                            <a href="https://wa.me/{{ $waPhone }}?text=Bonjour%20SMC%20Couture,%20je%20souhaite%20commander%20le%20mod%C3%A8le%20{{ urlencode($vetement->nom) }}%20(Prix%20:%20{{ number_format($vetement->prix, 0, ',', ' ') }}%20CFA)."
+                               target="_blank"
+                               class="btn-commander-wa">
+                                <i class="fab fa-whatsapp"></i> Commander
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -608,13 +889,14 @@
 
             {{-- Modal --}}
             <div class="modal fade" id="vetementModal{{ $vetement->id }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
                     <div class="modal-content">
-                        <div class="row g-0" style="min-height: 420px;">
-                            {{-- Image Carousel --}}
-                            <div class="col-md-5 p-0 modal-carousel">
-                                <div id="carousel-{{ $vetement->id }}" class="carousel slide h-100" data-bs-ride="false">
-                                    <div class="carousel-inner h-100">
+
+                        <div class="row g-0">
+                            {{-- Image Carousel & Thumbnails Panel --}}
+                            <div class="col-lg-6 col-md-6 modal-carousel-panel">
+                                <div id="carousel-{{ $vetement->id }}" class="carousel slide" data-bs-ride="false">
+                                    <div class="carousel-inner">
                                         @php
                                             $allModalImages = $allImages->count() > 0 ? $allImages : collect([
                                                 (object)['image_url' => 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200']
@@ -625,7 +907,7 @@
                                             $imgSrc = str_starts_with($img->image_url, 'http') ? $img->image_url : \Illuminate\Support\Facades\Storage::url($img->image_url);
                                         @endphp
                                         <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                            <div class="carousel-img-wrap">
+                                            <div class="carousel-img-wrap rounded-4 overflow-hidden">
                                                 <img src="{{ $imgSrc }}"
                                                      alt="{{ $vetement->nom }} - Image {{ $index + 1 }}"
                                                      onerror="this.onerror=null;this.src='{{ $fallbackUrl }}';">
@@ -643,58 +925,104 @@
                                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                         <span class="visually-hidden">Suivant</span>
                                     </button>
-
-                                    <div class="carousel-indicators">
-                                        @foreach($allModalImages as $index => $img)
-                                        <button type="button"
-                                                data-bs-target="#carousel-{{ $vetement->id }}"
-                                                data-bs-slide-to="{{ $index }}"
-                                                class="{{ $index === 0 ? 'active' : '' }}"
-                                                aria-label="Image {{ $index + 1 }}"></button>
-                                        @endforeach
-                                    </div>
                                     @endif
                                 </div>
+
+                                {{-- Vignettes Interactives --}}
+                                @if($allModalImages->count() > 1)
+                                <div class="d-flex justify-content-center gap-2 mt-3 px-2 flex-wrap">
+                                    @foreach($allModalImages as $thumbIndex => $img)
+                                    @php
+                                        $thumbSrc = str_starts_with($img->image_url, 'http') ? $img->image_url : \Illuminate\Support\Facades\Storage::url($img->image_url);
+                                    @endphp
+                                    <button type="button" 
+                                            data-bs-target="#carousel-{{ $vetement->id }}" 
+                                            data-bs-slide-to="{{ $thumbIndex }}" 
+                                            class="thumbnail-btn {{ $thumbIndex === 0 ? 'active' : '' }}" 
+                                            aria-label="Image {{ $thumbIndex + 1 }}">
+                                        <img src="{{ $thumbSrc }}" alt="Vignette {{ $thumbIndex + 1 }}" onerror="this.onerror=null;this.src='{{ $fallbackUrl }}';">
+                                    </button>
+                                    @endforeach
+                                </div>
+                                @endif
                             </div>
 
                             {{-- Info --}}
-                            <div class="col-md-7 modal-info position-relative">
-                                <button type="button" class="modal-close-btn d-none d-md-flex" data-bs-dismiss="modal">
+                            <div class="col-lg-6 col-md-6 modal-info position-relative">
+                                <button type="button" class="modal-close-btn" data-bs-dismiss="modal">
                                     <i class="fas fa-times"></i>
                                 </button>
 
-                                @if($vetement->categorie)
-                                    <span class="modal-cat-badge">
-                                        <i class="fas fa-tag fa-xs"></i> {{ $vetement->categorie->nom }}
-                                    </span>
-                                @endif
+                                <div class="modal-meta-row">
+                                    @if($vetement->categorie)
+                                        <span class="modal-cat-badge">
+                                            <i class="fas fa-tag fa-xs"></i> {{ $vetement->categorie->nom }}
+                                        </span>
+                                    @endif
+                                    @if($vetement->disponible)
+                                        <span class="modal-status-badge">
+                                            <i class="fas fa-check-circle fa-xs"></i> Disponible
+                                        </span>
+                                    @else
+                                        <span class="modal-status-badge indispo">
+                                            <i class="fas fa-times-circle fa-xs"></i> Sur commande uniquement
+                                        </span>
+                                    @endif
+                                </div>
 
                                 <h3 class="modal-vet-name">{{ $vetement->nom }}</h3>
 
-                                {{-- Prix Badge Modal --}}
-                                <span class="modal-price-badge">
-                                    {{ number_format($vetement->prix, 0, ',', ' ') }}
-                                    <span class="cfa">CFA</span>
-                                </span>
+                                {{-- Prix Block --}}
+                                <div class="modal-price-box">
+                                    <span class="modal-price-box-label">Prix estimé de confection</span>
+                                    <div class="modal-price-box-val">
+                                        {{ number_format($vetement->prix, 0, ',', ' ') }} <span class="cfa">CFA</span>
+                                    </div>
+                                </div>
 
-                                <p class="modal-desc">{{ $vetement->description }}</p>
+                                <div class="modal-divider"></div>
 
-                                @if($vetement->disponible)
-                                    @auth('client')
-                                    <a href="{{ route('rendezvous.create') }}?vetement={{ $vetement->id }}"
-                                       class="btn-modal-reserver">
-                                        <i class="fas fa-calendar-plus"></i> Réserver ce vêtement
+                                <h4 class="modal-desc-title">Description du modèle</h4>
+                                <p class="modal-desc">{{ $vetement->description ?: 'Aucune description disponible pour ce modèle de création artisanale.' }}</p>
+
+
+
+                                <div class="modal-divider"></div>
+                                <h4 class="modal-desc-title" style="font-size: 0.95rem; margin-bottom: 0.25rem;">Votre parcours couture</h4>
+                                <div class="process-timeline">
+                                    <div class="timeline-step">
+                                        <div class="timeline-dot">I</div>
+                                        <div class="timeline-lbl">Mesures</div>
+                                    </div>
+                                    <div class="timeline-step">
+                                        <div class="timeline-dot">II</div>
+                                        <div class="timeline-lbl">Tissus</div>
+                                    </div>
+                                    <div class="timeline-step">
+                                        <div class="timeline-dot">III</div>
+                                        <div class="timeline-lbl">Confection</div>
+                                    </div>
+                                    <div class="timeline-step">
+                                        <div class="timeline-dot">IV</div>
+                                        <div class="timeline-lbl">Essayage</div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-actions-container">
+                                    @if($vetement->disponible)
+                                        <a href="{{ route('rendezvous.create') }}?vetement={{ $vetement->id }}"
+                                           class="btn-modal-reserve-premium">
+                                            <i class="fas fa-calendar-plus"></i> Prendre RDV Mesures
+                                        </a>
+                                    @endif
+                                    <a href="https://wa.me/{{ $waPhone }}?text=Bonjour%20SMC%20Couture,%20je%20souhaite%20commander%20le%20mod%C3%A8le%20{{ urlencode($vetement->nom) }}%20(Prix%20:%20{{ number_format($vetement->prix, 0, ',', ' ') }}%20CFA)."
+                                       target="_blank"
+                                       class="btn-modal-whatsapp"
+                                       style="background: #25d366; color: #fff !important; border-color: #25d366;">
+                                        <i class="fab fa-whatsapp fa-lg"></i> Commander sur WhatsApp
                                     </a>
-                                    @else
-                                    <a href="{{ route('register') }}" class="btn-modal-reserver">
-                                        <i class="fas fa-user-plus"></i> Créer un compte pour réserver
-                                    </a>
-                                    @endauth
-                                @else
-                                    <span style="background:#f8d7da;color:#721c24;padding:0.5rem 1rem;border-radius:10px;font-size:0.85rem;font-weight:600;display:inline-flex;align-items:center;gap:0.4rem;">
-                                        <i class="fas fa-times-circle"></i> Indisponible actuellement
-                                    </span>
-                                @endif
+                                </div>
+                                <span class="modal-disclaimer">* La prise de rendez-vous est gratuite. Elle comprend une séance de mesures et d'écoute personnalisée à notre atelier.</span>
                             </div>
                         </div>
                     </div>
@@ -721,6 +1049,7 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // ── Search Filter ──
     var searchInput = document.getElementById('vetementSearch');
     var items       = document.querySelectorAll('.vetement-item');
 
@@ -739,6 +1068,27 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+
+    // ── Carousel Thumbnail Synchronization ──
+    var carousels = document.querySelectorAll('.modal-carousel-panel .carousel');
+    carousels.forEach(function (carousel) {
+        carousel.addEventListener('slide.bs.carousel', function (e) {
+            var activeIndex = e.to;
+            var panel = carousel.closest('.modal-carousel-panel');
+            if (panel) {
+                var thumbnails = panel.querySelectorAll('.thumbnail-btn');
+                thumbnails.forEach(function (btn, index) {
+                    if (index === activeIndex) {
+                        btn.classList.add('active');
+                        // Scroll thumbnail into view if list is overflowed
+                        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+        });
+    });
 });
 </script>
 @endsection
