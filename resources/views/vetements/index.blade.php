@@ -956,7 +956,9 @@
                                     <i class="fas fa-times"></i>
                                 </button>
 
-                                <div class="modal-meta-row">
+                                <h3 class="modal-vet-name" style="margin-bottom: 0.5rem; padding-right: 2rem;">{{ $vetement->nom }}</h3>
+
+                                <div class="modal-meta-row" style="justify-content: flex-start; gap: 0.5rem; margin-bottom: 1.5rem;">
                                     @if($vetement->categorie)
                                         <span class="modal-cat-badge">
                                             <i class="fas fa-tag fa-xs"></i> {{ $vetement->categorie->nom }}
@@ -968,29 +970,36 @@
                                         </span>
                                     @else
                                         <span class="modal-status-badge indispo">
-                                            <i class="fas fa-times-circle fa-xs"></i> Sur commande uniquement
+                                            <i class="fas fa-times-circle fa-xs"></i> Sur commande
                                         </span>
                                     @endif
                                 </div>
 
-                                <h3 class="modal-vet-name">{{ $vetement->nom }}</h3>
+                                <h4 class="modal-desc-title">Description du modèle</h4>
+                                <p class="modal-desc" style="margin-bottom: 1.5rem;">{{ $vetement->description ?: 'Aucune description disponible pour ce modèle de création artisanale.' }}</p>
 
-                                {{-- Prix Block --}}
-                                <div class="modal-price-box">
-                                    <span class="modal-price-box-label">Prix estimé de confection</span>
-                                    <div class="modal-price-box-val">
-                                        {{ number_format($vetement->prix, 0, ',', ' ') }} <span class="cfa">CFA</span>
+                                <div class="modal-divider" style="margin: 1rem 0 1.5rem;"></div>
+
+                                <h4 class="modal-desc-title">Caractéristiques</h4>
+                                <div class="specs-grid">
+                                    <div class="spec-item">
+                                        <i class="fas fa-coins"></i>
+                                        <div>
+                                            <div class="spec-item-label">Tarif estimé</div>
+                                            <div class="spec-item-value">{{ number_format($vetement->prix, 0, ',', ' ') }} CFA</div>
+                                        </div>
+                                    </div>
+                                    <div class="spec-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <div>
+                                            <div class="spec-item-label">Création</div>
+                                            <div class="spec-item-value">Dakar, Sénégal</div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="modal-divider"></div>
+                                <div class="modal-divider" style="margin: 1.5rem 0;"></div>
 
-                                <h4 class="modal-desc-title">Description du modèle</h4>
-                                <p class="modal-desc">{{ $vetement->description ?: 'Aucune description disponible pour ce modèle de création artisanale.' }}</p>
-
-
-
-                                <div class="modal-divider"></div>
                                 <h4 class="modal-desc-title" style="font-size: 0.95rem; margin-bottom: 0.25rem;">Votre parcours couture</h4>
                                 <div class="process-timeline">
                                     <div class="timeline-step">
