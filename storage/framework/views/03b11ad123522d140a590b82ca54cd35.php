@@ -75,13 +75,7 @@ body {
     gap: 1rem;
 }
 
-.hero-year::before {
-    content: '';
-    display: block;
-    width: 40px;
-    height: 1px;
-    background: var(--gold);
-}
+
 
 .hero-title {
     font-family: 'Cormorant Garamond', serif;
@@ -96,7 +90,7 @@ body {
 .hero-title em {
     font-style: italic;
     color: var(--gold-light);
-    display: block;
+    display: inline;
 }
 
 .hero-side {
@@ -116,8 +110,7 @@ body {
     text-transform: uppercase;
     text-align: right;
     line-height: 1.9;
-    border-top: 1px solid rgba(201,169,89,0.25);
-    padding-top: 1.25rem;
+    padding-top: 0;
 }
 
 .hero-actions {
@@ -887,17 +880,17 @@ html {
     }
 
     .hero-bg {
-        left: 50%;
+        left: 49.5%;
         right: 0;
-        width: 50%;
+        width: 50.5%;
         background-position: center;
         background-size: cover;
     }
 
     .hero-overlay {
-        left: 50%;
+        left: 49.5%;
         right: 0;
-        width: 50%;
+        width: 50.5%;
         background: linear-gradient(
             to right,
             #111 0%,
@@ -932,9 +925,9 @@ html {
     .hero-tagline {
         text-align: left;
         border-top: none;
-        border-bottom: 1px solid rgba(201,169,89,0.25);
+        border-bottom: none;
         padding-top: 0;
-        padding-bottom: 1.25rem;
+        padding-bottom: 0;
         width: 100%;
         max-width: 320px;
     }
@@ -1117,8 +1110,8 @@ html {
                 <span>Maison fondée en 2020</span>
             </div>
             <h1 class="hero-title">
-                L'art de<br>
-                la <em>couture</em><br>
+                L'art de la<br>
+                <em>couture</em><br>
                 sur mesure
             </h1>
         </div>
@@ -1204,12 +1197,17 @@ html {
                         if (strlen($waPhone) === 9 && (str_starts_with($waPhone, '77') || str_starts_with($waPhone, '78') || str_starts_with($waPhone, '76') || str_starts_with($waPhone, '70') || str_starts_with($waPhone, '75'))) {
                             $waPhone = '221' . $waPhone;
                         }
+                        $_src = $vetement->imageUrl;
+                        $_src = $_src && !str_starts_with($_src, 'http') ? \Illuminate\Support\Facades\Storage::url($_src) : ($_src ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800');
+                        $absoluteImgUrl = url($_src);
                     ?>
-                    <a href="https://wa.me/<?php echo e($waPhone); ?>?text=Bonjour%20SMC%20Couture,%20je%20souhaite%20commander%20le%20mod%C3%A8le%20<?php echo e(urlencode($vetement->nom)); ?>%20(Prix%20:%20<?php echo e(number_format($vetement->prix, 0, ',', ' ')); ?>%20CFA)."
+                    <a href="https://wa.me/<?php echo e($waPhone); ?>?text=Bonjour%20SMC%20Couture,%20je%20souhaite%20commander%20le%20mod%C3%A8le%20<?php echo e(urlencode($vetement->nom)); ?>%20(Prix%20:%20<?php echo e(number_format($vetement->prix, 0, ',', ' ')); ?>%20CFA).%20Voici%20la%20photo%20:%20<?php echo e(urlencode($absoluteImgUrl)); ?>"
                        target="_blank"
                        class="vet-btn-wa">
                         <span>Commander</span>
-                        <i class="fab fa-whatsapp" style="font-size:0.85rem;"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 448 512" fill="currentColor" style="margin-left: 5px;">
+                            <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+                        </svg>
                     </a>
                 </div>
             </div>

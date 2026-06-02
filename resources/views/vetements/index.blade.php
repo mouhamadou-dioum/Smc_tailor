@@ -876,11 +876,14 @@
                                 if (strlen($waPhone) === 9 && (str_starts_with($waPhone, '77') || str_starts_with($waPhone, '78') || str_starts_with($waPhone, '76') || str_starts_with($waPhone, '70') || str_starts_with($waPhone, '75'))) {
                                     $waPhone = '221' . $waPhone;
                                 }
+                                $absoluteImgUrl = url($cardImgSrc);
                             @endphp
-                            <a href="https://wa.me/{{ $waPhone }}?text=Bonjour%20SMC%20Couture,%20je%20souhaite%20commander%20le%20mod%C3%A8le%20{{ urlencode($vetement->nom) }}%20(Prix%20:%20{{ number_format($vetement->prix, 0, ',', ' ') }}%20CFA)."
+                            <a href="https://wa.me/{{ $waPhone }}?text=Bonjour%20SMC%20Couture,%20je%20souhaite%20commander%20le%20mod%C3%A8le%20{{ urlencode($vetement->nom) }}%20(Prix%20:%20{{ number_format($vetement->prix, 0, ',', ' ') }}%20CFA).%20Voici%20la%20photo%20:%20{{ urlencode($absoluteImgUrl) }}"
                                target="_blank"
                                class="btn-commander-wa">
-                                <i class="fab fa-whatsapp"></i> Commander
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-right: 5px;">
+                                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.455L0 24zm6.49-3.99c1.65.981 3.272 1.498 4.795 1.5 5.539 0 10.043-4.507 10.046-10.05.001-2.686-1.042-5.212-2.93-7.103-1.89-1.89-4.412-2.932-7.102-2.933-5.546 0-10.05 4.507-10.053 10.051-.002 1.902.501 3.757 1.456 5.416l-.99 3.61 3.712-.973zm12.337-5.69c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                                </svg> Commander
                             </a>
                         </div>
                     </div>
@@ -889,7 +892,7 @@
 
             {{-- Modal --}}
             <div class="modal fade" id="vetementModal{{ $vetement->id }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
 
                         <div class="row g-0">
@@ -1015,12 +1018,6 @@
                                             <i class="fas fa-calendar-plus"></i> Prendre RDV Mesures
                                         </a>
                                     @endif
-                                    <a href="https://wa.me/{{ $waPhone }}?text=Bonjour%20SMC%20Couture,%20je%20souhaite%20commander%20le%20mod%C3%A8le%20{{ urlencode($vetement->nom) }}%20(Prix%20:%20{{ number_format($vetement->prix, 0, ',', ' ') }}%20CFA)."
-                                       target="_blank"
-                                       class="btn-modal-whatsapp"
-                                       style="background: #25d366; color: #fff !important; border-color: #25d366;">
-                                        <i class="fab fa-whatsapp fa-lg"></i> Commander sur WhatsApp
-                                    </a>
                                 </div>
                                 <span class="modal-disclaimer">* La prise de rendez-vous est gratuite. Elle comprend une séance de mesures et d'écoute personnalisée à notre atelier.</span>
                             </div>
