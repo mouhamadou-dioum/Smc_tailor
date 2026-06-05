@@ -1,12 +1,12 @@
-# Spécifications Logiques : Notification WhatsApp Manuelle (wa.me)
+# Spécifications Logiques : Notification WhatsApp Manuelle (wa.me) - Version Unifiée
 
-Ce document décrit l'architecture logique de la fonctionnalité d'envoi manuel des notifications WhatsApp aux clients, conçue comme une alternative gratuite et sans contrainte technique à l'API WhatsApp Cloud officielle.
+Ce document décrit l'architecture logique de la fonctionnalité d'envoi des notifications WhatsApp aux clients en **un seul clic**, conçue comme une alternative gratuite et sans contrainte technique à l'API WhatsApp Cloud officielle.
 
 ---
 
 ## 1. Contexte & Contraintes
-- **Problématique** : L'envoi automatique via l'API officielle nécessite un compte Meta Business vérifié et des modèles de messages approuvés, ce qui n'est pas disponible pour l'environnement actuel.
-- **Solution** : Utiliser le protocole de redirection standard de WhatsApp (`https://wa.me/`) pour pré-remplir les messages sur le terminal de l'administrateur, lui permettant de valider l'envoi en un clic via son propre compte (WhatsApp Web ou application).
+- **Problématique** : L'envoi automatique via l'API officielle nécessite un compte Meta Business vérifié et des modèles de messages approuvés.
+- **Solution** : Unification des étapes. L'administrateur clique sur "Confirmer" (ou "Refuser"). L'application effectue la mise à jour en base de données via AJAX, tout en ouvrant et redirigeant simultanément un nouvel onglet vers le lien WhatsApp pré-rempli (`https://wa.me/`).
 - **Emails** : Désactivés conformément aux spécifications ("pas de mail").
 
 ---
@@ -16,20 +16,26 @@ Ce document décrit l'architecture logique de la fonctionnalité d'envoi manuel 
 ```mermaid
 sequenceDiagram
     actor Admin
+    participant Vue as Interface Admin (JS)
     participant Serveur as Application Laravel
     participant DB as Base de Données
     participant WA as WhatsApp Web/App
 
-    Admin->>Serveur: Confirme le rendez-vous (POST)
-    Note over Serveur: Met à jour le statut du RDV (CONFIRME)
+    Admin->>Vue: Clique sur "Confirmer" ou "Refuser"
+    Vue->>Vue: Ouvre immédiatement un onglet vide (about:blank)
+    Vue->>Serveur: Envoie la requête AJAX (fetch)
+    Note over Serveur: Met à jour le statut du RDV (CONFIRME / REFUSE)
     Note over Serveur: Génère le message textuel
     Note over Serveur: Calcule le lien de redirection wa.me
     Serveur->>DB: Enregistre la notification avec statut 'A_ENVOYER'
-    Serveur->>Serveur: Stocke le lien wa_link en session flash
-    Serveur-->>Admin: Redirection avec succès + wa_link en session
-    Admin->>WA: Clique sur "Envoyer via WhatsApp" (ouvre wa.me)
-    Note over WA: WhatsApp s'ouvre avec le texte pré-rempli
-    Admin->>WA: Clique sur le bouton d'envoi dans WhatsApp
+    Serveur-->>Vue: Retourne la réponse JSON avec wa_link
+    alt Succès
+        Vue->>WA: Redirige l'onglet ouvert vers le wa_link
+        Vue->>Vue: Recharge la page principale (window.location.reload)
+    else Erreur
+        Vue->>Vue: Ferme l'onglet ouvert
+        Vue->>Vue: Affiche un message d'erreur à l'administrateur
+    end
 ```
 
 ---
@@ -37,18 +43,14 @@ sequenceDiagram
 ## 3. Composants et Rôles
 
 ### A. Contrôleur Admin : [AdminController.php](file:///c:/Users/fallou/projet%20laravel/couture-app/app/Http/Controllers/AdminController.php)
-- **`rendezvousConfirmer($id)` & `rendezvousRefuser($id)`** : Mettent à jour le statut du rendez-vous, rédigent le message personnalisé, et appellent `sendAppointmentNotifications(...)`.
-- **`sendAppointmentNotifications(...)`** :
-  - Calcule le lien de redirection `https://wa.me/{telephone}?text={message}`.
-  - Sauvegarde ce lien dans la session flash : `session()->flash('wa_link', $waLink)`.
-  - Enregistre une instance du modèle `Notification` avec le statut `'A_ENVOYER'` pour l'historique de suivi.
+- **`rendezvousConfirmer($id)` & `rendezvousRefuser($id)`** : Mettent à jour le statut du rendez-vous, rédigent le message personnalisé, appellent `sendAppointmentNotifications(...)` et détectent si la requête est AJAX (`wantsJson()`). Si oui, ils retournent directement le lien `wa_link` en format JSON.
 
-### B. Vues Administrateur (Blade templates)
+### B. Vues Administrateur (Interactions JS)
 - **Liste des rendez-vous** : [index.blade.php](file:///c:/Users/fallou/projet%20laravel/couture-app/resources/views/admin/rendezvous/index.blade.php)
-  - Intercepte la session flash `success` et `wa_link` pour afficher le bouton d'action principal d'envoi immédiat.
-  - Dynamise les icônes WhatsApp de chaque ligne pour pré-remplir le message exact selon le statut actuel du rendez-vous.
-  - Affiche un badge orange **"À envoyer"** pour les notifications de statut `A_ENVOYER`.
 - **Détails d'un rendez-vous** : [show.blade.php](file:///c:/Users/fallou/projet%20laravel/couture-app/resources/views/admin/rendezvous/show.blade.php)
-  - Affiche également le bouton vert dans le bandeau de succès.
-  - Affiche un bouton d'action rapide **"Envoyer maintenant"** dans l'historique des notifications pour tous les messages au statut `A_ENVOYER`.
-  - Adapte les alertes d'étapes finales (confirmé/refusé) pour rappeler à l'administrateur de procéder à l'envoi manuel si nécessaire.
+  - Les boutons de confirmation et de refus ont la classe `btn-ajax-action` et stockent le message de confirmation dans `data-confirm-msg`.
+  - Un script JS écoute le clic sur ces boutons :
+    1. Affiche un dialogue de confirmation.
+    2. Ouvre un onglet vide (`window.open('about:blank', '_blank')`) de manière synchrone pour contourner le bloqueur de popups.
+    3. Exécute l'appel `fetch` en arrière-plan.
+    4. En cas de succès, redirige l'onglet et recharge la page. En cas d'échec, ferme l'onglet et affiche l'erreur.

@@ -798,13 +798,13 @@
 
                         <div class="d-flex gap-3">
                             <a href="{{ route('admin.rendezvous.confirmer', $rendezVous->id) }}"
-                               class="btn-confirm flex-grow-1"
-                               onclick="return confirm('Confirmer ce rendez-vous ?')">
+                               class="btn-confirm flex-grow-1 btn-ajax-action"
+                               data-confirm-msg="Confirmer ce rendez-vous ?">
                                 <i class="fas fa-check-circle"></i> Confirmer
                             </a>
                             <a href="{{ route('admin.rendezvous.refuser', $rendezVous->id) }}"
-                               class="btn-refuse flex-grow-1"
-                               onclick="return confirm('Refuser ce rendez-vous ?')">
+                               class="btn-refuse flex-grow-1 btn-ajax-action"
+                               data-confirm-msg="Refuser ce rendez-vous ?">
                                 <i class="fas fa-times-circle"></i> Refuser
                             </a>
                         </div>
@@ -886,4 +886,53 @@
 
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.btn-ajax-action').forEach(function (button) {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            const url = this.getAttribute('href');
+            const msg = this.getAttribute('data-confirm-msg');
+            
+            if (confirm(msg)) {
+                // 1. Ouvrir immédiatement l'onglet vierge (requis pour contourner le bloqueur de popup)
+                const newTab = window.open('about:blank', '_blank');
+                
+                // 2. Lancer la requête AJAX vers la route Laravel
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Erreur serveur');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data.success && data.wa_link) {
+                        // 3. Rediriger l'onglet déjà ouvert vers le lien WhatsApp
+                        newTab.location.href = data.wa_link;
+                        // 4. Rafraîchir la page principale
+                        window.location.reload();
+                    } else {
+                        newTab.close();
+                        alert(data.message || 'Une erreur est survenue.');
+                    }
+                })
+                .catch(function(err) {
+                    newTab.close();
+                    alert('Une erreur réseau ou serveur est survenue.');
+                });
+            }
+        });
+    });
+});
+</script>
 @endsection

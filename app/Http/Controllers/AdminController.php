@@ -269,6 +269,14 @@ class AdminController extends Controller
 
         $this->sendAppointmentNotifications($rendezVous, $message, 'confirm');
 
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Rendez-vous confirmé !',
+                'wa_link' => session('wa_link')
+            ]);
+        }
+
         return back()->with('success', 'Rendez-vous confirmé!');
     }
 
@@ -287,6 +295,14 @@ class AdminController extends Controller
         $message .= "N'hésitez pas à nous contacter pour toute question. 🙏";
 
         $this->sendAppointmentNotifications($rendezVous, $message, 'refuse');
+
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Rendez-vous refusé !',
+                'wa_link' => session('wa_link')
+            ]);
+        }
 
         return back()->with('success', 'Rendez-vous refusé!');
     }
