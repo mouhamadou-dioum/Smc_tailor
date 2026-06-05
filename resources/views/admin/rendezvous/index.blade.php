@@ -65,7 +65,6 @@
         gap: 1.5rem;
         transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
         position: relative;
-        overflow: hidden;
     }
     .rdv-card:hover {
         box-shadow: 0 6px 24px rgba(201,169,89,0.12);
@@ -77,7 +76,8 @@
         position: absolute;
         left: 0; top: 0; bottom: 0;
         width: 4px;
-        border-radius: 4px 0 0 4px;
+        border-top-left-radius: 16px;
+        border-bottom-left-radius: 16px;
     }
     .rdv-card.statut-attente::before  { background: #f59e0b; }
     .rdv-card.statut-confirme::before { background: #22c55e; }
@@ -231,8 +231,15 @@
         </div>
 
         @if(session('success'))
-            <div class="alert alert-custom alert-success-custom mb-4">
-                <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+            <div class="alert alert-custom alert-success-custom mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <span>
+                    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                </span>
+                @if(session('wa_link'))
+                    <a href="{{ session('wa_link') }}" target="_blank" class="btn btn-success btn-sm d-inline-flex align-items-center gap-2" style="background-color: #25d366; border-color: #25d366; color: white; padding: 0.4rem 1rem; border-radius: 50px; font-weight: 600; text-decoration: none;">
+                        <i class="fab fa-whatsapp"></i> Envoyer la confirmation via WhatsApp
+                    </a>
+                @endif
             </div>
         @endif
 
@@ -259,10 +266,33 @@
                 if ($phone && !str_starts_with($phone, '221')) {
                     $phone = '221' . ltrim($phone, '0');
                 }
-                $waText = urlencode(
-                    "Bonjour {$client->prenom}, je vous contacte concernant votre rendez-vous du {$dateObj->format('d/m/Y')} à {$rdv->heure}."
-                );
-                $waLink = $phone ? 'https://wa.me/' . $phone . '?text=' . $waText : null;
+
+                $vetementNom = $rdv->vetement?->nom ?? null;
+                $clientPrenom = $client->prenom ?? 'Client';
+                $dateRdv = $dateObj->format('d/m/Y');
+                $heureRdv = $rdv->heure;
+
+                if ($rdv->statut === \App\Models\RendezVous::STATUT_CONFIRME) {
+                    $message  = "✅ *Rendez-vous confirmé !*\n\n";
+                    $message .= "Bonjour {$clientPrenom},\n\n";
+                    $message .= "Votre rendez-vous a bien été *confirmé*.\n\n";
+                    $message .= "📅 Date : {$dateRdv}\n";
+                    $message .= "🕐 Heure : {$heureRdv}\n";
+                    if ($vetementNom) {
+                        $message .= "👗 Vêtement : {$vetementNom}\n";
+                    }
+                    $message .= "\nMerci de votre confiance. À très bientôt ! 🙏";
+                } elseif ($rdv->statut === \App\Models\RendezVous::STATUT_REFUSE) {
+                    $message  = "❌ *Rendez-vous non disponible*\n\n";
+                    $message .= "Bonjour {$clientPrenom},\n\n";
+                    $message .= "Nous sommes désolés, votre rendez-vous du *{$dateRdv}* n'a pas pu être confirmé.\n\n";
+                    $message .= "Vous pouvez prendre un nouveau rendez-vous directement sur l'application.\n";
+                    $message .= "N'hésitez pas à nous contacter pour toute question. 🙏";
+                } else {
+                    $message = "Bonjour {$clientPrenom}, je vous contacte concernant votre rendez-vous du {$dateRdv} à {$heureRdv}.";
+                }
+
+                $waLink = $phone ? 'https://wa.me/' . $phone . '?text=' . rawurlencode($message) : null;
             @endphp
             <div class="rdv-card {{ $statutClass }}">
 
@@ -312,6 +342,11 @@
                                 <i class="fab fa-whatsapp"></i> Envoyé
                             </span>
                             <div class="text-muted" style="font-size:0.7rem;margin-top:3px;">{{ $lastWa->dateEnvoi->diffForHumans() }}</div>
+                        @elseif($lastWa->statut === 'A_ENVOYER')
+                            <span class="wa-badge pending" style="background: #fef3c7; color: #92400e; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.72rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem;" title="En attente d'envoi manuel">
+                                <i class="fab fa-whatsapp"></i> À envoyer
+                            </span>
+                            <div class="text-muted" style="font-size:0.7rem;margin-top:3px;">En attente d'envoi</div>
                         @else
                             <span class="wa-badge failed" title="Échec d'envoi">
                                 <i class="fas fa-exclamation-triangle"></i> Échec
@@ -323,30 +358,38 @@
                     @endif
                 </div>
 
-                {{-- Actions --}}
-                <div class="rdv-actions">
-                    @if($waLink)
-                        <a href="{{ $waLink }}" target="_blank" class="btn-action wa" title="Contacter sur WhatsApp">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                    @endif
-
-                    <a href="{{ route('admin.rendezvous.show', $rdv->id) }}" class="btn-action view" title="Voir détails">
-                        <i class="fas fa-eye"></i>
-                    </a>
-
-                    @if($rdv->statut === \App\Models\RendezVous::STATUT_EN_ATTENTE)
-                        <a href="{{ route('admin.rendezvous.confirmer', $rdv->id) }}"
-                           class="btn-action confirm" title="Confirmer — envoie un WhatsApp au client"
-                           onclick="return confirm('Confirmer ce RDV ? Un WhatsApp de confirmation sera envoyé au client.')">
-                            <i class="fas fa-check"></i>
-                        </a>
-                        <a href="{{ route('admin.rendezvous.refuser', $rdv->id) }}"
-                           class="btn-action reject" title="Refuser — envoie un WhatsApp au client"
-                           onclick="return confirm('Refuser ce RDV ? Un WhatsApp sera envoyé au client.')">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    @endif
+                {{-- Actions Dropdown --}}
+                <div class="dropdown">
+                    <button class="btn-action d-flex align-items-center justify-content-center" type="button" id="dropdownMenuButton{{ $rdv->id }}" data-bs-toggle="dropdown" aria-expanded="false" style="border: 1.5px solid var(--gray-300); background: #fff; border-radius: 50%; width: 38px; height: 38px; color: var(--gray-600); transition: all 0.2s;" title="Actions">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="dropdownMenuButton{{ $rdv->id }}" style="border-radius: 12px; border: 1px solid var(--gray-200); font-size: 0.85rem; padding: 0.5rem 0; min-width: 180px;">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('admin.rendezvous.show', $rdv->id) }}">
+                                <i class="fas fa-eye text-primary" style="width: 16px;"></i> Voir les détails
+                            </a>
+                        </li>
+                        @if($waLink)
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ $waLink }}" target="_blank">
+                                    <i class="fab fa-whatsapp text-success" style="width: 16px;"></i> Contacter le client
+                                </a>
+                            </li>
+                        @endif
+                        @if($rdv->statut === \App\Models\RendezVous::STATUT_EN_ATTENTE)
+                            <li><hr class="dropdown-divider" style="margin: 0.4rem 0;"></li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-success fw-bold" href="{{ route('admin.rendezvous.confirmer', $rdv->id) }}" onclick="return confirm('Confirmer ce RDV ?')">
+                                    <i class="fas fa-check" style="width: 16px;"></i> Confirmer
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger fw-bold" href="{{ route('admin.rendezvous.refuser', $rdv->id) }}" onclick="return confirm('Refuser ce RDV ?')">
+                                    <i class="fas fa-times" style="width: 16px;"></i> Refuser
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
                 </div>
 
             </div>

@@ -151,10 +151,15 @@
                 <div class="auth-card">
                     <form method="POST" action="<?php echo e(route('login')); ?>">
                         <?php echo csrf_field(); ?>
+                        <div class="alert alert-info small mb-4 py-2 px-3 border-0 rounded-3" style="background-color: rgba(201,169,89,0.08); color: var(--gold-dark); font-size: 0.85rem; line-height: 1.4;">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Si vous avez réservé sans compte, connectez-vous avec votre numéro de <strong>téléphone</strong> et le mot de passe <strong>password</strong>.
+                        </div>
+
                         <div class="mb-3">
-                            <label class="auth-label">Email *</label>
-                            <input type="email" name="email" class="auth-input" required placeholder="votre@email.com">
-                            <?php $__errorArgs = ['email'];
+                            <label class="auth-label">Email ou Téléphone *</label>
+                            <input type="text" name="login" class="auth-input" required placeholder="votre@email.com ou 771234567" value="<?php echo e(old('login')); ?>">
+                            <?php $__errorArgs = ['login'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }

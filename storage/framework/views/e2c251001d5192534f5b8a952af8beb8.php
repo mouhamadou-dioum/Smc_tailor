@@ -614,10 +614,17 @@
 
         
         <?php if(session('success')): ?>
-            <div class="alert-success-custom">
-                <i class="fas fa-check-circle"></i>
-                <?php echo e(session('success')); ?>
+            <div class="alert-success-custom d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <span>
+                    <i class="fas fa-check-circle"></i>
+                    <?php echo e(session('success')); ?>
 
+                </span>
+                <?php if(session('wa_link')): ?>
+                    <a href="<?php echo e(session('wa_link')); ?>" target="_blank" class="btn btn-success btn-sm d-inline-flex align-items-center gap-2" style="background-color: #25d366; border-color: #25d366; color: white; padding: 0.4rem 1rem; border-radius: 50px; font-weight: 600; text-decoration: none; font-size: 0.8rem;">
+                        <i class="fab fa-whatsapp"></i> Envoyer la confirmation via WhatsApp
+                    </a>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
 
@@ -707,16 +714,46 @@
                         </div>
                     <?php else: ?>
                         <?php $__currentLoopData = $waNotifs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notif): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php
+                            $statusClass = match($notif->statut) {
+                                'ENVOYE' => 'sent',
+                                'A_ENVOYER' => 'pending',
+                                default => 'failed',
+                            };
+                            $statusLabel = match($notif->statut) {
+                                'ENVOYE' => 'Envoyé',
+                                'A_ENVOYER' => 'À envoyer (manuel)',
+                                default => 'Échec d\'envoi',
+                            };
+                            $statusIcon = match($notif->statut) {
+                                'ENVOYE', 'A_ENVOYER' => 'fab fa-whatsapp',
+                                default => 'fas fa-exclamation-triangle',
+                            };
+                            $pendingStyle = $notif->statut === 'A_ENVOYER' ? 'background: #fef3c7; color: #92400e;' : '';
+                            $pendingTextStyle = $notif->statut === 'A_ENVOYER' ? 'color: #92400e;' : '';
+                        ?>
                         <div class="wa-log-item">
-                            <div class="wa-icon <?php echo e($notif->statut === 'ENVOYE' ? 'sent' : 'failed'); ?>">
-                                <i class="<?php echo e($notif->statut === 'ENVOYE' ? 'fab fa-whatsapp' : 'fas fa-exclamation-triangle'); ?>"></i>
+                            <div class="wa-icon <?php echo e($statusClass); ?>" style="<?php echo e($pendingStyle); ?>">
+                                <i class="<?php echo e($statusIcon); ?>"></i>
                             </div>
                             <div class="wa-log-content">
-                                <div class="wa-log-status <?php echo e($notif->statut === 'ENVOYE' ? 'sent' : 'failed'); ?>">
-                                    <?php echo e($notif->statut === 'ENVOYE' ? 'Envoyé' : 'Échec d\'envoi'); ?>
+                                <div class="wa-log-status <?php echo e($statusClass); ?>" style="<?php echo e($pendingTextStyle); ?>">
+                                    <?php echo e($statusLabel); ?>
 
                                 </div>
                                 <div class="wa-log-text"><?php echo e(Str::limit($notif->contenu, 65)); ?></div>
+                                <?php if($notif->statut === 'A_ENVOYER'): ?>
+                                    <?php
+                                        $waDirectLink = $phone ? 'https://wa.me/'.$phone.'?text='.rawurlencode($notif->contenu) : null;
+                                    ?>
+                                    <?php if($waDirectLink): ?>
+                                        <div class="mt-1">
+                                            <a href="<?php echo e($waDirectLink); ?>" target="_blank" class="btn btn-sm btn-success py-0 px-2" style="background-color: #25d366; border-color: #25d366; font-size: 0.72rem; color: white; border-radius: 4px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                                                <i class="fab fa-whatsapp"></i> Envoyer maintenant
+                                            </a>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endif; ?>
                             </div>
                             <div class="wa-log-time">
                                 <?php echo e($notif->dateEnvoi->format('d/m H:i')); ?><br>
@@ -761,7 +798,7 @@
                             <div class="step-badge">2</div>
                             <p class="step-title">Valider ou refuser</p>
                         </div>
-                        <p class="step-desc">Un message WhatsApp sera automatiquement envoyé au client après votre décision.</p>
+                        <p class="step-desc">Vous pourrez envoyer le message de confirmation/refus par WhatsApp après votre décision.</p>
 
                         <div class="d-flex gap-3">
                             <a href="<?php echo e(route('admin.rendezvous.confirmer', $rendezVous->id)); ?>"
@@ -780,9 +817,14 @@
                 <?php elseif($rendezVous->statut === \App\Models\RendezVous::STATUT_CONFIRME): ?>
 
                     <div class="step-card">
-                        <div class="banner-confirmed">
-                            <i class="fas fa-check-circle fa-lg"></i>
-                            Ce rendez-vous a été confirmé. Le client a été notifié par WhatsApp.
+                        <div class="banner-confirmed" style="<?php echo e($lastWa && $lastWa->statut === 'A_ENVOYER' ? 'background: linear-gradient(135deg, #fef3c7, #fde68a); border-color: #f59e0b; color: #92400e;' : ''); ?>">
+                            <?php if($lastWa && $lastWa->statut === 'A_ENVOYER'): ?>
+                                <i class="fas fa-exclamation-circle fa-lg"></i>
+                                Ce rendez-vous a été confirmé. N'oubliez pas d'envoyer le message de confirmation par WhatsApp.
+                            <?php else: ?>
+                                <i class="fas fa-check-circle fa-lg"></i>
+                                Ce rendez-vous a été confirmé. Le client a été notifié par WhatsApp.
+                            <?php endif; ?>
                         </div>
                         <p class="step-desc" style="padding-left:0; margin-bottom:1rem;">
                             Vous pouvez maintenant prendre ou consulter les mesures du client.
@@ -830,9 +872,14 @@
                 <?php else: ?>
 
                     <div class="step-card">
-                        <div class="banner-refused">
-                            <i class="fas fa-times-circle fa-lg"></i>
-                            Ce rendez-vous a été refusé. Le client a été notifié par WhatsApp.
+                        <div class="banner-refused" style="<?php echo e($lastWa && $lastWa->statut === 'A_ENVOYER' ? 'background: linear-gradient(135deg, #f8d7da, #fbcfe8); border-color: #f43f5e; color: #9f1239;' : ''); ?>">
+                            <?php if($lastWa && $lastWa->statut === 'A_ENVOYER'): ?>
+                                <i class="fas fa-exclamation-circle fa-lg"></i>
+                                Ce rendez-vous a été refusé. N'oubliez pas d'envoyer le message de refus par WhatsApp.
+                            <?php else: ?>
+                                <i class="fas fa-times-circle fa-lg"></i>
+                                Ce rendez-vous a été refusé. Le client a été notifié par WhatsApp.
+                            <?php endif; ?>
                         </div>
                     </div>
 

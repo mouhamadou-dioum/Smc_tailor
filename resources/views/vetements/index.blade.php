@@ -993,7 +993,7 @@
                                         <i class="fas fa-map-marker-alt"></i>
                                         <div>
                                             <div class="spec-item-label">Création</div>
-                                            <div class="spec-item-value">Dakar, Sénégal</div>
+                                            <div class="spec-item-value">Guédiawaye, Sénégal </div>
                                         </div>
                                     </div>
                                 </div>

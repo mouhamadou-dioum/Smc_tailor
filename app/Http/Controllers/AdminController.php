@@ -306,37 +306,13 @@ class AdminController extends Controller
         $waPhone = $this->normalizeWhatsAppPhone($client?->telephone);
         $waLink = $waPhone ? 'https://wa.me/'.$waPhone.'?text='.rawurlencode($message) : null;
 
-        $emailStatus = 'ECHEC';
-        if (!empty($client?->email)) {
-            try {
-                $html = view('emails.rendez-vous-update', [
-                    'message' => $message,
-                    'waLink' => $waLink,
-                ])->render();
-
-                Mail::html($html, function ($mail) use ($client) {
-                    $mail->to($client->email)->subject('Mise à jour de votre rendez-vous — Couture');
-                });
-                $emailStatus = 'ENVOYE';
-            } catch (\Throwable $e) {
-                Log::error('Echec envoi email rendez-vous', [
-                    'rendez_vous_id' => $rendezVous->id,
-                    'client_id' => $client?->id,
-                    'error' => $e->getMessage(),
-                ]);
-            }
+        if ($waLink) {
+            session()->flash('wa_link', $waLink);
         }
 
-        Notification::create([
-            'type' => Notification::TYPE_EMAIL,
-            'contenu' => $message,
-            'dateEnvoi' => now(),
-            'statut' => $emailStatus,
-            'client_id' => $rendezVous->client_id,
-            'rendez_vous_id' => $rendezVous->id,
-        ]);
+        // Envoi Email désactivé selon demande ("pas de mail")
 
-        $whatsappStatus = 'ECHEC';
+        $whatsappStatus = 'A_ENVOYER';
         $token = config('services.whatsapp.token');
         $phoneNumberId = config('services.whatsapp.phone_number_id');
 
@@ -349,6 +325,8 @@ class AdminController extends Controller
                 $message,
                 $waEvent
             );
+        } elseif (empty($waPhone)) {
+            $whatsappStatus = 'ECHEC';
         }
 
         Notification::create([
