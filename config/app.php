@@ -124,4 +124,15 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Mode Thème de l'application
+    |--------------------------------------------------------------------------
+    |
+    | Détermine quel thème afficher : 'client' (SMC Couture original) ou
+    | 'alternative' (AURA Couture haut de gamme, version "vendue").
+    |
+    */
+    'theme_mode' => env('APP_THEME_MODE', 'alternative'),
+
 ];

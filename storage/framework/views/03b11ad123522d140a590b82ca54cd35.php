@@ -1,4 +1,4 @@
-<?php $__env->startSection('title', 'Accueil — SMC Couture'); ?>
+<?php $__env->startSection('title', config('app.theme_mode') === 'alternative' ? 'Accueil — AURA Couture' : 'Accueil — SMC Couture'); ?>
 
 <?php $__env->startSection('styles'); ?>
 <style>
@@ -37,7 +37,7 @@ body {
 .hero-bg {
     position: absolute;
     inset: 0;
-    background: url("<?php echo e(asset('heros5.png')); ?>") center/cover no-repeat;
+    background: url("<?php echo e(asset('headerrrr1.png')); ?>") center 30%/cover no-repeat;
 }
 
 .hero-overlay {
@@ -45,9 +45,9 @@ body {
     inset: 0;
     background: linear-gradient(
         to top,
-        rgba(10,10,10,0.92) 0%,
-        rgba(10,10,10,0.55) 40%,
-        rgba(10,10,10,0.15) 100%
+        rgba(10,10,10,0.9) 0%,
+        rgba(10,10,10,0.45) 42%,
+        rgba(10,10,10,0.1) 100%
     );
 }
 
@@ -393,14 +393,15 @@ body {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
     gap: 2rem;
 }
 
 .collection-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2.5rem;
+    justify-content: center;
 }
 
 .vet-card {
@@ -410,20 +411,26 @@ body {
     overflow: hidden;
     transition: var(--transition);
     border: 1px solid var(--border-gold);
+    border-radius: 2px;
 }
 
 .vet-card:hover { transform: translateY(-6px); box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
 
 .vet-img-wrap {
     position: relative;
-    aspect-ratio: 3/4;
+    width: 100%;
+    padding-top: 133.33%; /* Ratio portrait 3:4 — technique fiable padding-top */
     overflow: hidden;
     background: #F0EBE0;
+    flex-shrink: 0;
 }
 
 .vet-img-wrap img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 100%;
+    height: 100% !important;
     object-fit: cover;
     object-position: center top;
     transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -435,16 +442,16 @@ body {
     position: absolute;
     top: 1.25rem;
     left: 1.25rem;
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 600;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--charcoal);
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(201, 169, 89, 0.3);
-    padding: 0.4rem 0.9rem;
+    background: rgba(248, 245, 238, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(201, 169, 89, 0.35);
+    padding: 0.35rem 0.85rem;
     z-index: 2;
 }
 
@@ -452,96 +459,110 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(26,26,26,0.3) 0%, transparent 40%);
-    opacity: 0.8;
-    transition: opacity 0.5s ease;
+    background: linear-gradient(
+        to top,
+        rgba(10,10,10,0.65) 0%,
+        rgba(10,10,10,0.2) 35%,
+        transparent 65%
+    );
+    opacity: 0.85;
+    transition: opacity 0.6s ease;
     z-index: 1;
     pointer-events: none;
 }
 
-.vet-card:hover .vet-img-wrap::before {
-    opacity: 1;
+.vet-card:hover .vet-img-wrap::before { opacity: 1; }
+
+/* Prix flottant au bas de l'image */
+.vet-price-float {
+    position: absolute;
+    bottom: 1.1rem;
+    right: 1.1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    z-index: 3;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    letter-spacing: 0.5px;
 }
 
 .vet-body {
-    padding: 1.75rem 1.5rem 1.5rem;
+    padding: 1.5rem 1.5rem 1.4rem;
     flex: 1;
     display: flex;
     flex-direction: column;
-}
-
-.vet-info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
+    border-top: 1px solid var(--border-gold);
+    background: linear-gradient(to bottom, #fffefb, #fff);
 }
 
 .vet-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.35rem;
+    font-size: 1.4rem;
     font-weight: 500;
     color: var(--charcoal);
-    margin-bottom: 0;
+    margin-bottom: 0.5rem;
     line-height: 1.2;
-}
-
-.vet-price-tag {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--gold-dark);
-    white-space: nowrap;
+    text-transform: capitalize;
 }
 
 .vet-desc {
     font-size: 0.8rem;
     font-weight: 300;
     color: var(--warm-gray);
-    line-height: 1.7;
+    line-height: 1.75;
     flex: 1;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.4rem;
+    font-style: italic;
 }
 
+/* Bouton Détails */
 .vet-btn {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0.85rem 1.2rem;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1.2rem;
     background: transparent;
     color: var(--charcoal);
-    font-size: 0.68rem;
+    font-size: 0.65rem;
     font-weight: 500;
-    letter-spacing: 2px;
+    letter-spacing: 2.5px;
     text-transform: uppercase;
     text-decoration: none;
-    border: 1px solid var(--gold);
+    border: 1px solid rgba(201,169,89,0.45);
     transition: var(--transition);
+    cursor: pointer;
 }
 
-.vet-btn:hover { background: var(--charcoal); border-color: var(--charcoal); color: var(--gold-light); }
+.vet-btn:hover {
+    background: var(--charcoal);
+    border-color: var(--charcoal);
+    color: var(--gold-light);
+}
 
+/* Bouton WhatsApp — style luxe sombre */
 .vet-btn-wa {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0.85rem 1.2rem;
-    background: #25d366;
-    color: #fff !important;
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 2px;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1.2rem;
+    background: var(--charcoal);
+    color: var(--gold-light) !important;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 2.5px;
     text-transform: uppercase;
     text-decoration: none;
-    border: 1px solid #25d366;
+    border: 1px solid var(--charcoal);
     transition: var(--transition);
 }
 
 .vet-btn-wa:hover {
-    background: #20ba5a;
-    border-color: #20ba5a;
-    color: #fff !important;
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--charcoal) !important;
 }
 
 /* ─── PROCESS ─── */
@@ -615,77 +636,98 @@ body {
 }
 
 .testi-card {
-    background: #F2EDE3;
-    padding: 2.5rem;
-    border-top: 3px solid var(--gold);
+    background: linear-gradient(145deg, #FDFCF9, #F4EFE4);
+    padding: 2.5rem 2rem;
+    border: 1px solid var(--border-gold);
+    border-top: 2.5px solid var(--gold);
+    position: relative;
     transition: var(--transition);
+    overflow: hidden;
+}
+
+.testi-card::before {
+    content: '"';
+    position: absolute;
+    top: -0.5rem;
+    right: 1.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8rem;
+    font-weight: 300;
+    color: var(--gold);
+    opacity: 0.08;
+    line-height: 1;
+    pointer-events: none;
 }
 
 .testi-card:hover {
     background: var(--charcoal);
-    transform: translateY(-4px);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.12);
 }
 
 .testi-quote {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 3rem;
-    font-weight: 300;
-    color: var(--gold);
-    line-height: 0.5;
-    margin-bottom: 1.25rem;
+    display: none;
 }
 
 .testi-text {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 300;
     font-style: italic;
     color: var(--charcoal-mid);
-    line-height: 1.8;
+    line-height: 1.85;
     margin-bottom: 1.75rem;
     transition: color 0.4s ease;
 }
 
-.testi-card:hover .testi-text { color: #D0C8B8; }
+.testi-card:hover .testi-text { color: rgba(248,245,238,0.9); }
 
 .testi-stars {
     color: var(--gold);
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-    margin-bottom: 1.25rem;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
 }
 
 .testi-footer {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(201,169,89,0.2);
+    transition: border-color 0.4s ease;
 }
 
+.testi-card:hover .testi-footer { border-color: rgba(201,169,89,0.1); }
+
 .testi-avatar {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid var(--border-gold);
+    border: 2px solid var(--gold);
+    box-shadow: 0 2px 8px rgba(201,169,89,0.25);
 }
 
 .testi-name {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: var(--charcoal);
+    letter-spacing: 0.5px;
     transition: color 0.4s ease;
 }
 
 .testi-card:hover .testi-name { color: var(--gold-light); }
 
 .testi-role {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     color: var(--warm-gray);
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
     transition: color 0.4s ease;
 }
 
-.testi-card:hover .testi-role { color: #6A6458; }
+.testi-card:hover .testi-role { color: rgba(201,169,89,0.6); }
 
 /* Contact styles removed */
 
@@ -724,57 +766,6 @@ html {
     opacity: 1;
     transform: translate(0) scale(1);
 }
-
-/* Hero page load animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeInBg {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-.hero-bg {
-    animation: fadeInBg 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.hero-year {
-    opacity: 0;
-    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: 0.2s;
-}
-
-.hero-title {
-    opacity: 0;
-    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: 0.4s;
-}
-
-.hero-side .hero-tagline {
-    opacity: 0;
-    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: 0.6s;
-}
-
-.hero-side .hero-actions {
-    opacity: 0;
-    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: 0.8s;
-}
-
-/* Scroll indicator animation removed */
 
 /* Premium micro-interactions for Collection cards */
 .vet-card {
@@ -883,7 +874,7 @@ html {
         left: 49.5%;
         right: 0;
         width: 50.5%;
-        background-position: center;
+        background-position: center 28%;
         background-size: cover;
     }
 
@@ -987,11 +978,7 @@ html {
     }
     .hero-bg {
         background-size: cover;
-        background-position: 75% center; /* Décale vers le mannequin à droite */
-        transform: scale(1) !important;
-    }
-    .hero:hover .hero-bg {
-        transform: scale(1) !important;
+        background-position: center 32%;
     }
 
     .hero-content {
@@ -1050,11 +1037,7 @@ html {
     }
     .hero-bg {
         background-size: cover;
-        background-position: 75% center; /* Décale vers le mannequin à droite */
-        transform: scale(1) !important;
-    }
-    .hero:hover .hero-bg {
-        transform: scale(1) !important;
+        background-position: center 32%;
     }
     .hero-content { padding: 0 1rem 3rem; gap: 1.5rem; }
     .hero-title { font-size: clamp(2.8rem, 15vw, 4.5rem); line-height: 1; }
@@ -1079,8 +1062,7 @@ html {
     .section-heading { font-size: clamp(1.6rem, 8vw, 2.2rem); }
 
     /* Collection */
-    .collection-grid { grid-template-columns: 1fr; gap: 1.25rem; }
-    .vet-img-wrap { aspect-ratio: 3/2; }
+    .collection-grid { grid-template-columns: 1fr; gap: 1.5rem; }
     .vet-body { padding: 1.25rem; }
 
     /* Process — 1 col on very small screens */
@@ -1098,41 +1080,33 @@ html {
 /* ── Actions Row on Card ── */
 .vet-actions-row {
     display: flex;
-    gap: 0.5rem;
+    gap: 0;
     margin-top: auto;
+    border-top: 1px solid var(--border-gold);
 }
 
-.vet-btn-detail {
+.vet-actions-row .vet-btn,
+.vet-actions-row .vet-btn-wa {
     flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.85rem 1rem;
-    background: transparent;
-    color: var(--charcoal);
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: 1px solid var(--gold);
-    transition: var(--transition);
-    cursor: pointer;
+    border-radius: 0;
 }
 
-.vet-btn-detail:hover {
-    background: var(--charcoal);
-    border-color: var(--charcoal);
-    color: var(--gold-light);
+.vet-actions-row .vet-btn {
+    border-top: none;
+    border-right: 1px solid var(--border-gold);
+    border-bottom: none;
+    border-left: none;
+    padding: 0.85rem 0.75rem;
 }
 
-/* Override welcome page's flex behavior for WhatsApp button to split evenly */
-.vet-body .vet-btn-wa {
-    flex: 1;
-    justify-content: center;
-    gap: 0.5rem;
+.vet-actions-row .vet-btn-wa {
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    border-left: 1px solid rgba(26,26,26,0.15);
+    padding: 0.85rem 0.75rem;
 }
+
 
 /* ── Modal Premium Couture ── */
 .modal-content {
@@ -1584,18 +1558,33 @@ html {
     <div class="hero-content">
         <div>
             <div class="hero-year">
-                <span>Maison fondée en 2020</span>
+                <?php if(config('app.theme_mode') === 'alternative'): ?>
+                    <span>Haute Couture d'Exception</span>
+                <?php else: ?>
+                    <span>Maison fondée en 2020</span>
+                <?php endif; ?>
             </div>
             <h1 class="hero-title">
-                L'art de la<br>
-                <em>couture</em><br>
-                sur mesure
+                <?php if(config('app.theme_mode') === 'alternative'): ?>
+                    L'excellence de la<br>
+                    <em>haute couture</em><br>
+                    intemporelle
+                <?php else: ?>
+                    L'art de la<br>
+                    <em>couture</em><br>
+                    sur mesure
+                <?php endif; ?>
             </h1>
         </div>
         <div class="hero-side">
             <div class="hero-tagline">
-                SMC Couture<br>
-                Dakar, Sénégal
+                <?php if(config('app.theme_mode') === 'alternative'): ?>
+                    Maison AURA<br>
+                    Dakar - Paris
+                <?php else: ?>
+                    
+                    Dakar, Sénégal
+                <?php endif; ?>
             </div>
             <div class="hero-actions">
                 <a href="<?php echo e(route('vetements.index')); ?>" class="btn-gold">
@@ -1609,8 +1598,6 @@ html {
             </div>
         </div>
     </div>
-
-
 </section>
 
 
@@ -1633,6 +1620,32 @@ html {
 
 
 <?php if($vetements->count() > 0): ?>
+<?php
+    $altImages = [
+        'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800',
+        'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800',
+        'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800',
+        'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800',
+        'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800',
+        'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800',
+    ];
+    $altNames = [
+        'Le Tailleur Émeraude',
+        'La Robe de Soirée Velours',
+        'Le Costume Tuxedo Impérial',
+        'La Robe en Soie de Nuit',
+        'L\'Ensemble Prestige Lin',
+        'Le Manteau Laine Cachemire',
+    ];
+    $altDescs = [
+        'Un tailleur d\'une élégance incomparable, ajusté avec soin pour une silhouette moderne et distinguée.',
+        'Une robe de soirée somptueuse en velours de soie, conçue pour capter la lumière lors des grands événements.',
+        'Le costume de cérémonie par excellence. Un smoking intemporel à la coupe ajustée et finitions faites main.',
+        'Une création fluide et aérienne en soie naturelle, offrant un confort absolu et un port altier.',
+        'Un ensemble raffiné alliant modernité et tradition, confectionné dans un lin d\'exception.',
+        'Un pardessus haut de gamme en laine vierge et cachemire, pièce maîtresse du vestiaire d\'hiver.',
+    ];
+?>
 <section id="collection-section" class="section section-warm">
     <div class="container">
         <div class="collection-header">
@@ -1649,31 +1662,42 @@ html {
         </div>
         <div class="collection-grid">
             <?php $__currentLoopData = $vetements; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vetement): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php
+                $index = $loop->index % 6;
+                if (config('app.theme_mode') === 'alternative') {
+                    $nom = $altNames[$index];
+                    $desc = $altDescs[$index];
+                    $_src = $altImages[$index];
+                } else {
+                    $nom = $vetement->nom;
+                    $desc = $vetement->description;
+                    $_src = $vetement->imageUrl;
+                    $_src = $_src && !str_starts_with($_src, 'http') ? \Illuminate\Support\Facades\Storage::url($_src) : ($_src ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800');
+                }
+            ?>
             <div class="vet-card" data-reveal="fade-up" data-delay="<?php echo e($loop->index * 100); ?>">
                 <div class="vet-img-wrap">
-                    <?php
-                        $_src = $vetement->imageUrl;
-                        $_src = $_src && !str_starts_with($_src, 'http') ? \Illuminate\Support\Facades\Storage::url($_src) : ($_src ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800');
-                    ?>
                     <img src="<?php echo e($_src); ?>"
-                         alt="<?php echo e($vetement->nom); ?>"
-                         onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';">
+                          alt="<?php echo e($nom); ?>"
+                          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';">
                     <?php if($vetement->categorie): ?>
                         <span class="vet-cat"><?php echo e($vetement->categorie->nom); ?></span>
                     <?php endif; ?>
+                    
+                    <span class="vet-price-float"><?php echo e(number_format($vetement->prix, 0, ',', ' ')); ?> CFA</span>
                 </div>
                 <div class="vet-body">
-                    <div class="vet-info-row">
-                        <h4 class="vet-name"><?php echo e($vetement->nom); ?></h4>
-                        <span class="vet-price-tag"><?php echo e(number_format($vetement->prix, 0, ',', ' ')); ?> CFA</span>
-                    </div>
-                    <p class="vet-desc"><?php echo e(\Illuminate\Support\Str::limit($vetement->description ?? '', 90)); ?></p>
+                    <h4 class="vet-name"><?php echo e($nom); ?></h4>
+                    <?php
+                        $displayDesc = (strlen(trim($desc ?? '')) > 10) ? \Illuminate\Support\Str::limit($desc, 95) : 'Création artisanale sur mesure, confectionnée avec soin pour révéler votre élégance naturelle.';
+                    ?>
+                    <p class="vet-desc"><?php echo e($displayDesc); ?></p>
                     
                     <div class="vet-actions-row">
-                        <button class="vet-btn-detail"
+                        <button class="vet-btn"
                                 data-bs-toggle="modal"
                                 data-bs-target="#vetementModal<?php echo e($vetement->id); ?>">
-                            <i class="fas fa-eye"></i> Détails
+                            <i class="fas fa-eye"></i> Voir le modèle
                         </button>
                         <?php
                             $adminPhone = \App\Models\Admin::first()?->telephone ?? '221771234567';
@@ -1681,17 +1705,16 @@ html {
                             if (strlen($waPhone) === 9 && (str_starts_with($waPhone, '77') || str_starts_with($waPhone, '78') || str_starts_with($waPhone, '76') || str_starts_with($waPhone, '70') || str_starts_with($waPhone, '75'))) {
                                 $waPhone = '221' . $waPhone;
                             }
-                            $_src = $vetement->imageUrl;
-                            $_src = $_src && !str_starts_with($_src, 'http') ? \Illuminate\Support\Facades\Storage::url($_src) : ($_src ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800');
                             $absoluteImgUrl = url($_src);
+                            $waText = config('app.theme_mode') === 'alternative' 
+                                ? "Bonjour AURA Couture, je souhaite commander le modèle " . $nom . " (Prix : " . number_format($vetement->prix, 0, ',', ' ') . " CFA). Voici la photo : " . $absoluteImgUrl
+                                : "Bonjour SMC Couture, je souhaite commander le modèle " . $vetement->nom . " (Prix : " . number_format($vetement->prix, 0, ',', ' ') . " CFA). Voici la photo : " . $absoluteImgUrl;
                         ?>
-                        <a href="https://wa.me/<?php echo e($waPhone); ?>?text=Bonjour%20SMC%20Couture,%20je%20souhaite%20commander%20le%20mod%C3%A8le%20<?php echo e(urlencode($vetement->nom)); ?>%20(Prix%20:%20<?php echo e(number_format($vetement->prix, 0, ',', ' ')); ?>%20CFA).%20Voici%20la%20photo%20:%20<?php echo e(urlencode($absoluteImgUrl)); ?>"
+                        <a href="https://wa.me/<?php echo e($waPhone); ?>?text=<?php echo e(urlencode($waText)); ?>"
                            target="_blank"
                            class="vet-btn-wa">
-                            <span>Commander</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 448 512" fill="currentColor">
-                                <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 448 512" fill="currentColor"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+                            Commander
                         </a>
                     </div>
                 </div>
@@ -1708,20 +1731,26 @@ html {
                                 <div id="carousel-<?php echo e($vetement->id); ?>" class="carousel slide" data-bs-ride="false">
                                     <div class="carousel-inner">
                                         <?php
-                                            $allImages = $vetement->images->sortBy('ordre');
-                                            $allModalImages = $allImages->count() > 0 ? $allImages : collect([
-                                                (object)['image_url' => 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200']
-                                            ]);
+                                            if (config('app.theme_mode') === 'alternative') {
+                                                $allModalImages = collect([
+                                                    (object)['image_url' => $_src]
+                                                ]);
+                                            } else {
+                                                $allImages = $vetement->images->sortBy('ordre');
+                                                $allModalImages = $allImages->count() > 0 ? $allImages : collect([
+                                                    (object)['image_url' => 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200']
+                                                ]);
+                                            }
                                             $fallbackUrl = 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';
                                         ?>
-                                        <?php $__currentLoopData = $allModalImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php $__currentLoopData = $allModalImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $indexImg => $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <?php
                                             $imgSrc = str_starts_with($img->image_url, 'http') ? $img->image_url : \Illuminate\Support\Facades\Storage::url($img->image_url);
                                         ?>
-                                        <div class="carousel-item <?php echo e($index === 0 ? 'active' : ''); ?>">
+                                        <div class="carousel-item <?php echo e($indexImg === 0 ? 'active' : ''); ?>">
                                             <div class="carousel-img-wrap rounded-4 overflow-hidden">
                                                 <img src="<?php echo e($imgSrc); ?>"
-                                                     alt="<?php echo e($vetement->nom); ?> - Image <?php echo e($index + 1); ?>"
+                                                     alt="<?php echo e($nom); ?> - Image <?php echo e($indexImg + 1); ?>"
                                                      onerror="this.onerror=null;this.src='<?php echo e($fallbackUrl); ?>';">
                                             </div>
                                         </div>
@@ -1765,7 +1794,7 @@ html {
                                     <i class="fas fa-times"></i>
                                 </button>
 
-                                <h3 class="modal-vet-name" style="margin-bottom: 0.5rem; padding-right: 2rem;"><?php echo e($vetement->nom); ?></h3>
+                                <h3 class="modal-vet-name" style="margin-bottom: 0.5rem; padding-right: 2rem;"><?php echo e($nom); ?></h3>
 
                                 <div class="modal-meta-row" style="justify-content: flex-start; gap: 0.5rem; margin-bottom: 1.5rem;">
                                     <?php if($vetement->categorie): ?>
@@ -1786,7 +1815,7 @@ html {
                                 </div>
 
                                 <h4 class="modal-desc-title">Description du modèle</h4>
-                                <p class="modal-desc" style="margin-bottom: 1.5rem;"><?php echo e($vetement->description ?: 'Aucune description disponible pour ce modèle de création artisanale.'); ?></p>
+                                <p class="modal-desc" style="margin-bottom: 1.5rem;"><?php echo e($desc ?: 'Aucune description disponible pour ce modèle de création artisanale.'); ?></p>
 
                                 <div class="modal-divider" style="margin: 1rem 0 1.5rem;"></div>
 
@@ -1843,7 +1872,6 @@ html {
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
@@ -1928,24 +1956,19 @@ html {
             </div>
             <h2 class="section-heading" style="margin-top: 1.25rem;">Votre expérience <em>couture</em></h2>
         </div>
-        <div class="process-grid">
+        <div class="process-grid" style="grid-template-columns: repeat(3, 1fr);">
             <div class="step-item" data-reveal="fade-up" data-delay="0">
                 <div class="step-dot">I</div>
-                <h4 class="step-name">Inscrivez-vous</h4>
-                <p class="step-desc">Créez votre compte client en quelques clics, simplement et rapidement.</p>
-            </div>
-            <div class="step-item" data-reveal="fade-up" data-delay="100">
-                <div class="step-dot">II</div>
                 <h4 class="step-name">Choisissez</h4>
                 <p class="step-desc">Parcourez notre collection et sélectionnez le modèle qui vous inspire.</p>
             </div>
-            <div class="step-item" data-reveal="fade-up" data-delay="200">
-                <div class="step-dot">III</div>
+            <div class="step-item" data-reveal="fade-up" data-delay="100">
+                <div class="step-dot">II</div>
                 <h4 class="step-name">Réservez</h4>
                 <p class="step-desc">Prenez rendez-vous pour la prise de mesures à votre convenance.</p>
             </div>
-            <div class="step-item" data-reveal="fade-up" data-delay="300">
-                <div class="step-dot">IV</div>
+            <div class="step-item" data-reveal="fade-up" data-delay="200">
+                <div class="step-dot">III</div>
                 <h4 class="step-name">Sublimez</h4>
                 <p class="step-desc">Recevez votre création unique et arborez votre style avec élégance.</p>
             </div>

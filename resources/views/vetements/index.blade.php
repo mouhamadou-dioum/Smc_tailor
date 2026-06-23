@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Nos Vêtements - Couture App')
+@section('title', config('app.theme_mode') === 'alternative' ? 'Nos Créations - AURA Couture' : 'Nos Vêtements - Couture App')
 
 @section('styles')
 <style>
@@ -132,14 +132,19 @@
     /* ── Image Wrapper ── */
     .vet-img-wrap {
         position: relative;
+        width: 100%;
+        padding-top: 133.33%; /* Ratio portrait 3:4 — technique fiable padding-top */
         overflow: hidden;
-        aspect-ratio: 3/4;
+        background: #F0EBE0;
         flex-shrink: 0;
     }
 
     .vet-img-wrap img {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-        height: 100%;
+        height: 100% !important;
         object-fit: cover;
         object-position: center top;
         transition: transform 0.45s ease;
@@ -787,8 +792,13 @@
 {{-- Hero Banner --}}
 <section class="vetements-hero">
     <div class="container">
-        <h1 class="hero-title">Nos Créations</h1>
-        <p class="hero-subtitle">Découvrez notre collection exclusive</p>
+        @if(config('app.theme_mode') === 'alternative')
+            <h1 class="hero-title">Collection d'Exception</h1>
+            <p class="hero-subtitle">Découvrez l'élégance à l'état pur</p>
+        @else
+            <h1 class="hero-title">Nos Créations</h1>
+            <p class="hero-subtitle">Découvrez notre collection exclusive</p>
+        @endif
     </div>
 </section>
 
@@ -822,21 +832,54 @@
         <div class="row g-4" id="vetementsGrid">
             @forelse($vetements as $vetement)
             @php
-                $allImages = $vetement->images->sortBy('ordre');
-                $mainImg = $allImages->first()?->image_url;
-                $cardImgSrc = $mainImg
-                    ? (str_starts_with($mainImg, 'http') ? $mainImg : \Illuminate\Support\Facades\Storage::url($mainImg))
-                    : 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';
+                $altImages = [
+                    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800',
+                    'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800',
+                    'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800',
+                    'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800',
+                    'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800',
+                    'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800',
+                ];
+                $altNames = [
+                    'Le Tailleur Émeraude',
+                    'La Robe de Soirée Velours',
+                    'Le Costume Tuxedo Impérial',
+                    'La Robe en Soie de Nuit',
+                    'L\'Ensemble Prestige Lin',
+                    'Le Manteau Laine Cachemire',
+                ];
+                $altDescs = [
+                    'Un tailleur d\'une élégance incomparable, ajusté avec soin pour une silhouette moderne et distinguée.',
+                    'Une robe de soirée somptueuse en velours de soie, conçue pour capter la lumière lors des grands événements.',
+                    'Le costume de cérémonie par excellence. Un smoking intemporel à la coupe ajustée et finitions faites main.',
+                    'Une création fluide et aérienne en soie naturelle, offrant un confort absolu et un port altier.',
+                    'Un ensemble raffiné alliant modernité et tradition, confectionné dans un lin d\'exception.',
+                    'Un pardessus haut de gamme en laine vierge et cachemire, pièce maîtresse du vestiaire d\'hiver.',
+                ];
+                $index = $loop->index % 6;
+                if (config('app.theme_mode') === 'alternative') {
+                    $nom = $altNames[$index];
+                    $desc = $altDescs[$index];
+                    $cardImgSrc = $altImages[$index];
+                } else {
+                    $nom = $vetement->nom;
+                    $desc = $vetement->description;
+                    $allImages = $vetement->images->sortBy('ordre');
+                    $mainImg = $allImages->first()?->image_url;
+                    $cardImgSrc = $mainImg
+                        ? (str_starts_with($mainImg, 'http') ? $mainImg : \Illuminate\Support\Facades\Storage::url($mainImg))
+                        : 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';
+                }
                 $fallbackUrl = 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';
             @endphp
-            <div class="col-md-6 col-lg-4 vetement-item" data-nom="{{ strtolower($vetement->nom) }}" data-desc="{{ strtolower($vetement->description ?? '') }}">
+            <div class="col-md-6 col-lg-4 vetement-item" data-nom="{{ strtolower($nom) }}" data-desc="{{ strtolower($desc ?? '') }}">
                 <div class="vet-card">
 
                     {{-- Image --}}
                     <div class="vet-img-wrap">
                         <img
                             src="{{ $cardImgSrc }}"
-                            alt="{{ $vetement->nom }}"
+                            alt="{{ $nom }}"
                             onerror="this.onerror=null;this.src='{{ $fallbackUrl }}';"
                         >
 
@@ -861,8 +904,8 @@
 
                     {{-- Body --}}
                     <div class="vet-card-body">
-                        <h5 class="vet-card-name">{{ $vetement->nom }}</h5>
-                        <p class="vet-card-desc">{{ \Illuminate\Support\Str::limit($vetement->description ?? '', 85) }}</p>
+                        <h5 class="vet-card-name">{{ $nom }}</h5>
+                        <p class="vet-card-desc">{{ \Illuminate\Support\Str::limit($desc ?? '', 85) }}</p>
 
                         <div class="vet-card-actions">
                             <button class="btn-detail"
@@ -877,8 +920,11 @@
                                     $waPhone = '221' . $waPhone;
                                 }
                                 $absoluteImgUrl = url($cardImgSrc);
+                                $waText = config('app.theme_mode') === 'alternative' 
+                                    ? "Bonjour AURA Couture, je souhaite commander le modèle " . $nom . " (Prix : " . number_format($vetement->prix, 0, ',', ' ') . " CFA). Voici la photo : " . $absoluteImgUrl
+                                    : "Bonjour SMC Couture, je souhaite commander le modèle " . $vetement->nom . " (Prix : " . number_format($vetement->prix, 0, ',', ' ') . " CFA). Voici la photo : " . $absoluteImgUrl;
                             @endphp
-                            <a href="https://wa.me/{{ $waPhone }}?text=Bonjour%20SMC%20Couture,%20je%20souhaite%20commander%20le%20mod%C3%A8le%20{{ urlencode($vetement->nom) }}%20(Prix%20:%20{{ number_format($vetement->prix, 0, ',', ' ') }}%20CFA).%20Voici%20la%20photo%20:%20{{ urlencode($absoluteImgUrl) }}"
+                            <a href="https://wa.me/{{ $waPhone }}?text={{ urlencode($waText) }}"
                                target="_blank"
                                class="btn-commander-wa">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-right: 5px;">
@@ -901,18 +947,24 @@
                                 <div id="carousel-{{ $vetement->id }}" class="carousel slide" data-bs-ride="false">
                                     <div class="carousel-inner">
                                         @php
-                                            $allModalImages = $allImages->count() > 0 ? $allImages : collect([
-                                                (object)['image_url' => 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200']
-                                            ]);
+                                            if (config('app.theme_mode') === 'alternative') {
+                                                $allModalImages = collect([
+                                                    (object)['image_url' => $cardImgSrc]
+                                                ]);
+                                            } else {
+                                                $allModalImages = $allImages->count() > 0 ? $allImages : collect([
+                                                    (object)['image_url' => 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200']
+                                                ]);
+                                            }
                                         @endphp
-                                        @foreach($allModalImages as $index => $img)
+                                        @foreach($allModalImages as $indexImg => $img)
                                         @php
                                             $imgSrc = str_starts_with($img->image_url, 'http') ? $img->image_url : \Illuminate\Support\Facades\Storage::url($img->image_url);
                                         @endphp
-                                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                        <div class="carousel-item {{ $indexImg === 0 ? 'active' : '' }}">
                                             <div class="carousel-img-wrap rounded-4 overflow-hidden">
                                                 <img src="{{ $imgSrc }}"
-                                                     alt="{{ $vetement->nom }} - Image {{ $index + 1 }}"
+                                                     alt="{{ $nom }} - Image {{ $indexImg + 1 }}"
                                                      onerror="this.onerror=null;this.src='{{ $fallbackUrl }}';">
                                             </div>
                                         </div>
@@ -956,7 +1008,7 @@
                                     <i class="fas fa-times"></i>
                                 </button>
 
-                                <h3 class="modal-vet-name" style="margin-bottom: 0.5rem; padding-right: 2rem;">{{ $vetement->nom }}</h3>
+                                <h3 class="modal-vet-name" style="margin-bottom: 0.5rem; padding-right: 2rem;">{{ $nom }}</h3>
 
                                 <div class="modal-meta-row" style="justify-content: flex-start; gap: 0.5rem; margin-bottom: 1.5rem;">
                                     @if($vetement->categorie)
@@ -976,7 +1028,7 @@
                                 </div>
 
                                 <h4 class="modal-desc-title">Description du modèle</h4>
-                                <p class="modal-desc" style="margin-bottom: 1.5rem;">{{ $vetement->description ?: 'Aucune description disponible pour ce modèle de création artisanale.' }}</p>
+                                <p class="modal-desc" style="margin-bottom: 1.5rem;">{{ $desc ?: 'Aucune description disponible pour ce modèle de création artisanale.' }}</p>
 
                                 <div class="modal-divider" style="margin: 1rem 0 1.5rem;"></div>
 
@@ -993,7 +1045,7 @@
                                         <i class="fas fa-map-marker-alt"></i>
                                         <div>
                                             <div class="spec-item-label">Création</div>
-                                            <div class="spec-item-value">Guédiawaye, Sénégal </div>
+                                            <div class="spec-item-value">Dakar, Sénégal </div>
                                         </div>
                                     </div>
                                 </div>

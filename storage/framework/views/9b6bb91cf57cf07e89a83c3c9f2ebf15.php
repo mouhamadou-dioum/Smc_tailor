@@ -117,11 +117,21 @@
                 </div>
                 
                 <div class="auth-card">
-                    <form method="POST" action="<?php echo e(route('admin.login')); ?>">
+                    <form method="POST" action="<?php echo e(route('admin.checkLogin')); ?>">
                         <?php echo csrf_field(); ?>
                         <div class="mb-3">
                             <label class="auth-label">Email</label>
-                            <input type="email" name="email" class="auth-input" required placeholder="admin@email.com">
+                            <input type="email" name="email" class="auth-input" required placeholder="admin@email.com" value="<?php echo e(old('email')); ?>">
+                            <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span class="text-danger small"><?php echo e($message); ?></span>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                         
                         <div class="mb-4">
@@ -132,6 +142,16 @@
                                     <i class="fas fa-eye" id="toggleIcon"></i>
                                 </button>
                             </div>
+                            <?php $__errorArgs = ['motDePasse'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span class="text-danger small"><?php echo e($message); ?></span>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                         
                         <button type="submit" class="auth-btn mb-3">Se connecter</button>

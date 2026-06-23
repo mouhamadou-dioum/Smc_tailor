@@ -3,23 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Concerns\UploadsToCloudinary;
 use App\Models\Admin;
-use App\Models\Vetement;
-use App\Models\RendezVous;
+use App\Models\Categorie;
 use App\Models\Client;
 use App\Models\Notification;
-use App\Models\Categorie;
-use Cloudinary\Cloudinary;
+use App\Models\RendezVous;
+use App\Models\Vetement;
 
 class AdminController extends Controller
 {
+    use UploadsToCloudinary;
     public function showLoginForm()
     {
         return view('admin.login');
@@ -107,31 +107,7 @@ class AdminController extends Controller
         }
     }
 
-    private function uploadToCloudinary(\Illuminate\Http\UploadedFile $file): string
-{
-    $cloudName = config('cloudinary.cloud_name');
-    $apiKey    = config('cloudinary.api_key');
-    $apiSecret = config('cloudinary.api_secret');
-
-    if (empty($cloudName) || empty($apiKey) || empty($apiSecret)) {
-        Log::error('Cloudinary: credentials manquants', [
-            'cloud_name' => $cloudName,
-            'api_key'    => $apiKey ? '***' : 'NULL',
-            'api_secret' => $apiSecret ? '***' : 'NULL',
-        ]);
-        throw new \RuntimeException('Cloudinary non configuré — vérifiez les variables d\'environnement.');
-    }
-
-    $client = new Cloudinary(
-        sprintf('cloudinary://%s:%s@%s', $apiKey, $apiSecret, $cloudName)
-    );
-
-    $result = $client->uploadApi()->upload($file->getRealPath(), [
-        'folder' => 'vetements',
-    ]);
-
-    return $result['secure_url'];
-}
+    // uploadToCloudinary() est fourni par le trait UploadsToCloudinary
 
     public function vetementsStore(Request $request)
     {
@@ -512,35 +488,7 @@ class AdminController extends Controller
         ];
     }
 
-    /**
-     * Numéro international chiffres uniquement (ex. 221771234567) pour l’API WhatsApp Cloud.
-     */
-    private function normalizeWhatsAppPhone(?string $raw): ?string
-    {
-        if ($raw === null || trim($raw) === '') {
-            return null;
-        }
-
-        $digits = preg_replace('/\D+/', '', $raw);
-        if ($digits === '') {
-            return null;
-        }
-
-        $country = preg_replace('/\D+/', '', (string) config('services.whatsapp.default_country_code', '221'));
-        if ($country === '') {
-            $country = '221';
-        }
-
-        if (str_starts_with($digits, $country)) {
-            return $digits;
-        }
-
-        if (str_starts_with($digits, '0')) {
-            $digits = substr($digits, 1);
-        }
-
-        return $country.$digits;
-    }
+    // normalizeWhatsAppPhone() est fourni par le trait UploadsToCloudinary
 
     public function updateProductionStatus(Request $request, $id)
     {

@@ -381,12 +381,12 @@
                         <?php if($rdv->statut === \App\Models\RendezVous::STATUT_EN_ATTENTE): ?>
                             <li><hr class="dropdown-divider" style="margin: 0.4rem 0;"></li>
                             <li>
-                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-success fw-bold" href="<?php echo e(route('admin.rendezvous.confirmer', $rdv->id)); ?>" onclick="return confirm('Confirmer ce RDV ?')">
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-success fw-bold btn-ajax-action" href="<?php echo e(route('admin.rendezvous.confirmer', $rdv->id)); ?>" data-confirm-msg="Confirmer ce RDV ?">
                                     <i class="fas fa-check" style="width: 16px;"></i> Confirmer
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger fw-bold" href="<?php echo e(route('admin.rendezvous.refuser', $rdv->id)); ?>" onclick="return confirm('Refuser ce RDV ?')">
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger fw-bold btn-ajax-action" href="<?php echo e(route('admin.rendezvous.refuser', $rdv->id)); ?>" data-confirm-msg="Refuser ce RDV ?">
                                     <i class="fas fa-times" style="width: 16px;"></i> Refuser
                                 </a>
                             </li>
@@ -406,5 +406,54 @@
 
     </div>
 </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('scripts'); ?>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.btn-ajax-action').forEach(function (button) {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            const url = this.getAttribute('href');
+            const msg = this.getAttribute('data-confirm-msg');
+            
+            if (confirm(msg)) {
+                // 1. Ouvrir immédiatement l'onglet vierge (requis pour contourner le bloqueur de popup)
+                const newTab = window.open('about:blank', '_blank');
+                
+                // 2. Lancer la requête AJAX vers la route Laravel
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Erreur serveur');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data.success && data.wa_link) {
+                        // 3. Rediriger l'onglet déjà ouvert vers le lien WhatsApp
+                        newTab.location.href = data.wa_link;
+                        // 4. Rafraîchir la page principale
+                        window.location.reload();
+                    } else {
+                        newTab.close();
+                        alert(data.message || 'Une erreur est survenue.');
+                    }
+                })
+                .catch(function(err) {
+                    newTab.close();
+                    alert('Une erreur réseau ou serveur est survenue.');
+                });
+            }
+        });
+    });
+});
+</script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\fallou\projet laravel\couture-app\resources\views/admin/rendezvous/index.blade.php ENDPATH**/ ?>

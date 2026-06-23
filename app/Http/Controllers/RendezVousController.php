@@ -7,13 +7,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use App\Models\Vetement;
-use App\Models\RendezVous;
-use App\Models\Notification;
+use App\Http\Concerns\UploadsToCloudinary;
 use App\Models\Admin;
+use App\Models\Notification;
+use App\Models\RendezVous;
+use App\Models\Vetement;
 
 class RendezVousController extends Controller
 {
+    use UploadsToCloudinary;
     public function suivi(Request $request)
     {
         $telephone = $request->query('telephone');
@@ -377,30 +379,5 @@ class RendezVousController extends Controller
         }
     }
 
-    private function normalizeWhatsAppPhone(?string $raw): ?string
-    {
-        if ($raw === null || trim($raw) === '') {
-            return null;
-        }
-
-        $digits = preg_replace('/\D+/', '', $raw);
-        if ($digits === '') {
-            return null;
-        }
-
-        $country = preg_replace('/\D+/', '', (string) config('services.whatsapp.default_country_code', '221'));
-        if ($country === '') {
-            $country = '221';
-        }
-
-        if (str_starts_with($digits, $country)) {
-            return $digits;
-        }
-
-        if (str_starts_with($digits, '0')) {
-            $digits = substr($digits, 1);
-        }
-
-        return $country . $digits;
-    }
+    // normalizeWhatsAppPhone() est fourni par le trait UploadsToCloudinary
 }

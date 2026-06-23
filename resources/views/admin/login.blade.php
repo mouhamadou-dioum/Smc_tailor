@@ -119,11 +119,14 @@
                 </div>
                 
                 <div class="auth-card">
-                    <form method="POST" action="{{ route('admin.login') }}">
+                    <form method="POST" action="{{ route('admin.checkLogin') }}">
                         @csrf
                         <div class="mb-3">
                             <label class="auth-label">Email</label>
-                            <input type="email" name="email" class="auth-input" required placeholder="admin@email.com">
+                            <input type="email" name="email" class="auth-input" required placeholder="admin@email.com" value="{{ old('email') }}">
+                            @error('email')
+                                <span class="text-danger small">{{ $message }}</span>
+                            @enderror
                         </div>
                         
                         <div class="mb-4">
@@ -134,6 +137,9 @@
                                     <i class="fas fa-eye" id="toggleIcon"></i>
                                 </button>
                             </div>
+                            @error('motDePasse')
+                                <span class="text-danger small">{{ $message }}</span>
+                            @enderror
                         </div>
                         
                         <button type="submit" class="auth-btn mb-3">Se connecter</button>

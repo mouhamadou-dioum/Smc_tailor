@@ -612,7 +612,13 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center navbar-wrapper">
                 <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('home') }}">
-                    <img src="{{ asset('logo.png') }}?v=4" alt="SMC Couture" style="height: 55px; width: auto; object-fit: contain; border-radius: 4px;">
+                    {{-- @if(config('app.theme_mode') === 'alternative')
+                        <div style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; color: #fff; line-height: 1;">
+                            <span style="color: var(--gold); font-weight: 500;">AURA</span> <span style="font-size: 1.1rem; vertical-align: middle; opacity: 0.8;">Couture</span>
+                        </div>
+                    @else
+                        <img src="{{ asset('logo.png') }}?v=4" alt="SMC Couture" style="height: 55px; width: auto; object-fit: contain; border-radius: 4px;">
+                    @endif --}}
                 </a>
 
                 {{-- Bouton hamburger (visible ≤991px) --}}
@@ -723,10 +729,17 @@
 
             {{-- Colonne marque --}}
             <div class="footer-col footer-col-brand">
-                <div class="footer-logo">SMC<span>—</span>COUTURE</div>
-                <p class="footer-about">
-                    Maison de couture sur mesure fondée en 2020 à Dakar. Chaque création est unique, pensée pour sublimer votre style avec des matières d'exception.
-                </p>
+                @if(config('app.theme_mode') === 'alternative')
+                    <div class="footer-logo">AURA<span>—</span>COUTURE</div>
+                    <p class="footer-about">
+                        Maison de haute couture d'exception. Chaque création est une pièce unique, façonnée pour sublimer votre allure avec raffinement.
+                    </p>
+                @else
+                    <div class="footer-logo">SMC<span>—</span>COUTURE</div>
+                    <p class="footer-about">
+                        Maison de couture sur mesure fondée en 2020 à Dakar. Chaque création est unique, pensée pour sublimer votre style avec des matières d'exception.
+                    </p>
+                @endif
                 <div class="footer-socials">
                     <a href="#" class="footer-social" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="footer-social" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -786,7 +799,11 @@
     {{-- Barre copyright --}}
     <div class="footer-bottom">
         <div class="footer-bottom-inner">
-            <span class="footer-copy">© {{ date('Y') }} SMC Couture. Tous droits réservés.</span>
+            @if(config('app.theme_mode') === 'alternative')
+                <span class="footer-copy">© {{ date('Y') }} AURA Couture. Tous droits réservés.</span>
+            @else
+                <span class="footer-copy">© {{ date('Y') }} SMC Couture. Tous droits réservés.</span>
+            @endif
             <span class="footer-copy">Fait avec <i class="fas fa-heart" style="color:var(--gold); font-size:0.6rem;"></i> à Dakar</span>
         </div>
     </div>

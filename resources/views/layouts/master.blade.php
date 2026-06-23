@@ -132,6 +132,9 @@
                 justify-content: flex-start;
                 gap: 3rem;
             }
+            .nav-actions {
+                flex: 1; /* étire pour occuper tout l'espace restant */
+            }
         }
 
         .navbar-brand {
@@ -166,6 +169,32 @@
             align-items: center;
             gap: 0.15rem;
         }
+
+        /* ── Réseaux sociaux Navbar ── */
+        .nav-socials {
+            display: flex;
+            align-items: center;
+            gap: 0.1rem;
+            margin-left: auto;
+            padding-left: 0.75rem;
+            border-left: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .nav-social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            color: rgba(255,255,255,0.45);
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: color 0.3s ease, background 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .nav-social-icon:hover { color: var(--gold); background: rgba(201,169,89,0.08); }
+        .nav-social-wa:hover { color: #25d366; background: rgba(37,211,102,0.08); }
 
         .nav-link-custom {
             font-family: 'Jost', sans-serif;
@@ -531,6 +560,17 @@
             .nav-actions form { padding: 0.5rem 1.25rem 0; width: 100%; }
             .nav-actions form .btn { width: 100%; text-align: center; border-radius: 0; }
 
+            .nav-socials {
+                margin-left: 0;
+                padding: 0.75rem 1.25rem;
+                border-left: none;
+                border-top: 1px solid rgba(255,255,255,0.04);
+                width: 100%;
+                gap: 0.5rem;
+            }
+
+            .nav-social-icon { width: 36px; height: 36px; font-size: 0.9rem; }
+
             /* Footer */
             .footer-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
             .footer-col-brand { grid-column: 1 / -1; }
@@ -641,7 +681,13 @@
             <div class="navbar-inner">
 
                 <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('home') }}">
-                    <img src="{{ asset('logo.png') }}?v=4" alt="SMC Couture" style="height: 55px; width: auto; object-fit: contain; border-radius: 4px;">
+                    @if(config('app.theme_mode') === 'alternative')
+                        <div style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; color: #fff; line-height: 1;">
+                            <span style="color: var(--gold); font-weight: 500;">AURA</span> <span style="font-size: 1.1rem; vertical-align: middle; opacity: 0.8;">Couture</span>
+                        </div>
+                    @else
+                        <img src="{{ asset('logo.png') }}?v=4" alt="SMC Couture" style="height: 55px; width: auto; object-fit: contain; border-radius: 4px;">
+                    @endif
                 </a>
 
                 <button class="navbar-toggler-custom" id="navToggler" aria-label="Menu">
@@ -683,6 +729,23 @@
                         <a href="{{ route('rendezvous.create') }}" class="nav-link-custom">
                             <i class="fas fa-calendar-plus"></i><span>Réserver</span>
                         </a>
+
+                        {{-- ─ Réseaux sociaux ─ --}}
+                        <div class="nav-socials">
+                            <a href="https://www.instagram.com" target="_blank" class="nav-social-icon" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://www.facebook.com" target="_blank" class="nav-social-icon" aria-label="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://www.tiktok.com" target="_blank" class="nav-social-icon" aria-label="TikTok">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                            @php $adminPhone = \App\Models\Admin::first()?->telephone ?? '221771234567'; $waNum = preg_replace('/\D+/', '', $adminPhone); if(strlen($waNum)===9) $waNum='221'.$waNum; @endphp
+                            <a href="https://wa.me/{{ $waNum }}" target="_blank" class="nav-social-icon nav-social-wa" aria-label="WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
                     @endif
                 </div>
 
@@ -717,10 +780,17 @@
  
                 {{-- Marque --}}
                 <div class="footer-col footer-col-brand">
-                    <a href="{{ route('home') }}" class="footer-logo">SMC<span>—</span>COUTURE</a>
-                    <p class="footer-about">
-                        Maison de couture sur mesure fondée en 2020 à Dakar. Chaque création est unique, pensée pour sublimer votre style avec des matières d'exception.
-                    </p>
+                    @if(config('app.theme_mode') === 'alternative')
+                        <a href="{{ route('home') }}" class="footer-logo">AURA<span>—</span>COUTURE</a>
+                        <p class="footer-about">
+                            Maison de haute couture d'exception. Chaque création est une pièce unique, façonnée pour sublimer votre allure avec raffinement.
+                        </p>
+                    @else
+                        <a href="{{ route('home') }}" class="footer-logo">SMC<span>—</span>COUTURE</a>
+                        <p class="footer-about">
+                            Maison de couture sur mesure fondée en 2020 à Dakar. Chaque création est unique, pensée pour sublimer votre style avec des matières d'exception.
+                        </p>
+                    @endif
                     <div class="footer-socials">
                         <a href="#" class="footer-social" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="footer-social" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -780,7 +850,11 @@
         {{-- Copyright --}}
         <div class="footer-bottom">
             <div class="footer-bottom-inner">
-                <span class="footer-copy">© {{ date('Y') }} SMC Couture. Tous droits réservés.</span>
+                @if(config('app.theme_mode') === 'alternative')
+                    <span class="footer-copy">© {{ date('Y') }} AURA Couture. Tous droits réservés.</span>
+                @else
+                    <span class="footer-copy">© {{ date('Y') }} SMC Couture. Tous droits réservés.</span>
+                @endif
                 <span class="footer-copy">Fait avec <i class="fas fa-heart" style="color:var(--gold); font-size:0.55rem;"></i> à Dakar, Sénégal</span>
             </div>
         </div>

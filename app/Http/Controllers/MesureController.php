@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use App\Models\Mesure;
+use App\Http\Concerns\UploadsToCloudinary;
 use App\Models\Client;
-use App\Models\RendezVous;
-use Cloudinary\Cloudinary;
+use App\Models\Mesure;
 
 class MesureController extends Controller
 {
+    use UploadsToCloudinary;
     public function create($clientId)
     {
         $client = Client::findOrFail($clientId);
@@ -92,29 +91,5 @@ class MesureController extends Controller
         return view('admin.mesures.print', compact('client', 'mesure'));
     }
 
-    private function uploadToCloudinary(\Illuminate\Http\UploadedFile $file, string $folder): string
-    {
-        $cloudName = config('cloudinary.cloud_name');
-        $apiKey    = config('cloudinary.api_key');
-        $apiSecret = config('cloudinary.api_secret');
-
-        if (empty($cloudName) || empty($apiKey) || empty($apiSecret)) {
-            Log::error('Cloudinary: credentials manquants', [
-                'cloud_name' => $cloudName,
-                'api_key'    => $apiKey ? '***' : 'NULL',
-                'api_secret' => $apiSecret ? '***' : 'NULL',
-            ]);
-            throw new \RuntimeException('Cloudinary non configuré — vérifiez les variables d\'environnement.');
-        }
-
-        $client = new Cloudinary(
-            sprintf('cloudinary://%s:%s@%s', $apiKey, $apiSecret, $cloudName)
-        );
-
-        $result = $client->uploadApi()->upload($file->getRealPath(), [
-            'folder' => $folder,
-        ]);
-
-        return $result['secure_url'];
-    }
+    // uploadToCloudinary() est fourni par le trait UploadsToCloudinary
 }
