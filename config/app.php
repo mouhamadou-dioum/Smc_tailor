@@ -133,6 +133,6 @@ return [
     | 'alternative' (AURA Couture haut de gamme, version "vendue").
     |
     */
-    'theme_mode' => env('APP_THEME_MODE', 'alternative'),
+    'theme_mode' => env('APP_THEME_MODE', 'client'),
 
 ];

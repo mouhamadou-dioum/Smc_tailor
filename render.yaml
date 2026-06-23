@@ -35,3 +35,5 @@ services:
         value: error
       - key: MAIL_MAILER
         value: smtp
+      - key: APP_THEME_MODE
+        value: client
