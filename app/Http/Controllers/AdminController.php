@@ -115,10 +115,10 @@ class AdminController extends Controller
             'nom'             => 'required|string|max:255',
             'description'     => 'nullable|string',
             'prix'            => 'required|numeric|min:0',
-            'image_principale' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'image_detail_1'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'image_detail_2'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'image_detail_3'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image_principale' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'image_detail_1'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'image_detail_2'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'image_detail_3'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
             'categorie_id'    => 'nullable|exists:categories,id',
         ]);
 
@@ -163,10 +163,10 @@ class AdminController extends Controller
             'nom'             => 'required|string|max:255',
             'description'     => 'nullable|string',
             'prix'            => 'required|numeric|min:0',
-            'image_principale' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'image_detail_1'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'image_detail_2'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'image_detail_3'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image_principale' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'image_detail_1'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'image_detail_2'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'image_detail_3'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
             'categorie_id'    => 'nullable|exists:categories,id',
         ]);
 
