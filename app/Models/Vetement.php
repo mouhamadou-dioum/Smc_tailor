@@ -12,6 +12,7 @@ class Vetement extends Model
     protected $fillable = [
         'nom',
         'description',
+        'taille',
         'prix',
         'disponible',
         'dateAjout',

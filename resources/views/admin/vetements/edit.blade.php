@@ -56,6 +56,33 @@
         border-bottom: 2px solid var(--gray-200);
     }
 
+    /* Badges taille */
+    .taille-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.4rem;
+    }
+    .taille-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 36px;
+        border: 2px solid var(--gray-300);
+        border-radius: 8px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--gray-600);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+        background: #fff;
+    }
+    .taille-badge.sur-mesure { width: auto; padding: 0 0.75rem; }
+    .taille-badge:hover { border-color: var(--primary); color: var(--primary); background: rgba(201,169,89,0.06); }
+    .taille-badge.active { border-color: var(--primary); background: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(201,169,89,0.3); }
+
     .upload-zone {
         border: 2px dashed var(--gray-300);
         border-radius: 16px;
@@ -188,8 +215,22 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label-custom">Description</label>
-                            <textarea name="description" class="form-control form-control-custom" rows="4">{{ $vetement->description }}</textarea>
+                            <label class="form-label-custom">Description <span style="color:var(--gray-400);font-weight:400;font-size:0.82rem;">(optionnel)</span></label>
+                            <textarea name="description" class="form-control form-control-custom" rows="4">{{ old('description', $vetement->description) }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label-custom">Taille disponible <span style="color:var(--gray-400);font-weight:400;font-size:0.82rem;">(optionnel)</span></label>
+                            <input type="hidden" name="taille" id="taille_hidden" value="{{ old('taille', $vetement->taille) }}">
+                            <div class="taille-badges">
+                                @foreach(['XS','S','M','L','XL','XXL','Sur mesure'] as $t)
+                                @php $currentTaille = old('taille', $vetement->taille); @endphp
+                                <span class="taille-badge {{ $t === 'Sur mesure' ? 'sur-mesure' : '' }} {{ $currentTaille === $t ? 'active' : '' }}"
+                                      onclick="selectTaille(this, '{{ $t }}')">
+                                    {{ $t }}
+                                </span>
+                                @endforeach
+                            </div>
                         </div>
 
                         <div class="row">
@@ -291,7 +332,6 @@
 function previewImage(input, previewId) {
     const preview = document.getElementById(previewId);
     const zone = input.closest('.upload-zone');
-
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -304,6 +344,17 @@ function previewImage(input, previewId) {
             if (p) p.style.display = 'none';
         }
         reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function selectTaille(el, val) {
+    document.querySelectorAll('.taille-badge').forEach(b => b.classList.remove('active'));
+    const hidden = document.getElementById('taille_hidden');
+    if (hidden.value === val) {
+        hidden.value = '';
+    } else {
+        el.classList.add('active');
+        hidden.value = val;
     }
 }
 </script>

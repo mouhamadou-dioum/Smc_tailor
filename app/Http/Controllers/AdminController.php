@@ -124,7 +124,8 @@ class AdminController extends Controller
 
         $vetement = Vetement::create([
             'nom'          => $request->nom,
-            'description'  => $request->description,
+            'description'  => $request->description ?: null,
+            'taille'       => $request->taille ?: null,
             'prix'         => $request->prix,
             'disponible'   => $request->has('disponible'),
             'dateAjout'    => now(),
@@ -172,7 +173,8 @@ class AdminController extends Controller
 
         $vetement->update([
             'nom'          => $request->nom,
-            'description'  => $request->description,
+            'description'  => $request->description ?: null,
+            'taille'       => $request->taille ?: null,
             'prix'         => $request->prix,
             'disponible'   => $request->has('disponible'),
             'categorie_id' => $request->categorie_id,

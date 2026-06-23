@@ -421,7 +421,7 @@ body {
 .vet-img-wrap {
     position: relative;
     width: 100%;
-    padding-top: 133.33%; /* Ratio portrait 3:4 — technique fiable padding-top */
+    padding-top: 110%; /* Ratio réduit pour des cards moins hautes */
     overflow: hidden;
     background: #F0EBE0;
     flex-shrink: 0;
@@ -538,9 +538,9 @@ body {
 }
 
 .vet-btn:hover {
-    background: var(--charcoal);
-    border-color: var(--charcoal);
-    color: var(--gold-light);
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--charcoal);
 }
 
 /* Bouton WhatsApp — style luxe sombre */
@@ -1690,10 +1690,19 @@ html {
                 </div>
                 <div class="vet-body">
                     <h4 class="vet-name">{{ $nom }}</h4>
+                    @if($vetement->taille)
+                    <div style="margin-bottom:0.75rem;">
+                        <span style="display:inline-flex;align-items:center;gap:0.35rem;background:rgba(201,169,89,0.1);border:1px solid rgba(201,169,89,0.3);color:#7a5f1a;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:0.25rem 0.65rem;border-radius:999px;">
+                            <i class="fas fa-ruler-horizontal" style="font-size:0.55rem;"></i> {{ $vetement->taille }}
+                        </span>
+                    </div>
+                    @endif
                     @php
-                        $displayDesc = (strlen(trim($desc ?? '')) > 10) ? \Illuminate\Support\Str::limit($desc, 95) : 'Création artisanale sur mesure, confectionnée avec soin pour révéler votre élégance naturelle.';
+                        $displayDesc = (strlen(trim($desc ?? '')) > 10) ? \Illuminate\Support\Str::limit($desc, 95) : null;
                     @endphp
+                    @if($displayDesc)
                     <p class="vet-desc">{{ $displayDesc }}</p>
+                    @endif
                     
                     <div class="vet-actions-row">
                         <button class="vet-btn"
