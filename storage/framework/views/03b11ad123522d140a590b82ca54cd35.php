@@ -37,7 +37,7 @@ body {
 .hero-bg {
     position: absolute;
     inset: 0;
-    background: url("<?php echo e(asset('headerrrr1.png')); ?>") center 30%/cover no-repeat;
+    background: url("<?php echo e(asset('heros5.png')); ?>") center 30%/cover no-repeat;
 }
 
 .hero-overlay {

@@ -39,7 +39,7 @@ body {
 .hero-bg {
     position: absolute;
     inset: 0;
-    background: url("{{ asset('headerrrr1.png') }}") center 30%/cover no-repeat;
+    background: url("{{ asset('heros5.png') }}") center 30%/cover no-repeat;
 }
 
 .hero-overlay {
