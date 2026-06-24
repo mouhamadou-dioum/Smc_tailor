@@ -129,8 +129,8 @@ body {
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    padding: 1rem 2rem;
-    background: var(--charcoal);
+    padding: 0.9rem 2rem;
+    background: linear-gradient(135deg, var(--charcoal) 0%, #2d2d2d 100%);
     color: var(--gold-light);
     font-family: 'Jost', sans-serif;
     font-size: 0.75rem;
@@ -138,22 +138,34 @@ body {
     letter-spacing: 2px;
     text-transform: uppercase;
     text-decoration: none;
-    border: 1px solid var(--charcoal);
+    border: 1.5px solid rgba(201,169,89,0.35);
+    border-radius: 50px;
     transition: var(--transition);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    position: relative;
+    overflow: hidden;
 }
 
-.btn-gold:hover {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: var(--charcoal);
+.btn-gold::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    border-radius: 50px;
 }
+
+.btn-gold:hover::before { opacity: 1; }
+.btn-gold:hover { color: var(--charcoal); border-color: var(--gold); box-shadow: 0 10px 28px rgba(201,169,89,0.4); transform: translateY(-2px); }
+.btn-gold > * { position: relative; z-index: 1; }
 
 .btn-outline-gold {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    padding: 1rem 2rem;
+    padding: 0.9rem 2rem;
     background: transparent;
     color: var(--charcoal);
     font-family: 'Jost', sans-serif;
@@ -162,14 +174,26 @@ body {
     letter-spacing: 2px;
     text-transform: uppercase;
     text-decoration: none;
-    border: 1px solid var(--charcoal);
+    border: 1.5px solid var(--charcoal);
+    border-radius: 50px;
     transition: var(--transition);
+    position: relative;
+    overflow: hidden;
 }
 
-.btn-outline-gold:hover {
+.btn-outline-gold::before {
+    content: '';
+    position: absolute;
+    inset: 0;
     background: var(--charcoal);
-    color: var(--gold-light);
+    border-radius: 50px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
 }
+
+.btn-outline-gold:hover::before { opacity: 1; }
+.btn-outline-gold:hover { color: var(--gold-light); border-color: var(--charcoal); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,0.18); }
+.btn-outline-gold > * { position: relative; z-index: 1; }
 
 /* ─── MARQUEE ─── */
 .marquee-strip {
@@ -402,29 +426,51 @@ body {
 .collection-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2.5rem;
+    gap: 2rem;
     justify-content: center;
 }
 
+/* ── Card principale ── */
 .vet-card {
     display: flex;
     flex-direction: column;
     background: #fff;
     overflow: hidden;
-    transition: var(--transition);
-    border: 1px solid var(--border-gold);
-    border-radius: 2px;
+    transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.5s ease, border-color 0.3s ease;
+    border: 1.5px solid rgba(201,169,89,0.14);
+    border-radius: 28px;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+    position: relative;
 }
 
-.vet-card:hover { transform: translateY(-6px); box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
+.vet-card:hover {
+    transform: translateY(-12px) scale(1.012);
+    box-shadow: 0 32px 64px rgba(0,0,0,0.14), 0 8px 24px rgba(201,169,89,0.1);
+    border-color: rgba(201,169,89,0.42);
+}
+
+/* Lueur dorée au hover */
+.vet-card::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, rgba(201,169,89,0.18) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+.vet-card:hover::after { opacity: 1; }
 
 .vet-img-wrap {
     position: relative;
     width: 100%;
-    padding-top: 110%; /* Ratio réduit pour des cards moins hautes */
+    padding-top: 108%;
     overflow: hidden;
-    background: #F0EBE0;
+    background: linear-gradient(145deg, #F5EFE4, #EDE5D6);
     flex-shrink: 0;
+    border-radius: 28px 28px 0 0;
 }
 
 .vet-img-wrap img {
@@ -435,26 +481,34 @@ body {
     height: 100% !important;
     object-fit: cover;
     object-position: center top;
-    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.vet-card:hover .vet-img-wrap img { transform: scale(1.08); }
+.vet-card:hover .vet-img-wrap img { transform: scale(1.1); }
 
 .vet-cat {
     position: absolute;
-    top: 1.25rem;
-    left: 1.25rem;
-    font-size: 0.6rem;
-    font-weight: 600;
-    letter-spacing: 3px;
+    top: 1rem;
+    left: 1rem;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--charcoal);
-    background: rgba(248, 245, 238, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(201, 169, 89, 0.35);
-    padding: 0.35rem 0.85rem;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(201,169,89,0.35);
+    padding: 0.32rem 0.85rem;
+    border-radius: 999px;
     z-index: 2;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+.vet-card:hover .vet-cat {
+    background: var(--gold);
+    color: #fff;
+    border-color: transparent;
 }
 
 .vet-img-wrap::before {
@@ -463,12 +517,12 @@ body {
     inset: 0;
     background: linear-gradient(
         to top,
-        rgba(10,10,10,0.65) 0%,
-        rgba(10,10,10,0.2) 35%,
-        transparent 65%
+        rgba(10,10,10,0.72) 0%,
+        rgba(10,10,10,0.18) 42%,
+        transparent 68%
     );
     opacity: 0.85;
-    transition: opacity 0.6s ease;
+    transition: opacity 0.5s ease;
     z-index: 1;
     pointer-events: none;
 }
@@ -478,29 +532,36 @@ body {
 /* Prix flottant au bas de l'image */
 .vet-price-float {
     position: absolute;
-    bottom: 1.1rem;
-    right: 1.1rem;
+    bottom: 1rem;
+    left: 1rem;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--gold-light);
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: #fff;
     z-index: 3;
-    text-shadow: 0 1px 6px rgba(0,0,0,0.5);
-    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    letter-spacing: 0.3px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.28);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
 }
+.vet-card:hover .vet-price-float { transform: scale(1.06); }
 
 .vet-body {
-    padding: 1.5rem 1.5rem 1.4rem;
+    padding: 1.5rem 1.6rem 1.4rem;
     flex: 1;
     display: flex;
     flex-direction: column;
-    border-top: 1px solid var(--border-gold);
-    background: linear-gradient(to bottom, #fffefb, #fff);
+    background: #fff;
+    border-radius: 0 0 28px 28px;
+    position: relative;
+    z-index: 1;
 }
 
 .vet-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.4rem;
+    font-size: 1.45rem;
     font-weight: 500;
     color: var(--charcoal);
     margin-bottom: 0.5rem;
@@ -509,62 +570,80 @@ body {
 }
 
 .vet-desc {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     font-weight: 300;
     color: var(--warm-gray);
-    line-height: 1.75;
+    line-height: 1.78;
     flex: 1;
-    margin-bottom: 1.4rem;
+    margin-bottom: 1.25rem;
     font-style: italic;
 }
 
-/* Bouton Détails */
+/* Bouton Voir le modèle (accueil) */
 .vet-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.6rem;
-    padding: 0.9rem 1.2rem;
-    background: transparent;
-    color: var(--charcoal);
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 2.5px;
+    gap: 0.55rem;
+    padding: 0.78rem 1.25rem;
+    background: rgba(201,169,89,0.07);
+    color: var(--gold-dark);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     text-decoration: none;
-    border: 1px solid rgba(201,169,89,0.45);
-    transition: var(--transition);
+    border: 1.5px solid rgba(201,169,89,0.32);
+    border-radius: 999px;
+    transition: all 0.38s cubic-bezier(0.34,1.56,0.64,1);
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
-
+.vet-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    border-radius: 999px;
+}
+.vet-btn:hover::before { opacity: 1; }
 .vet-btn:hover {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: var(--charcoal);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(201,169,89,0.42);
+    transform: translateY(-2px);
 }
+.vet-btn > * { position: relative; z-index: 1; }
+.vet-btn i { transition: transform 0.3s ease; }
+.vet-btn:hover i { transform: translateX(3px); }
 
-/* Bouton WhatsApp — style luxe sombre */
+/* Bouton WhatsApp / Commander */
 .vet-btn-wa {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.6rem;
-    padding: 0.9rem 1.2rem;
-    background: var(--charcoal);
-    color: var(--gold-light) !important;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 2.5px;
+    gap: 0.55rem;
+    padding: 0.78rem 1.25rem;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #fff !important;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     text-decoration: none;
-    border: 1px solid var(--charcoal);
-    transition: var(--transition);
+    border: none;
+    border-radius: 999px;
+    transition: all 0.38s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow: 0 4px 16px rgba(37,211,102,0.3);
 }
-
 .vet-btn-wa:hover {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: var(--charcoal) !important;
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(37,211,102,0.45);
 }
 
 /* ─── PROCESS ─── */
@@ -641,10 +720,12 @@ body {
     background: linear-gradient(145deg, #FDFCF9, #F4EFE4);
     padding: 2.5rem 2rem;
     border: 1px solid var(--border-gold);
-    border-top: 2.5px solid var(--gold);
+    border-top: 3px solid var(--gold);
+    border-radius: 20px;
     position: relative;
     transition: var(--transition);
     overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
 }
 
 .testi-card::before {
@@ -1079,44 +1160,27 @@ html {
     /* Contact responsive removed */
 }
 
-/* ── Actions Row on Card ── */
+/* ── Actions Row on Card (accueil) ── */
 .vet-actions-row {
     display: flex;
-    gap: 0;
+    gap: 0.65rem;
     margin-top: auto;
-    border-top: 1px solid var(--border-gold);
+    padding-top: 1rem;
 }
 
 .vet-actions-row .vet-btn,
 .vet-actions-row .vet-btn-wa {
     flex: 1;
-    border-radius: 0;
-}
-
-.vet-actions-row .vet-btn {
-    border-top: none;
-    border-right: 1px solid var(--border-gold);
-    border-bottom: none;
-    border-left: none;
-    padding: 0.85rem 0.75rem;
-}
-
-.vet-actions-row .vet-btn-wa {
-    border-top: none;
-    border-right: none;
-    border-bottom: none;
-    border-left: 1px solid rgba(26,26,26,0.15);
-    padding: 0.85rem 0.75rem;
 }
 
 
 /* ── Modal Premium Couture ── */
 .modal-content {
-    border: 1px solid rgba(201,169,89,0.2);
-    border-radius: 24px;
+    border: 1px solid rgba(201,169,89,0.22);
+    border-radius: 28px;
     overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.25);
-    background: #fdfcf9; /* Teinte ivoire douce */
+    box-shadow: 0 32px 80px rgba(0,0,0,0.28), 0 8px 24px rgba(201,169,89,0.08);
+    background: #fdfcf9;
 }
 
 .modal-body {
@@ -1441,57 +1505,68 @@ html {
 
 .btn-modal-reserve-premium {
     flex-grow: 1;
-    background: linear-gradient(135deg, var(--charcoal), var(--charcoal-mid));
+    background: linear-gradient(135deg, var(--charcoal), #2a2a3a);
     color: var(--gold-light) !important;
     border: 1.5px solid var(--gold);
-    border-radius: 8px;
-    padding: 0.85rem 1.75rem;
+    border-radius: 999px;
+    padding: 0.88rem 1.75rem;
     font-family: 'Jost', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
+    font-size: 0.73rem;
+    font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
     text-decoration: none;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.16);
+    position: relative;
+    overflow: hidden;
 }
-
+.btn-modal-reserve-premium::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    border-radius: 999px;
+}
+.btn-modal-reserve-premium:hover::before { opacity: 1; }
 .btn-modal-reserve-premium:hover {
-    background: var(--gold);
     color: var(--charcoal) !important;
-    border-color: var(--gold);
+    border-color: transparent;
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(201,169,89,0.35);
+    box-shadow: 0 10px 28px rgba(201,169,89,0.4);
 }
+.btn-modal-reserve-premium > * { position: relative; z-index: 1; }
 
 .btn-modal-whatsapp {
     background: transparent;
     color: #25d366 !important;
     border: 1.5px solid #25d366;
-    border-radius: 8px;
-    padding: 0.85rem 1.5rem;
+    border-radius: 999px;
+    padding: 0.88rem 1.5rem;
     font-family: 'Jost', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
+    font-size: 0.73rem;
+    font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     text-decoration: none;
 }
-
 .btn-modal-whatsapp:hover {
-    background: #25d366;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
     color: #fff !important;
+    border-color: transparent;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.25);
+    box-shadow: 0 10px 24px rgba(37, 211, 102, 0.35);
 }
 
 .modal-disclaimer {
@@ -1648,7 +1723,7 @@ html {
         'Un pardessus haut de gamme en laine vierge et cachemire, pièce maîtresse du vestiaire d\'hiver.',
     ];
 @endphp
-<section id="collection-section" class="section section-warm">
+<section id="collection-section" class="section section-warm" style="background: linear-gradient(180deg, #ffffff 0%, #f9f5ec 40%, #ffffff 100%); padding-top: 5.5rem; padding-bottom: 6rem;">
     <div class="container">
         <div class="collection-header">
             <div data-reveal="fade-up">
@@ -1657,9 +1732,10 @@ html {
                     <span class="section-label">Collection</span>
                 </div>
                 <h2 class="section-heading">Nos créations <em>récentes</em></h2>
+                <p style="font-size:0.9rem; color: var(--warm-gray); font-weight:300; margin-top:0.75rem; max-width:420px; line-height:1.7;">Chaque pièce, une histoire d'élégance façonnée pour sublimer votre allure.</p>
             </div>
-            <a href="{{ route('vetements.index') }}" class="btn-outline-gold" data-reveal="fade-up" data-delay="100">
-                Voir tout <i class="fas fa-arrow-right" style="font-size:0.6rem;"></i>
+            <a href="{{ route('vetements.index') }}" class="btn-outline-gold" data-reveal="fade-up" data-delay="100" style="border-radius:999px; padding:0.8rem 1.75rem;">
+                <span>Voir toute la collection</span> <i class="fas fa-arrow-right" style="font-size:0.58rem;"></i>
             </a>
         </div>
         <div class="collection-grid">
