@@ -11,11 +11,11 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         Admin::updateOrCreate(
-            ['email' => 'loufadioum2004@gmail.com'],
+            ['email' => env('ADMIN_EMAIL', 'admin@couture.com')],
             [
-                'nom'        => 'Admin',
-                'telephone' => '221778629935',
-                'motDePasse' => Hash::make('admin123'),
+                'nom'        => env('ADMIN_NOM', 'Admin'),
+                'telephone'  => env('ADMIN_TELEPHONE', '221770000000'),
+                'motDePasse' => Hash::make(env('ADMIN_PASSWORD', 'ChangeMe123!')),
             ]
         );
         $this->command->info('Admin créé avec succès !');

@@ -1,4 +1,3 @@
-# Configuration de déploiement Render
 services:
   - type: web
     name: couture-app
@@ -22,9 +21,26 @@ services:
         generateValue: true
       - key: APP_URL
         value: https://couture-app.onrender.com
-      # CORRECTIF : Utilisation du pilote MySQL comme demandé (les identifiants DB_HOST, DB_PASSWORD, etc. sont configurés sur le tableau de bord Render)
       - key: DB_CONNECTION
-        value: mysql
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: couture-app-db
+          property: host
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_DATABASE
+        fromDatabase:
+          name: couture-app-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: couture-app-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: couture-app-db
+          property: password
       - key: SESSION_DRIVER
         value: file
       - key: CACHE_DRIVER
@@ -37,3 +53,10 @@ services:
         value: smtp
       - key: APP_THEME_MODE
         value: client
+
+databases:
+  - name: couture-app-db
+    databaseName: couture_app
+    region: frankfurt
+    plan: free
+    ipAllowList: []

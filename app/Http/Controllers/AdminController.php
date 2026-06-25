@@ -100,11 +100,36 @@ class AdminController extends Controller
 
         $path = $image->image_url;
 
-        if (str_starts_with($path, 'http')) return;
+        // Suppression sur Cloudinary si l'URL est distante
+        if (str_starts_with($path, 'http')) {
+            try {
+                $publicId = $this->extractCloudinaryPublicId($path);
+                if ($publicId) {
+                    \Cloudinary\Cloudinary::admin()->deleteAssets([$publicId]);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Échec suppression Cloudinary', [
+                    'url' => $path,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+            return;
+        }
 
         if (Storage::disk('public')->exists($path)) {
             Storage::disk('public')->delete($path);
         }
+    }
+
+    private function extractCloudinaryPublicId(string $url): ?string
+    {
+        // Extrait le public_id d'une URL Cloudinary
+        // Format: https://res.cloudinary.com/{cloud_name}/image/upload/v{version}/{public_id}.{ext}
+        if (!preg_match('#/image/upload/(?:v\d+/)?(.+?)(?:\.\w+)?$#', $url, $matches)) {
+            return null;
+        }
+        $publicId = $matches[1];
+        return $publicId !== '' ? $publicId : null;
     }
 
     // uploadToCloudinary() est fourni par le trait UploadsToCloudinary
