@@ -428,216 +428,315 @@ body {
     justify-content: center;
 }
 
-/* ── Card principale ── */
+/* ═══════════════════════════════════════
+   CARD DESIGN (same as collection page)
+═══════════════════════════════════════ */
 .vet-card {
+    background: #fff;
+    border-radius: 28px;
+    border: 1.5px solid rgba(201,169,89,0.12);
+    box-shadow: 0 6px 28px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+    overflow: hidden;
+    transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    background: #fff;
-    overflow: hidden;
-    transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.5s ease, border-color 0.3s ease;
-    border: 1.5px solid rgba(201,169,89,0.14);
-    border-radius: 28px;
-    box-shadow: 0 6px 28px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
     position: relative;
 }
-
 .vet-card:hover {
-    transform: translateY(-12px) scale(1.012);
-    box-shadow: 0 32px 64px rgba(0,0,0,0.14), 0 8px 24px rgba(201,169,89,0.1);
-    border-color: rgba(201,169,89,0.42);
+    transform: translateY(-10px) scale(1.012);
+    box-shadow: 0 28px 56px rgba(0,0,0,0.13), 0 8px 20px rgba(201,169,89,0.1);
+    border-color: rgba(201,169,89,0.4);
 }
-
-/* Lueur dorée au hover */
-.vet-card::after {
+.vet-card::before {
     content: '';
     position: absolute;
     inset: -1px;
     border-radius: 28px;
-    background: linear-gradient(135deg, rgba(201,169,89,0.18) 0%, transparent 60%);
+    background: linear-gradient(135deg, rgba(201,169,89,0.15) 0%, transparent 55%);
     opacity: 0;
     transition: opacity 0.4s ease;
     pointer-events: none;
     z-index: 0;
 }
-.vet-card:hover::after { opacity: 1; }
+.vet-card:hover::before { opacity: 1; }
 
+/* ── Image Wrapper ── */
 .vet-img-wrap {
     position: relative;
     width: 100%;
-    padding-top: 108%;
+    padding-top: 133.33%;
     overflow: hidden;
     background: linear-gradient(145deg, #F5EFE4, #EDE5D6);
     flex-shrink: 0;
-    border-radius: 28px 28px 0 0;
 }
-
 .vet-img-wrap img {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100% !important;
+    top: 0; left: 0;
+    width: 100%; height: 100% !important;
     object-fit: cover;
     object-position: center top;
-    transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.vet-card:hover .vet-img-wrap img {
+    transform: scale(1.07);
 }
 
-.vet-card:hover .vet-img-wrap img { transform: scale(1.1); }
-
-.vet-cat {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--charcoal);
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(201,169,89,0.35);
-    padding: 0.32rem 0.85rem;
-    border-radius: 999px;
-    z-index: 2;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-}
-.vet-card:hover .vet-cat {
-    background: var(--gold);
-    color: #fff;
-    border-color: transparent;
-}
-
-.vet-img-wrap::before {
+/* Shimmer overlay on hover */
+.vet-img-wrap::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        to top,
-        rgba(10,10,10,0.72) 0%,
-        rgba(10,10,10,0.18) 42%,
-        transparent 68%
-    );
-    opacity: 0.85;
-    transition: opacity 0.5s ease;
-    z-index: 1;
-    pointer-events: none;
+    background: linear-gradient(135deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 60%);
+    background-size: 200% 200%;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.vet-card:hover .vet-img-wrap::after {
+    opacity: 1;
+    animation: shimmer 1.2s ease forwards;
+}
+@keyframes shimmer {
+    from { background-position: 200% 200%; }
+    to   { background-position: -200% -200%; }
 }
 
-.vet-card:hover .vet-img-wrap::before { opacity: 1; }
-
-/* Prix flottant au bas de l'image */
-.vet-price-float {
+/* ── New Badge ── */
+.new-badge {
     position: absolute;
-    bottom: 1rem;
-    left: 1rem;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.08rem;
-    font-weight: 700;
+    top: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
     color: #fff;
-    z-index: 3;
-    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-    padding: 0.35rem 0.9rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0.28rem 0.65rem;
     border-radius: 999px;
-    letter-spacing: 0.3px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.28);
-    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 3;
+    box-shadow: 0 4px 10px rgba(238,90,36,0.35);
+    animation: pulse-new 2.5s ease-in-out infinite;
 }
-.vet-card:hover .vet-price-float { transform: scale(1.06); }
-
-.vet-body {
-    padding: 1.5rem 1.6rem 1.4rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: #fff;
-    border-radius: 0 0 28px 28px;
-    position: relative;
-    z-index: 1;
+@keyframes pulse-new {
+    0%, 100% { box-shadow: 0 4px 10px rgba(238,90,36,0.35); }
+    50%       { box-shadow: 0 4px 18px rgba(238,90,36,0.6); }
 }
 
-.vet-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.45rem;
-    font-weight: 500;
+/* ── Category Badge ── */
+.cat-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(255,255,255,0.96);
     color: var(--charcoal);
-    margin-bottom: 0.5rem;
-    line-height: 1.2;
-    text-transform: capitalize;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0.3rem 0.85rem;
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.7);
+    z-index: 3;
+    transition: all 0.28s ease;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+.vet-card:hover .cat-badge {
+    background: var(--gold);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(201,169,89,0.35);
 }
 
-.vet-desc {
-    font-size: 0.82rem;
-    font-weight: 300;
-    color: var(--warm-gray);
-    line-height: 1.78;
-    flex: 1;
-    margin-bottom: 1.25rem;
-    font-style: italic;
+/* ── Indispo Badge ── */
+.indispo-badge {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(20,20,20,0.78);
+    color: #fff;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    backdrop-filter: blur(5px);
+    z-index: 3;
 }
 
-/* Bouton Voir le modèle (accueil) */
-.vet-btn {
+/* ── Price Badge (bottom-left of image) ── */
+.price-badge {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: #fff;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 0.42rem 0.95rem;
+    border-radius: 999px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.24);
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    z-index: 3;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+}
+.vet-card:hover .price-badge { transform: scale(1.07); box-shadow: 0 10px 24px rgba(0,0,0,0.3); }
+.price-badge .cfa {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    opacity: 0.85;
+    letter-spacing: 0.5px;
+}
+
+/* Quick-view overlay */
+.quick-view-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(26,26,46,0.55);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.55rem;
-    padding: 0.78rem 1.25rem;
-    background: rgba(201,169,89,0.07);
-    color: var(--gold-dark);
-    font-size: 0.68rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+    backdrop-filter: blur(2px);
+}
+.vet-card:hover .quick-view-overlay { opacity: 1; }
+.quick-view-btn {
+    background: rgba(255,255,255,0.96);
+    color: var(--charcoal);
+    border: none;
+    border-radius: 999px;
+    padding: 0.7rem 1.6rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    text-decoration: none;
-    border: 1.5px solid rgba(201,169,89,0.32);
-    border-radius: 999px;
-    transition: all 0.38s cubic-bezier(0.34,1.56,0.64,1);
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transform: translateY(12px);
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.14);
+}
+.vet-card:hover .quick-view-btn { transform: translateY(0); }
+.quick-view-btn:hover {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(201,169,89,0.45);
+}
+
+/* ── Card Body ── */
+.vet-card-body {
+    padding: 1.3rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+.vet-card-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--charcoal);
+    margin: 0 0 0.4rem;
+    line-height: 1.2;
+}
+.vet-card-desc {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    color: var(--warm-gray);
+    margin: 0 0 1.1rem;
+    line-height: 1.6;
+    flex: 1;
+}
+
+/* ── Card Actions ── */
+.vet-card-actions {
+    display: flex;
+    gap: 0.65rem;
+    padding-top: 0.2rem;
+}
+
+/* Bouton "Détails" */
+.btn-detail {
+    flex: 1;
+    border: 1.5px solid rgba(201,169,89,0.28);
+    color: var(--gold-dark);
+    background: rgba(201,169,89,0.06);
+    border-radius: 999px;
+    padding: 0.65rem 0.8rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    letter-spacing: 0.5px;
     position: relative;
     overflow: hidden;
 }
-.vet-btn::before {
+.btn-detail::before {
     content: '';
     position: absolute;
     inset: 0;
     background: linear-gradient(135deg, var(--gold), var(--gold-dark));
     opacity: 0;
-    transition: opacity 0.35s ease;
+    transition: opacity 0.32s ease;
     border-radius: 999px;
+    z-index: -1;
 }
-.vet-btn:hover::before { opacity: 1; }
-.vet-btn:hover {
+.btn-detail:hover::before { opacity: 1; }
+.btn-detail:hover {
     border-color: transparent;
     color: #fff;
-    box-shadow: 0 10px 24px rgba(201,169,89,0.42);
     transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(201,169,89,0.42);
 }
-.vet-btn > * { position: relative; z-index: 1; }
-.vet-btn i { transition: transform 0.3s ease; }
-.vet-btn:hover i { transform: translateX(3px); }
+.btn-detail > * { position: relative; z-index: 1; }
+.btn-detail i { transition: transform 0.28s ease; }
+.btn-detail:hover i { transform: scale(1.15); }
 
-/* Bouton WhatsApp / Commander */
-.vet-btn-wa {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.55rem;
-    padding: 0.78rem 1.25rem;
+/* Bouton "Commander via WhatsApp" */
+.btn-commander-wa {
+    flex: 1;
     background: linear-gradient(135deg, #22c55e, #16a34a);
     color: #fff !important;
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    text-decoration: none;
     border: none;
     border-radius: 999px;
-    transition: all 0.38s cubic-bezier(0.34,1.56,0.64,1);
+    padding: 0.65rem 0.8rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+    letter-spacing: 0.5px;
 }
-.vet-btn-wa:hover {
+.btn-commander-wa:hover {
     background: linear-gradient(135deg, #16a34a, #15803d);
     color: #fff !important;
     transform: translateY(-2px);
@@ -848,56 +947,7 @@ html {
     transform: translate(0) scale(1);
 }
 
-/* Premium micro-interactions for Collection cards */
-.vet-card {
-    position: relative;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
 
-.vet-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border: 1.5px solid var(--gold);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
-    z-index: 10;
-}
-
-.vet-card:hover::before {
-    opacity: 1;
-}
-
-.vet-img-wrap::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(
-        to right,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,0.25) 50%,
-        rgba(255,255,255,0) 100%
-    );
-    transform: skewX(-25deg);
-    transition: none;
-}
-
-.vet-card:hover .vet-img-wrap::after {
-    left: 150%;
-    transition: left 1s ease-in-out;
-}
-
-.vet-btn i {
-    transition: transform 0.3s ease;
-}
-
-.vet-btn:hover i {
-    transform: translateX(4px);
-}
 
 /* Micro-animations for services */
 .service-item {
@@ -1144,7 +1194,7 @@ html {
 
     /* Collection */
     .collection-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-    .vet-body { padding: 1.25rem; }
+    .vet-card-body { padding: 1.25rem; }
 
     /* Process — 1 col on very small screens */
     .process-grid { grid-template-columns: 1fr; gap: 2.5rem; }
@@ -1158,18 +1208,7 @@ html {
     /* Contact responsive removed */
 }
 
-/* ── Actions Row on Card (accueil) ── */
-.vet-actions-row {
-    display: flex;
-    gap: 0.65rem;
-    margin-top: auto;
-    padding-top: 1rem;
-}
 
-.vet-actions-row .vet-btn,
-.vet-actions-row .vet-btn-wa {
-    flex: 1;
-}
 
 
 /* ── Modal Premium Couture ── */
@@ -1341,6 +1380,16 @@ html {
     padding: 0.8rem 1.2rem;
     width: fit-content;
     margin-bottom: 1.5rem;
+}
+
+.modal-price-box-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    text-transform: uppercase; letter-spacing: 2.5px;
+    color: var(--gold-dark);
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    display: block;
 }
 
 .modal-price-box-val {
@@ -1751,19 +1800,62 @@ html {
                     $_src = $_src && !str_starts_with($_src, 'http') ? \Illuminate\Support\Facades\Storage::url($_src) : ($_src ?: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800');
                 }
             ?>
+            <?php
+                $fallbackUrl = 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';
+                $isNew = $vetement->created_at >= now()->subDays(14);
+                if (config('app.theme_mode') === 'alternative') {
+                    $allImages = collect([(object)['image_url' => $_src]]);
+                } else {
+                    $allImages = $vetement->images->sortBy('ordre');
+                }
+                $allModalImages = $allImages->count() > 0 ? $allImages : collect([
+                    (object)['image_url' => $fallbackUrl]
+                ]);
+            ?>
+
             <div class="vet-card" data-reveal="fade-up" data-delay="<?php echo e($loop->index * 100); ?>">
                 <div class="vet-img-wrap">
                     <img src="<?php echo e($_src); ?>"
                           alt="<?php echo e($nom); ?>"
-                          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';">
+                          onerror="this.onerror=null;this.src='<?php echo e($fallbackUrl); ?>';">
+
                     <?php if($vetement->categorie): ?>
-                        <span class="vet-cat"><?php echo e($vetement->categorie->nom); ?></span>
+                        <span class="cat-badge">
+                            <i class="fas fa-tag fa-xs"></i> <?php echo e($vetement->categorie->nom); ?>
+
+                        </span>
                     <?php endif; ?>
-                    
-                    <span class="vet-price-float"><?php echo e(number_format($vetement->prix, 0, ',', ' ')); ?> CFA</span>
+
+                    <?php if($isNew && $vetement->disponible): ?>
+                        <span class="new-badge">Nouveau</span>
+                    <?php elseif(!$vetement->disponible): ?>
+                        <span class="indispo-badge">Sur commande</span>
+                    <?php endif; ?>
+
+                    <?php if($vetement->disponible): ?>
+                        <span class="price-badge">
+                            <?php echo e(number_format($vetement->prix, 0, ',', ' ')); ?>
+
+                            <span class="cfa">CFA</span>
+                        </span>
+                    <?php endif; ?>
+
+                    <div class="quick-view-overlay">
+                        <button class="quick-view-btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#vetementModal<?php echo e($vetement->id); ?>">
+                            <i class="fas fa-eye"></i> Aperçu rapide
+                        </button>
+                    </div>
                 </div>
-                <div class="vet-body">
-                    <h4 class="vet-name"><?php echo e($nom); ?></h4>
+
+                <div class="vet-card-body">
+                    <h5 class="vet-card-name"><?php echo e($nom); ?></h5>
+                    <?php $displayDesc = (strlen(trim($desc ?? '')) > 10) ? \Illuminate\Support\Str::limit($desc, 90) : null; ?>
+                    <?php if($displayDesc): ?>
+                    <p class="vet-card-desc"><?php echo e($displayDesc); ?></p>
+                    <?php endif; ?>
+
                     <?php if($vetement->taille): ?>
                     <div style="margin-bottom:0.75rem;">
                         <span style="display:inline-flex;align-items:center;gap:0.35rem;background:rgba(201,169,89,0.1);border:1px solid rgba(201,169,89,0.3);color:#7a5f1a;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:0.25rem 0.65rem;border-radius:999px;">
@@ -1772,18 +1864,12 @@ html {
                         </span>
                     </div>
                     <?php endif; ?>
-                    <?php
-                        $displayDesc = (strlen(trim($desc ?? '')) > 10) ? \Illuminate\Support\Str::limit($desc, 95) : null;
-                    ?>
-                    <?php if($displayDesc): ?>
-                    <p class="vet-desc"><?php echo e($displayDesc); ?></p>
-                    <?php endif; ?>
-                    
-                    <div class="vet-actions-row">
-                        <button class="vet-btn"
+
+                    <div class="vet-card-actions">
+                        <button class="btn-detail"
                                 data-bs-toggle="modal"
                                 data-bs-target="#vetementModal<?php echo e($vetement->id); ?>">
-                            <i class="fas fa-eye"></i> Voir le modèle
+                            <i class="fas fa-eye"></i> Détails
                         </button>
                         <?php
                             $adminPhone = \App\Models\Admin::first()?->telephone ?? '221771234567';
@@ -1792,14 +1878,14 @@ html {
                                 $waPhone = '221' . $waPhone;
                             }
                             $absoluteImgUrl = url($_src);
-                            $waText = config('app.theme_mode') === 'alternative' 
+                            $waText = config('app.theme_mode') === 'alternative'
                                 ? "Bonjour AURA Couture, je souhaite commander le modèle " . $nom . " (Prix : " . number_format($vetement->prix, 0, ',', ' ') . " CFA). Voici la photo : " . $absoluteImgUrl
                                 : "Bonjour SMC Couture, je souhaite commander le modèle " . $vetement->nom . " (Prix : " . number_format($vetement->prix, 0, ',', ' ') . " CFA). Voici la photo : " . $absoluteImgUrl;
                         ?>
                         <a href="https://wa.me/<?php echo e($waPhone); ?>?text=<?php echo e(urlencode($waText)); ?>"
                            target="_blank"
-                           class="vet-btn-wa">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 448 512" fill="currentColor"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+                           class="btn-commander-wa">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.455L0 24zm6.49-3.99c1.65.981 3.272 1.498 4.795 1.5 5.539 0 10.043-4.507 10.046-10.05.001-2.686-1.042-5.212-2.93-7.103-1.89-1.89-4.412-2.932-7.102-2.933-5.546 0-10.05 4.507-10.053 10.051-.002 1.902.501 3.757 1.456 5.416l-.99 3.61 3.712-.973zm12.337-5.69c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
                             Commander
                         </a>
                     </div>
@@ -1810,25 +1896,12 @@ html {
             <div class="modal fade" id="vetementModal<?php echo e($vetement->id); ?>" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
-
                         <div class="row g-0">
+
                             
                             <div class="col-lg-6 col-md-6 modal-carousel-panel">
-                                <div id="carousel-<?php echo e($vetement->id); ?>" class="carousel slide" data-bs-ride="false">
+                                <div id="carousel-<?php echo e($vetement->id); ?>" class="modal-carousel carousel slide" data-bs-ride="false">
                                     <div class="carousel-inner">
-                                        <?php
-                                            if (config('app.theme_mode') === 'alternative') {
-                                                $allModalImages = collect([
-                                                    (object)['image_url' => $_src]
-                                                ]);
-                                            } else {
-                                                $allImages = $vetement->images->sortBy('ordre');
-                                                $allModalImages = $allImages->count() > 0 ? $allImages : collect([
-                                                    (object)['image_url' => 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1200']
-                                                ]);
-                                            }
-                                            $fallbackUrl = 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800';
-                                        ?>
                                         <?php $__currentLoopData = $allModalImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $indexImg => $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <?php
                                             $imgSrc = str_starts_with($img->image_url, 'http') ? $img->image_url : \Illuminate\Support\Facades\Storage::url($img->image_url);
@@ -1855,17 +1928,14 @@ html {
                                     <?php endif; ?>
                                 </div>
 
-                                
                                 <?php if($allModalImages->count() > 1): ?>
                                 <div class="d-flex justify-content-center gap-2 mt-3 px-2 flex-wrap">
                                     <?php $__currentLoopData = $allModalImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $thumbIndex => $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <?php
-                                        $thumbSrc = str_starts_with($img->image_url, 'http') ? $img->image_url : \Illuminate\Support\Facades\Storage::url($img->image_url);
-                                    ?>
-                                    <button type="button" 
-                                            data-bs-target="#carousel-<?php echo e($vetement->id); ?>" 
-                                            data-bs-slide-to="<?php echo e($thumbIndex); ?>" 
-                                            class="thumbnail-btn <?php echo e($thumbIndex === 0 ? 'active' : ''); ?>" 
+                                    <?php $thumbSrc = str_starts_with($img->image_url, 'http') ? $img->image_url : \Illuminate\Support\Facades\Storage::url($img->image_url); ?>
+                                    <button type="button"
+                                            data-bs-target="#carousel-<?php echo e($vetement->id); ?>"
+                                            data-bs-slide-to="<?php echo e($thumbIndex); ?>"
+                                            class="thumbnail-btn <?php echo e($thumbIndex === 0 ? 'active' : ''); ?>"
                                             aria-label="Image <?php echo e($thumbIndex + 1); ?>">
                                         <img src="<?php echo e($thumbSrc); ?>" alt="Vignette <?php echo e($thumbIndex + 1); ?>" onerror="this.onerror=null;this.src='<?php echo e($fallbackUrl); ?>';">
                                     </button>
@@ -1880,9 +1950,8 @@ html {
                                     <i class="fas fa-times"></i>
                                 </button>
 
-                                <h3 class="modal-vet-name" style="margin-bottom: 0.5rem; padding-right: 2rem;"><?php echo e($nom); ?></h3>
-
-                                <div class="modal-meta-row" style="justify-content: flex-start; gap: 0.5rem; margin-bottom: 1.5rem;">
+                                
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
                                     <?php if($vetement->categorie): ?>
                                         <span class="modal-cat-badge">
                                             <i class="fas fa-tag fa-xs"></i> <?php echo e($vetement->categorie->nom); ?>
@@ -1895,37 +1964,75 @@ html {
                                         </span>
                                     <?php else: ?>
                                         <span class="modal-status-badge indispo">
-                                            <i class="fas fa-times-circle fa-xs"></i> Sur commande
+                                            <i class="fas fa-circle fa-xs"></i> Sur commande
                                         </span>
                                     <?php endif; ?>
                                 </div>
 
-                                <h4 class="modal-desc-title">Description du modèle</h4>
-                                <p class="modal-desc" style="margin-bottom: 1.5rem;"><?php echo e($desc ?: 'Aucune description disponible pour ce modèle de création artisanale.'); ?></p>
+                                <h3 class="modal-vet-name"><?php echo e($nom); ?></h3>
 
-                                <div class="modal-divider" style="margin: 1rem 0 1.5rem;"></div>
+                                
+                                <div class="modal-price-box">
+                                    <span class="modal-price-box-label">Tarif estimé</span>
+                                    <div class="modal-price-box-val">
+                                        <?php echo e(number_format($vetement->prix, 0, ',', ' ')); ?>
 
-                                <h4 class="modal-desc-title">Caractéristiques</h4>
+                                        <span class="cfa">CFA</span>
+                                    </div>
+                                </div>
+
+                                <div class="modal-divider"></div>
+
+                                
+                                <p class="modal-desc-title">Description du modèle</p>
+                                <p class="modal-desc"><?php echo e($desc ?: 'Aucune description disponible pour ce modèle de création artisanale.'); ?></p>
+
+                                <div class="modal-divider" style="margin: 1rem 0 1.25rem;"></div>
+
+                                
+                                <p class="modal-desc-title">Caractéristiques</p>
                                 <div class="specs-grid">
                                     <div class="spec-item">
                                         <i class="fas fa-coins"></i>
                                         <div>
-                                            <div class="spec-item-label">Tarif estimé</div>
+                                            <div class="spec-item-label">Prix</div>
                                             <div class="spec-item-value"><?php echo e(number_format($vetement->prix, 0, ',', ' ')); ?> CFA</div>
                                         </div>
                                     </div>
                                     <div class="spec-item">
                                         <i class="fas fa-map-marker-alt"></i>
                                         <div>
-                                            <div class="spec-item-label">Création</div>
+                                            <div class="spec-item-label">Origine</div>
                                             <div class="spec-item-value">Dakar, Sénégal</div>
                                         </div>
                                     </div>
+                                    <div class="spec-item">
+                                        <i class="fas fa-cut"></i>
+                                        <div>
+                                            <div class="spec-item-label">Type</div>
+                                            <div class="spec-item-value">Sur mesure</div>
+                                        </div>
+                                    </div>
+                                    <div class="spec-item">
+                                        <i class="fas fa-hourglass-half"></i>
+                                        <div>
+                                            <div class="spec-item-label">Délai</div>
+                                            <div class="spec-item-value">2 – 4 semaines</div>
+                                        </div>
+                                    </div>
+                                    <?php if($vetement->taille): ?>
+                                    <div class="spec-item">
+                                        <i class="fas fa-ruler-horizontal"></i>
+                                        <div>
+                                            <div class="spec-item-label">Taille</div>
+                                            <div class="spec-item-value"><?php echo e($vetement->taille); ?></div>
+                                        </div>
+                                    </div>
+                                    <?php endif; ?>
                                 </div>
 
-                                <div class="modal-divider" style="margin: 1.5rem 0;"></div>
-
-                                <h4 class="modal-desc-title" style="font-size: 0.95rem; margin-bottom: 0.25rem;">Votre parcours couture</h4>
+                                
+                                <p class="modal-desc-title">Votre parcours couture</p>
                                 <div class="process-timeline">
                                     <div class="timeline-step">
                                         <div class="timeline-dot">I</div>
@@ -1945,16 +2052,25 @@ html {
                                     </div>
                                 </div>
 
+                                
                                 <div class="modal-actions-container">
                                     <?php if($vetement->disponible): ?>
                                         <a href="<?php echo e(route('rendezvous.create')); ?>?vetement=<?php echo e($vetement->id); ?>"
                                            class="btn-modal-reserve-premium">
-                                            <i class="fas fa-calendar-plus"></i> Prendre RDV Mesures
+                                            <i class="fas fa-calendar-plus"></i> Prendre RDV
                                         </a>
                                     <?php endif; ?>
+                                    <a href="https://wa.me/<?php echo e($waPhone); ?>?text=<?php echo e(urlencode($waText)); ?>"
+                                       target="_blank"
+                                       class="btn-modal-whatsapp">
+                                        <i class="fab fa-whatsapp" style="font-size:1rem;"></i> Commander
+                                    </a>
                                 </div>
-                                <span class="modal-disclaimer">* La prise de rendez-vous est gratuite. Elle comprend une séance de mesures et d'écoute personnalisée à notre atelier.</span>
+                                <span class="modal-disclaimer">
+                                    * La prise de rendez-vous est gratuite. Elle comprend une séance de mesures et d'écoute personnalisée à notre atelier.
+                                </span>
                             </div>
+
                         </div>
                     </div>
                 </div>

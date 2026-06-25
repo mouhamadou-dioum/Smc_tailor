@@ -81,11 +81,14 @@ class RendezVousController extends Controller
         if (!Auth::guard('client')->check()) {
             $rules['nom'] = 'required|string|max:255';
             $rules['prenom'] = 'required|string|max:255';
-            $rules['telephone'] = 'required|string|max:50';
+            $rules['telephone'] = ['required', 'string', 'max:20', 'regex:/^(?:(?:\+|00)221)?[ -]?7[15678][ -]?\d{3}[ -]?\d{2}[ -]?\d{2}$/'];
             $rules['email'] = 'nullable|email|max:255';
         }
 
-        $request->validate($rules);
+        $messages = [
+            'telephone.regex' => 'Le numéro de téléphone doit être un numéro sénégalais valide (77, 78, 76, 71, 75) avec 9 chiffres.',
+        ];
+        $request->validate($rules, $messages);
 
         $vetementId = $request->vetement_id;
         if ($vetementId) {

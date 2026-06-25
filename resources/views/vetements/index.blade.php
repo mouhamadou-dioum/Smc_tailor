@@ -635,6 +635,7 @@
         opacity: 0;
         transition: opacity 0.32s ease;
         border-radius: 999px;
+        z-index: -1;
     }
     .btn-detail:hover::before { opacity: 1; }
     .btn-detail:hover {
@@ -1238,6 +1239,14 @@
                         <h5 class="vet-card-name">{{ $nom }}</h5>
                         <p class="vet-card-desc">{{ \Illuminate\Support\Str::limit($desc ?? '', 90) }}</p>
 
+                        @if($vetement->taille)
+                        <div style="margin-bottom:0.75rem;">
+                            <span style="display:inline-flex;align-items:center;gap:0.35rem;background:rgba(201,169,89,0.1);border:1px solid rgba(201,169,89,0.3);color:#7a5f1a;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:0.25rem 0.65rem;border-radius:999px;">
+                                <i class="fas fa-ruler-horizontal" style="font-size:0.55rem;"></i> {{ $vetement->taille }}
+                            </span>
+                        </div>
+                        @endif
+
                         <div class="vet-card-actions">
                             <button class="btn-detail"
                                     data-bs-toggle="modal"
@@ -1401,6 +1410,15 @@
                                             <div class="spec-item-value">2 – 4 semaines</div>
                                         </div>
                                     </div>
+                                    @if($vetement->taille)
+                                    <div class="spec-item">
+                                        <i class="fas fa-ruler-horizontal"></i>
+                                        <div>
+                                            <div class="spec-item-label">Taille</div>
+                                            <div class="spec-item-value">{{ $vetement->taille }}</div>
+                                        </div>
+                                    </div>
+                                    @endif
                                 </div>
 
                                 {{-- Timeline --}}

@@ -213,6 +213,8 @@
                                         required
                                         value="{{ old('telephone') }}"
                                         placeholder="Ex : +221 77 123 45 67"
+                                        pattern="^(?:(?:\+|00)221)?[ -]?7[15678][ -]?\d{3}[ -]?\d{2}[ -]?\d{2}$"
+                                        title="Numéro sénégalais valide : 77 123 45 67, +221 77 123 45 67"
                                     >
                                     @error('telephone')
                                         <span class="text-danger small"><i class="fas fa-exclamation-circle me-1"></i>{{ $message }}</span>

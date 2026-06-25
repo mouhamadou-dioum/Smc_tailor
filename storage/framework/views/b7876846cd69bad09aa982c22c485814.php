@@ -230,6 +230,8 @@ unset($__errorArgs, $__bag); ?>"
                                         required
                                         value="<?php echo e(old('telephone')); ?>"
                                         placeholder="Ex : +221 77 123 45 67"
+                                        pattern="^(?:(?:\+|00)221)?[ -]?7[15678][ -]?\d{3}[ -]?\d{2}[ -]?\d{2}$"
+                                        title="Numéro sénégalais valide : 77 123 45 67, +221 77 123 45 67"
                                     >
                                     <?php $__errorArgs = ['telephone'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
