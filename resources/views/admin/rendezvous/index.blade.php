@@ -434,11 +434,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     return response.json();
                 })
                 .then(function(data) {
-                    if (data.success && data.wa_link) {
-                        // 3. Rediriger l'onglet déjà ouvert vers le lien WhatsApp
-                        newTab.location.href = data.wa_link;
-                        // 4. Rafraîchir la page principale
-                        window.location.reload();
+                    if (data.success) {
+                        if (data.wa_link) {
+                            // 3. Rediriger l'onglet déjà ouvert vers le lien WhatsApp
+                            newTab.location.href = data.wa_link;
+                        } else {
+                            newTab.close();
+                        }
+                        // 4. Rediriger vers la liste (pas de reload qui casse le bouton retour)
+                        window.location.href = data.redirect_url || window.location.pathname;
                     } else {
                         newTab.close();
                         alert(data.message || 'Une erreur est survenue.');

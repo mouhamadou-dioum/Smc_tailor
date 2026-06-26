@@ -17,7 +17,7 @@ use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\MesureController;
 
 Route::get('/', function () {
-    $categories = App\Models\Categorie::all();
+    $categories = App\Models\Categorie::whereHas('vetements', fn($q) => $q->where('disponible', true))->orderBy('nom')->get();
     $vetements = App\Models\Vetement::with('categorie', 'images')
         ->where('disponible', true)
         ->orderBy('dateAjout', 'desc')

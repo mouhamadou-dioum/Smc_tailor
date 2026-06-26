@@ -272,15 +272,18 @@ class AdminController extends Controller
 
         $this->sendAppointmentNotifications($rendezVous, $message, 'confirm');
 
+        $redirectUrl = route('admin.rendezvous.index');
+
         if (request()->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Rendez-vous confirmé !',
-                'wa_link' => session('wa_link')
+                'wa_link' => session('wa_link'),
+                'redirect_url' => $redirectUrl,
             ]);
         }
 
-        return back()->with('success', 'Rendez-vous confirmé!');
+        return redirect($redirectUrl)->with('success', 'Rendez-vous confirmé!');
     }
 
     public function rendezvousRefuser($id)
@@ -299,15 +302,18 @@ class AdminController extends Controller
 
         $this->sendAppointmentNotifications($rendezVous, $message, 'refuse');
 
+        $redirectUrl = route('admin.rendezvous.index');
+
         if (request()->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Rendez-vous refusé !',
-                'wa_link' => session('wa_link')
+                'wa_link' => session('wa_link'),
+                'redirect_url' => $redirectUrl,
             ]);
         }
 
-        return back()->with('success', 'Rendez-vous refusé!');
+        return redirect($redirectUrl)->with('success', 'Rendez-vous refusé!');
     }
 
     public function clientsIndex()

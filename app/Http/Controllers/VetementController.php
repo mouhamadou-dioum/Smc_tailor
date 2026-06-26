@@ -10,7 +10,7 @@ class VetementController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = Categorie::all();
+        $categories = Categorie::whereHas('vetements', fn($q) => $q->where('disponible', true))->orderBy('nom')->get();
         $categorieId = $request->query('categorie');
 
         $vetements = Vetement::with('categorie', 'images')
